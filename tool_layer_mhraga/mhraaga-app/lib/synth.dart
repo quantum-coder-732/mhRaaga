@@ -299,13 +299,13 @@ Uint8List renderScore(Map<String, dynamic> score) {
   final voice = score['lead_voice'] as String;
   double? prev;
   for (final n in score['lead'] as List) {
-    final t = _num(n[0]), f = _num(n[1]), d = _num(n[2]), orn = (n[3] as num).toInt();
+    final t = _num(n[0]), f = _num(n[1]), d = _num(n[2]), orn = (n[3] as num).toInt(), vel = n.length > 4 ? _num(n[4]) : 1.0;
     if (voice == 'harmonium') {
-      sy.harmonium(f, t, d, orn, prev, 0.2);
+      sy.harmonium(f, t, d, orn, prev, 0.2 * vel);
     } else if (voice == 'veena') {
-      sy.veena(f, t, d, orn, prev, 0.34);
+      sy.veena(f, t, d, orn, prev, 0.34 * vel);
     } else {
-      sy.bansuri(f, t, d, orn, prev, 0.3);
+      sy.bansuri(f, t, d, orn, prev, 0.3 * vel);
     }
     prev = f;
   }

@@ -17,3 +17,27 @@ The site is served by CloudFront (`https://d1bka1wc4jd8uy.cloudfront.net`). A cu
 5. Test `https://mhraaga.in`. HSTS is on, so keep HTTPS working before announcing it.
 
 Leaving the two variables empty keeps the CloudFront address, so nothing breaks until you are ready. Every redeploy must pass them, or the aliases are removed.
+
+## Hostinger, step by step (certificate already requested)
+
+Certificate ARN: `arn:aws:acm:us-east-1:877157050453:certificate/67556949-10e1-4adc-ad8b-b928dac89935` (status `PENDING_VALIDATION` until step 1 is done).
+
+**1. Validation records.** In hPanel go to Domains, then DNS / Nameservers, then DNS records, and add two CNAME records. In Hostinger the *Name* field is the host without `.mhraaga.in`, and the trailing dot on the value can be left off.
+
+| Type  | Name | Target |
+|-------|------|--------|
+| CNAME | `_8809945cbe58b3dcd6f488916d07a78a` | `_ddb9d39576eca5dbf0938ee79835fc7d.wzccmgtwzk.acm-validations.aws` |
+| CNAME | `_16c9c25aea6b504a5aa913bc7388ebd2.www` | `_132bcc837ba0438be604e3b01b341c51.wzccmgtwzk.acm-validations.aws` |
+
+Check with `aws acm describe-certificate --region us-east-1 --certificate-arn <ARN> --query Certificate.Status` until it says `ISSUED`.
+
+**2. Deploy with the domain:** `DOMAIN_NAME=mhraaga.in CERT_ARN=<ARN> AWS_PROFILE=default bash tool_layer_mhraga/mhraaga-cloud/infra/deploy.sh`
+
+**3. Site records** (after step 2):
+
+| Type  | Name  | Target |
+|-------|-------|--------|
+| CNAME | `www` | `d1bka1wc4jd8uy.cloudfront.net` |
+
+Delete any existing `www` A, AAAA or CNAME record first (a name cannot hold a CNAME and another record).
+For the bare `mhraaga.in`: the DNS standard does not allow a CNAME at the root. If Hostinger offers an ALIAS or ANAME record, use it with the same target. If it only offers A/AAAA, use Hostinger's domain forwarding to send `mhraaga.in` to `https://www.mhraaga.in`, or move DNS to Route 53 (nameservers at Hostinger, aliases in Route 53).

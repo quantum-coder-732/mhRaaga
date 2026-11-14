@@ -147,3 +147,26 @@ html.embed #gopi-sec,html.embed .foot,html.embed .sec>h1,html.embed .sec>h1+p{di
 .insp{display:flex;flex-direction:column;gap:2px}.insp h3{margin:10px 0 4px;font-size:1rem}
 @media(max-width:1000px){.editor{grid-template-columns:1fr}}
 .insp input[type=color]{height:42px;padding:3px}
+
+/* ---- Team studio ---- */
+.team .newp{margin:14px 0 22px}.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.pcard{text-align:left;padding:16px;border-radius:14px;background:linear-gradient(180deg,var(--card),#1a1550);border:1px solid var(--line);cursor:pointer;color:var(--ink)}
+.pcard:hover{border-color:var(--gold)}.pcard b{display:block;font-size:1.05rem;margin-bottom:4px}.pcard small{color:var(--mute)}
+.chip{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.75rem;font-weight:700;background:var(--bg2);border:1px solid var(--line);color:var(--mute);text-transform:capitalize}
+.chip.director,.chip.approved{background:var(--gold);color:#1a1033;border-color:var(--gold)}.chip.review{background:#5b4fc9;color:#fff;border-color:#5b4fc9}.chip.artist,.chip.wip{color:var(--ink)}
+.roombar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}.roombar h1{margin:0;font-size:1.5rem}.roombar #r-sync{margin-left:auto;font-size:.8rem}
+.team{color-scheme:dark}.team *{min-width:0}.roomgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:start}
+.boardbar{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px}.boardbar .seg{margin-bottom:0;max-width:100%;overflow-x:auto;scrollbar-width:none}.boardbar .seg button{white-space:nowrap}
+.lboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(170px,100%),1fr));gap:10px;max-height:62vh;overflow-y:auto;overflow-x:hidden;padding:2px}
+.lcard{text-align:left;padding:12px;border-radius:12px;background:#120f2e;border:1px solid var(--line);color:var(--ink);cursor:pointer;display:grid;gap:6px}
+.lcard:hover,.lcard.on{border-color:var(--gold)}.lcard.mine{box-shadow:inset 3px 0 0 var(--gold)}.lcard b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lcard .by{display:flex;align-items:center;gap:8px;color:var(--mute);font-size:.8rem;min-width:0}.lcard .by span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.av{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:700;color:#1a1033}
+.lcard .lt{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:0}.lcard .slot{color:var(--mute);font-size:.8rem}
+.side{display:grid;gap:14px}.side .card h3{margin:0 0 10px}.side small{color:var(--mute);font-weight:400}
+.members{display:grid;gap:6px;max-height:220px;overflow:auto}.mrow{display:flex;align-items:center;gap:8px;font-size:.88rem}.mrow span.n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow button{padding:2px 8px;font-size:.75rem}
+.comments{display:grid;gap:8px;max-height:230px;overflow:auto;margin-bottom:8px}.cmt{font-size:.88rem}.cmt b{color:var(--gold);font-weight:600}.cmt small{display:block}
+.editor .prev{width:100%;aspect-ratio:16/9;border-radius:10px;display:block;margin-bottom:10px}
+@media (max-width:820px){.roomgrid{grid-template-columns:minmax(0,1fr)}.lboard{grid-template-columns:repeat(2,minmax(0,1fr))}.lboard{max-height:none}.roombar #r-sync{margin-left:0;width:100%}}
+.team .seg button{flex:none}

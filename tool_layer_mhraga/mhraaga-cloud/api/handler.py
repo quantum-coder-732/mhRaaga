@@ -31,6 +31,7 @@ from mhraaga_engine.brief import TARGETS, detect_language, translate
 from mhraaga_engine.tala import TALAS
 
 import studio
+import team
 
 USERS = os.environ.get("USERS_TABLE", "mhraaga-users")
 SONGS = os.environ.get("SONGS_TABLE", "mhraaga-songs")
@@ -276,6 +277,34 @@ def _num(o):
     raise TypeError
 
 
+def team_route(method: str, path: str, event: dict):
+    """Shared studio: /teams, /teams/{pid}, .../invite, .../members/{email}, .../layers[/{lid}], .../comments, .../assemble, .../render."""
+    u, parts = user_from(event), path.strip("/").split("/")
+    q = event.get("queryStringParameters") or {}
+    if len(parts) == 1:
+        return team.mine(u) if method == "GET" else team.create(u, body_of(event)) if method == "POST" else (_ for _ in ()).throw(ApiError(405, "Not allowed."))
+    pid, rest = parts[1], parts[2:]
+    if not rest:
+        return team.get(u, pid, str(q.get("since", ""))[:40]) if method == "GET" else team.delete(u, pid) if method == "DELETE" else (_ for _ in ()).throw(ApiError(405, "Not allowed."))
+    if rest == ["invite"] and method == "POST":
+        return team.invite(u, pid, body_of(event))
+    if len(rest) == 2 and rest[0] == "members" and method == "DELETE":
+        from urllib.parse import unquote
+        return team.remove_member(u, pid, unquote(rest[1]))
+    if rest == ["layers"] and method == "POST":
+        return team.layer_save(u, pid, None, body_of(event, 400000))
+    if len(rest) == 2 and rest[0] == "layers":
+        return (team.layer_get(u, pid, rest[1]) if method == "GET" else team.layer_save(u, pid, rest[1], body_of(event, 400000)) if method == "PUT"
+                else team.layer_delete(u, pid, rest[1]) if method == "DELETE" else (_ for _ in ()).throw(ApiError(405, "Not allowed.")))
+    if rest == ["comments"] and method == "POST":
+        return team.comment(u, pid, body_of(event))
+    if rest == ["assemble"] and method == "GET":
+        return team.assemble(u, pid)
+    if rest == ["render"] and method == "POST":
+        return team.render_song(u, pid, event, make_song)
+    raise ApiError(404, "Not found.")
+
+
 def handler(event, context=None):
     method = event.get("requestContext", {}).get("http", {}).get("method", "GET")
     path = (event.get("rawPath") or "/").rstrip("/") or "/"
@@ -371,6 +400,8 @@ def handler(event, context=None):
         elif path.startswith("/films/") and method in ("GET", "PUT", "DELETE"):
             fid, u = path[7:], user_from(event)
             status, out = (studio.film_get(u, fid) if method == "GET" else studio.film_save(u, fid, body_of(event, 400000)) if method == "PUT" else studio.film_delete(u, fid))
+        elif path == "/teams" or path.startswith("/teams/"):
+            status, out = team_route(method, path, event)
         elif (method, path) == ("POST", "/compose"):
             status, out = make_song(event)
         elif (method, path) == ("GET", "/songs"):

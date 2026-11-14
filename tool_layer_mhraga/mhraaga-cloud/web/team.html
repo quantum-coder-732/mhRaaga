@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team studio · mhRaaga</title>
+<meta name="theme-color" content="#120f2e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231b1646'/%3E%3Cpath d='M9 21c4-10 10-10 14 0' stroke='%23f4b942' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css">
+</head><body>
+<main class="wrap pg team">
+  <section id="home">
+    <h1>Team studio</h1>
+    <p class="muted">One shared space where up to 150 people make a film or a song together. Each artist owns their own layer, the director orders and approves them, and everyone sees changes within seconds.</p>
+    <div class="card newp">
+      <div class="seg" id="np-kind"><button type="button" class="on" data-k="film">🎬 Film</button><button type="button" data-k="song">🎶 Song</button></div>
+      <div class="grid">
+        <label class="field"><span>Project title</span><input id="np-title" maxlength="80" placeholder="Yamuna at dawn"></label>
+        <label class="field" id="np-raga-w" hidden><span>Raga (songs)</span><input id="np-raga" maxlength="40" placeholder="yaman, or leave empty"></label>
+        <label class="field"><span>Language</span><select id="np-lang"><option>english</option><option>hindi</option><option>marathi</option><option>telugu</option><option>gujarati</option><option>kannada</option><option>tamil</option></select></label>
+      </div>
+      <div class="actions"><button id="np-go" class="primary" type="button">Create shared project</button><span id="np-status" role="status"></span></div>
+    </div>
+    <h2>Your projects</h2><div id="plist" class="tgrid"></div>
+  </section>
+
+  <section id="room" hidden>
+    <div class="roombar">
+      <button id="r-back" class="ghost" type="button">← Projects</button>
+      <h1 id="r-title"></h1><span id="r-role" class="chip"></span><span id="r-sync" class="muted" role="status"></span>
+    </div>
+    <div class="roomgrid">
+      <div class="board card">
+        <div class="boardbar">
+          <div class="seg" id="r-filter"><button type="button" class="on" data-f="all">All</button><button type="button" data-f="mine">Mine</button><button type="button" data-f="wip">In progress</button><button type="button" data-f="review">Review</button><button type="button" data-f="approved">Approved</button></div>
+          <button id="l-add" class="primary" type="button">+ New layer</button>
+        </div>
+        <div id="lboard" class="lboard"></div>
+        <div class="actions" id="r-actions"></div>
+      </div>
+      <div class="side">
+        <div class="card" id="editor" hidden></div>
+        <div class="card"><h3>People <small id="m-count"></small></h3><div id="members" class="members"></div>
+          <div id="invite" hidden><label class="field"><span>Add people (emails, comma or line separated)</span><textarea id="inv-emails" rows="2" placeholder="artist1@mail.com, artist2@mail.com"></textarea></label>
+            <div class="actions"><select id="inv-role" aria-label="Role"><option value="artist">Artist</option><option value="viewer">Viewer</option><option value="director">Director</option></select><button id="inv-go" class="ghost" type="button">Add</button></div>
+            <p class="muted">They see the project when they sign in with that email.</p></div></div>
+        <div class="card"><h3>Comments</h3><div id="comments" class="comments"></div>
+          <div class="actions"><input id="c-text" maxlength="500" placeholder="Say something…" aria-label="Comment"><button id="c-go" class="ghost" type="button">Send</button></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+<div id="toast" class="toast" role="status" hidden></div>
+<script type="module" src="site.js"></script><script type="module" src="team.js"></script>
+</body></html>

@@ -41,13 +41,13 @@ function tanpura(ctx, dest, f, t, vol, life) {
   o.start(t); o2.start(t); o.stop(t + life + 0.1); o2.stop(t + life + 0.1);
 }
 
-function bansuri(ctx, dest, nz, f, t, d, orn, prev, vol) {
+function bansuri(ctx, dest, nz, f, t, d, orn, prev, vol, gl) {
   const a = 0.07, rel = 0.14, end = t + d;
   const o1 = ctx.createOscillator(), o2 = ctx.createOscillator(), o3 = ctx.createOscillator(), g = ctx.createGain();
   o1.type = "sine"; o2.type = "triangle"; o3.type = "sine";
   const g2 = ctx.createGain(), g3 = ctx.createGain(); g2.gain.value = 0.16; g3.gain.value = 0.06;
   const start = orn === 1 && prev ? prev : orn === 2 ? f * 1.0595 : f;
-  const glide = orn === 1 ? Math.min(0.16, d * 0.45) : orn === 2 ? 0.07 : 0;
+  const glide = orn === 1 ? (gl || Math.min(0.16, d * 0.45)) : orn === 2 ? 0.07 : 0;
   for (const [o, m] of [[o1, 1], [o2, 2], [o3, 3]]) {
     if (glide) { o.frequency.setValueAtTime(start * m, t); o.frequency.exponentialRampToValueAtTime(f * m, t + glide); } else o.frequency.setValueAtTime(f * m, t);
   }
@@ -65,11 +65,11 @@ function bansuri(ctx, dest, nz, f, t, d, orn, prev, vol) {
   n.start(t); n.stop(end + rel + 0.05);
 }
 
-function harmonium(ctx, dest, f, t, d, orn, prev, vol) {
+function harmonium(ctx, dest, f, t, d, orn, prev, vol, gl) {
   const end = t + d, rel = 0.1;
   const g = ctx.createGain(), lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2300; lp.Q.value = 0.9;
   g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol * 0.8, t + 0.05); g.gain.setValueAtTime(vol * 0.8, Math.max(t + 0.05, end - 0.02)); g.gain.exponentialRampToValueAtTime(0.0002, end + rel);
-  const start = orn === 1 && prev ? prev : f, glide = orn === 1 ? Math.min(0.12, d * 0.4) : 0;
+  const start = orn === 1 && prev ? prev : f, glide = orn === 1 ? (gl || Math.min(0.12, d * 0.4)) : 0;
   for (const [type, m, det] of [["sawtooth", 1, 5], ["sawtooth", 1, -5], ["square", 2, 0]]) {
     const o = ctx.createOscillator(), og = ctx.createGain(); o.type = type; o.detune.value = det; og.gain.value = m === 2 ? 0.12 : 0.5;
     if (glide) { o.frequency.setValueAtTime(start * m, t); o.frequency.exponentialRampToValueAtTime(f * m, t + glide); } else o.frequency.value = f * m;
@@ -78,11 +78,11 @@ function harmonium(ctx, dest, f, t, d, orn, prev, vol) {
   lp.connect(g); g.connect(dest);
 }
 
-function veena(ctx, dest, f, t, d, orn, prev, vol) {
+function veena(ctx, dest, f, t, d, orn, prev, vol, gl) {
   const life = clamp(d * 1.5, 0.7, 2.6), o = ctx.createOscillator(), g = ctx.createGain(), lp = ctx.createBiquadFilter();
   o.setPeriodicWave(wave(ctx, "veena"));
   const start = orn === 1 && prev ? prev : f;
-  if (start !== f) { o.frequency.setValueAtTime(start, t); o.frequency.exponentialRampToValueAtTime(f, t + Math.min(0.1, d * 0.4)); } else o.frequency.value = f;
+  if (start !== f) { o.frequency.setValueAtTime(start, t); o.frequency.exponentialRampToValueAtTime(f, t + (gl || Math.min(0.1, d * 0.4))); } else o.frequency.value = f;
   lp.type = "lowpass"; lp.frequency.setValueAtTime(4200, t); lp.frequency.exponentialRampToValueAtTime(700, t + life);
   g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0002, t + life);
   o.connect(lp); lp.connect(g); g.connect(dest); o.start(t); o.stop(t + life + 0.05);
@@ -120,12 +120,12 @@ export function schedule(ctx, bus, score, t0, from = 0, opts = {}) {
     tanpura(ctx, bus, strings[k % 4], rel(t), (k % 4 === 3 ? 0.13 : 0.1), 4.2);
   }
   let prev = null;
-  for (const [t, f, d, orn] of score.lead) {
+  for (const [t, f, d, orn, vel, gl] of score.lead) {
     if (t + d < from) { prev = f; continue; }
     const st = Math.max(rel(t), t0), dd = d;
-    if (voice === "harmonium") harmonium(ctx, bus, f, st, dd, orn, prev, 0.2);
-    else if (voice === "veena") veena(ctx, bus, f, st, dd, orn, prev, 0.34);
-    else bansuri(ctx, bus, nz, f, st, dd, orn, prev, 0.3);
+    if (voice === "harmonium") harmonium(ctx, bus, f, st, dd, orn, prev, 0.2 * (vel || 1), gl);
+    else if (voice === "veena") veena(ctx, bus, f, st, dd, orn, prev, 0.34 * (vel || 1), gl);
+    else bansuri(ctx, bus, nz, f, st, dd, orn, prev, 0.3 * (vel || 1), gl);
     prev = f;
   }
   for (const [t, bol, cls, vol] of score.tabla) if (t >= from) tabla(ctx, bus, nz, score.sa, bol, cls, rel(t), vol * 0.8);

@@ -12,6 +12,7 @@ from __future__ import annotations
 import math
 import random
 
+from . import autotune, gan, physics
 from .ragas import hz
 from .tala import TALAS, bol_class
 
@@ -28,6 +29,7 @@ class _Phrases:
         self.asc = sorted(set(r["aroha"]))
         self.desc = sorted(set(r["avaroha"]), reverse=True)
         self.stress = {r["vadi"] % 12, r["samvadi"] % 12}
+        self.gan_used, self.gan_score = 0, 0.0
 
     def _stress(self, seq: list[tuple[int, float]]) -> list[tuple[int, float]]:
         return [(n, b * 2 if n % 12 in self.stress and b <= 1 else b) for n, b in seq]
@@ -42,6 +44,16 @@ class _Phrases:
         w = _walk(self.asc, self.rng.choice(lo), top)
         opts = [0.5, 0.5, 1.0] if fast else [0.5, 1.0, 1.0]
         return self._stress([(n, self.rng.choice(opts)) for n in w])
+
+    def gan_phrase(self, fast: bool):
+        g = gan.generate(self.rng, sorted({n % 12 for n in self.r["aroha"] + self.r["avaroha"]}))
+        if not g:
+            return None
+        self.gan_used += 1
+        self.gan_score += g[1]
+        opts = [0.5, 0.5, 1.0] if fast else [0.5, 1.0, 1.0]
+        seq = self._stress([(n, self.rng.choice(opts)) for n in g[0]])
+        return seq
 
     def fall(self, fast: bool) -> list[tuple[int, float]]:
         top = self.rng.choice([self.r["vadi"], self.r["samvadi"], 12 if 12 in self.desc else self.r["vadi"]])
@@ -62,7 +74,7 @@ def _orn(prev: int | None, n: int, rng: random.Random, stress: set[int]) -> int:
 
 
 def compose(raga: dict, tala: str = "", tempo: int = 72, duration: int = 90, lyrics: str = "", seed: int | None = None,
-            sa: float | None = None, lead: str = "bansuri", instrumental: bool = False, poem: bool = False) -> dict:
+            sa: float | None = None, lead: str = "bansuri", instrumental: bool = False, poem: bool = False, human: bool = True) -> dict:
     tala = tala if tala in TALAS else raga.get("tala", "teental")
     T = TALAS[tala]
     sa = float(sa or raga.get("tonic") or 233.0)
@@ -136,7 +148,7 @@ def compose(raga: dict, tala: str = "", tempo: int = 72, duration: int = 90, lyr
                 t += b * beat
             else:
                 gen += 1
-                seq = order[gen % 2](fast)
+                seq = (P.gan_phrase(fast) if rng.random() < 0.3 else None) or order[gen % 2](fast)
                 t += beat * (0.5 if gen % 3 == 0 else 0)
     sections.append({"name": "gat", "t0": round(gat_start, 3), "t1": round(tihai_start, 3)})
 
@@ -178,12 +190,26 @@ def compose(raga: dict, tala: str = "", tempo: int = 72, duration: int = 90, lyr
                 ly.append({"t": round(tt, 3), "dur": round(step * 0.92, 3), "text": text, "tag": ""})
                 tt += step
 
+    physics_meta = {"enabled": False}
+    if human and lead_ev:                      # physics feel, then auto-tune pulls the drift back to the shruti
+        scale = {n % 12 for n in raga["aroha"] + raga["avaroha"]}
+        lead_ev = physics.humanise(lead_ev, beat, seed, P.stress, sa, guard_from=tihai_start)
+        wander = physics.drift_cents(len(lead_ev), seed)
+        body, tail = [], []                     # the tihai keeps exact shruti so the final Sa lands on sam
+        for e, c in zip(lead_ev, wander):
+            (tail if e[0] >= tihai_start - 1e-6 else body).append([e[0], e[1] * (2.0 ** (c / 1200.0) if e[0] < tihai_start - 1e-6 else 1.0), *e[2:]])
+        body, corr = autotune.score(body, sa, scale, 0.75)
+        tail, _ = autotune.score(tail, sa, scale, 1.0)
+        lead_ev = body + tail
+        physics_meta = {"enabled": True, "engine": physics.BACKEND, "rubato_ms": 28, "autotune_cents": round(corr, 2),
+                        "gan_phrases": P.gan_used, "gan_score": round(P.gan_score / P.gan_used, 3) if P.gan_used else None}
+
     second = 7 if any(n % 12 == 7 for n in raga["aroha"]) else 5  # no Pa (Marwa, Puriya): tune the drone to Ma
     return {
         "meta": {"poem": poem, "raga": raga["name"], "tala": tala, "tempo": tempo, "sa": sa, "mood": raga["mood"], "time": raga["time"],
                  "seed": seed, "vadi": raga["vadi"], "samvadi": raga["samvadi"], "kind": raga.get("kind", "classical"),
                  "scale": sorted(set(n % 12 for n in raga["aroha"] + raga["avaroha"])),
-                 "gopi": raga.get("gopi"), "mela": raga.get("melakarta_names"), "aroha": raga["aroha"], "avaroha": raga["avaroha"]},
+                 "physics": physics_meta, "gopi": raga.get("gopi"), "mela": raga.get("melakarta_names"), "aroha": raga["aroha"], "avaroha": raga["avaroha"]},
         "sa": sa, "lead_voice": lead if lead in ("bansuri", "harmonium", "veena") else "bansuri",
         "drone": {"sa": sa, "second": round(hz(sa, second), 2), "low_sa": round(sa / 2, 2), "pluck": round(beat * 1.9, 3)},
         "lead": lead_ev, "tabla": tabla, "lyrics": ly, "sections": sections, "duration": round(total, 2),

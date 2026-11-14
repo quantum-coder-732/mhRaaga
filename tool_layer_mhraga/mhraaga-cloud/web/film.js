@@ -119,4 +119,12 @@ $("f-plan").onclick = async () => { const idea = $("f-idea").value.trim(); if (i
   catch (e) { say(e.message); } finally { $("f-plan").disabled = false; } };
 function voices() { const s = $("o-voice"); if (!("speechSynthesis" in window)) return; s.replaceChildren(new Option("Best match", "")); for (const v of speechSynthesis.getVoices()) s.append(new Option(`${/-IN$/i.test(v.lang) ? "🇮🇳 " : ""}${v.name} (${v.lang})`, v.voiceURI)); }
 if ("speechSynthesis" in window) { voices(); speechSynthesis.onvoiceschanged = voices; }
+// ---- auto-tune the look: measure the frame, then move exposure / contrast / saturation toward a balanced picture
+$("g-auto").onclick = () => { const s = proj.scenes[cur]; if (!s) return; s.grade = { exposure: 0, contrast: 0, saturation: 0, hue: s.grade.hue || 0 }; stop(); draw();
+  const d = cx.getImageData(0, 0, W, H).data; let n = 0, m = 0, q = 0, ch = 0;
+  for (let i = 0; i < d.length; i += 64) { const y = 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]; m += y; q += y * y; ch += Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]); n++; }
+  m /= n; const sd = Math.sqrt(Math.max(0, q / n - m * m)); ch /= n; const cl = (v, a) => Math.max(-a, Math.min(a, +v.toFixed(2)));
+  s.grade.exposure = cl((120 - m) / 255 * 1.3, 0.4); s.grade.contrast = cl((64 - sd) / 64 * 0.5, 0.4); s.grade.saturation = cl((70 - ch) / 70 * 0.4, 0.5);
+  select(cur); say(`Auto-tuned: brightness ${m | 0} → balanced, contrast ${sd | 0}, colour ${ch | 0}. Adjust the sliders to taste.`); };
 newWorld(); load({ title: "Untitled film", scenes: [blank()] }, null); films();
+{ const m = /open=(f-[0-9a-f]{8,16})/.exec(location.hash); if (m) api("/films/" + m[1]).then((p) => { load(p, m[1]); films(); }).catch(() => {}); }

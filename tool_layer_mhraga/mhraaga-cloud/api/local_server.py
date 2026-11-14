@@ -39,7 +39,7 @@ class FileTable:
         d = self._all(); t = self._tbl(d)
         if ConditionExpression and self._k(Item) in t:
             raise h._db.meta.client.exceptions.ConditionalCheckFailedException({"Error": {}}, "put")
-        t[self._k(Item)] = Item; DB.parent.mkdir(exist_ok=True); DB.write_text(json.dumps(d))
+        t[self._k(Item)] = Item; DB.parent.mkdir(exist_ok=True); DB.write_text(json.dumps(d, default=float))
 
     def get_item(self, Key):
         it = self._tbl(self._all()).get(self._k(Key)); return {"Item": dict(it)} if it else {}
@@ -48,10 +48,10 @@ class FileTable:
         d = self._all(); it = self._tbl(d)[self._k(Key)]
         for part in UpdateExpression[4:].split(","):
             f, v = [x.strip() for x in part.split("=")]; it[f] = ExpressionAttributeValues[v]
-        DB.write_text(json.dumps(d))
+        DB.write_text(json.dumps(d, default=float))
 
     def delete_item(self, Key):
-        d = self._all(); self._tbl(d).pop(self._k(Key), None); DB.write_text(json.dumps(d))
+        d = self._all(); self._tbl(d).pop(self._k(Key), None); DB.write_text(json.dumps(d, default=float))
 
     def query(self, KeyConditionExpression=None, **kw):
         owner = KeyConditionExpression._values[1]
@@ -78,13 +78,13 @@ class H(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(b))); self.end_headers(); self.wfile.write(b)
 
     def do_GET(self):
-        if self.path.startswith("/api"): return self._api()
+        if self.path.startswith("/api/"): return self._api()
         p = WEB / (self.path.split("?")[0].lstrip("/") or "index.html")
         if not p.is_file() or WEB not in p.resolve().parents: p = WEB / "index.html"
         b = p.read_bytes(); self.send_response(200); self.send_header("Content-Type", TYPES.get(p.suffix, "application/octet-stream"))
         self.send_header("Permissions-Policy", "microphone=(self)"); self.send_header("Content-Length", str(len(b))); self.end_headers(); self.wfile.write(b)
 
-    do_POST = do_DELETE = do_OPTIONS = _api
+    do_POST = do_PUT = do_DELETE = do_OPTIONS = _api
     def log_message(self, *a): pass
 
 

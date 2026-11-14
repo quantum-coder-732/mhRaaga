@@ -60,7 +60,7 @@ Resources:
     Properties:
       FunctionName: mhraaga-api
       Runtime: python3.12
-      Architectures: [arm64]
+      Architectures: [x86_64]   # the Box2D wheel is built for x86_64
       Handler: handler.handler
       MemorySize: 512
       Timeout: 28

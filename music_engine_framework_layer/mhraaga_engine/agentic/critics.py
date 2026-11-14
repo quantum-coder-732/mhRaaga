@@ -14,7 +14,7 @@ SCRIPT = {"hindi": "ऀ-ॿ", "marathi": "ऀ-ॿ", "sanskrit": "ऀ-ॿ", "telu
 
 def _notes(score: dict) -> list[tuple[float, int, float, int]]:
     sa = score["sa"]
-    return [(t, round(12 * math.log2(hz / sa)), d, o) for t, hz, d, o in score["lead"]]
+    return [(t, round(12 * math.log2(hz / sa)), d, o) for t, hz, d, o, *_ in score["lead"]]
 
 
 def raga_fidelity(score: dict, brief: dict) -> tuple[float, dict]:
