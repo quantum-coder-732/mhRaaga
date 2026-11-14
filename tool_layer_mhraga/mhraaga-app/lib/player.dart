@@ -1,3 +1,4 @@
+import 'dart:math' as m;
 import 'dart:async';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
@@ -9,7 +10,11 @@ import 'synth.dart';
 
 /// One player for the whole app: fetches a song, renders it, plays it, and recites the lyrics on cue.
 class Player extends ChangeNotifier {
-  Player._();
+  Player._() {
+    _tts.setCompletionHandler(() => _ap.setVolume(1.0));
+    _tts.setCancelHandler(() => _ap.setVolume(1.0));
+    _tts.setErrorHandler((_) => _ap.setVolume(1.0));
+  }
   static final Player i = Player._();
 
   final AudioPlayer _ap = AudioPlayer();
@@ -61,8 +66,14 @@ class Player extends ChangeNotifier {
       if (d > 0 && (l['tag'] ?? '') == '' && t >= s && t < s + d) {
         if (k != _lyricIdx) {
           _lyricIdx = k;
+          final text = l['text'] as String;
+          // characters a voice speaks per second at normal rate: Indic scripts vs Latin. Fit the line to its slot, never rush it.
+          final cps = RegExp(r'[\u0900-\u0D7F]').hasMatch(text) ? 11.0 : 14.0;
+          final rate = (text.length / (m.max(1.0, d) * cps)).clamp(0.7, 1.1);
           _tts.setLanguage(_lang);
-          _tts.speak(l['text'] as String);
+          _tts.setSpeechRate((0.5 * rate).clamp(0.3, 0.6));
+          _ap.setVolume(0.55); // the music steps back while the voice speaks
+          _tts.speak(text);
         }
         return;
       }
