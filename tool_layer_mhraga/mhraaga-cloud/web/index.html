@@ -7,10 +7,11 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231b1646'/%3E%3Cpath d='M9 21c4-10 10-10 14 0' stroke='%23f4b942' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css">
 </head><body class="one">
+<nav class="nav" id="appnav" aria-label="Main" hidden></nav>
 <header class="top1"><a class="logo" href="#top"><span class="om">ॐ</span><b>mhRaaga</b></a><span class="sp"></span><span id="who" class="who"></span><a id="sign" class="btn" href="login.html">Sign in</a></header>
 
 <main class="one-main" id="top">
-  <section class="hero1">
+  <section class="hero1" id="home-hero" data-sec>
     <canvas id="wave" width="560" height="560" aria-hidden="true"></canvas>
     <p class="hello" id="hello">Raga music from a sentence</p>
     <h1>Say a feeling.<br>Hear a <em>raga</em>.</h1>
@@ -28,15 +29,17 @@
 
   <section class="gate card" id="gate"><h2>Sign in to create</h2><p class="muted">Songs, poems, stories, people and the studio need an account. Listening to the playlist and exploring ragas are open to everyone.</p><a class="btn" href="login.html">Sign in or create an account</a></section>
 
-  <section class="blk" id="create" data-auth><h2>Create</h2><p class="muted">Songs, spoken poems, speech and translation, plus your library.</p><iframe title="Create" data-src="app.html" allow="microphone"></iframe></section>
-  <section class="blk" id="stories" data-auth><h2>Stories, pravachan &amp; explainers</h2><p class="muted">1 to 30 minutes, written section by section and narrated over a raga.</p><iframe title="Stories" data-src="stories.html" allow="microphone"></iframe></section>
-  <section class="blk" id="people" data-auth><h2>People</h2><p class="muted">Voice samples and speaking styles, with consent.</p><iframe title="People" data-src="people.html" allow="microphone"></iframe></section>
-  <section class="blk" id="film" data-auth><h2>Film studio</h2><p class="muted">Auto-direct a storyboard, then edit scenes, effects and colour, and export.</p><iframe title="Film studio" data-src="film.html"></iframe></section>
-  <section class="blk" id="team" data-auth><h2>Team studio</h2><p class="muted">Up to 150 artists in one shared film or song. Each owns a layer, the director approves.</p><iframe title="Team studio" data-src="team.html"></iframe></section>
-  <section class="blk" id="studio" data-auth><h2>Studio</h2><p class="muted">The rules the AI follows and what it has learned.</p><iframe title="Studio" data-src="studio.html"></iframe></section>
-  <section class="blk" id="ragas"><h2>Explore the ragas</h2><p class="muted">Thirty classical ragas, the 72 melakartas, and Krishna's sixteen thousand.</p><iframe title="Ragas" data-src="ragas.html"></iframe></section>
-  <section class="blk" id="library"><h2>Library &amp; self-improving catalog</h2><p id="learn" class="muted">The agents compose, critics score, and the weakest songs are replaced.</p><div id="tunes" class="tunes"></div></section>
-  <section class="blk" id="app"><div class="card dl"><div><h3>Get the Android app</h3><p>The same studio in your pocket, with microphone access. Allow installs from your browser to install the file.</p></div><a class="btn" href="mhraaga.apk" download>Download APK</a></div></section>
+  <section class="blk" id="create" data-sec data-auth><h2>Create</h2><p class="muted">Songs, spoken poems, speech and translation, plus your library.</p><iframe title="Create" data-src="app.html" allow="microphone"></iframe></section>
+  <section class="blk" id="playlist" data-sec data-auth><h2>Playlist</h2><p class="muted">Every song in the shared playlist. Tap one to play it.</p><iframe title="Playlist" data-src="app.html?view=playlist"></iframe></section>
+  <section class="blk" id="mine" data-sec data-auth><h2>My songs</h2><p class="muted">Everything you have made.</p><iframe title="My songs" data-src="app.html?view=mine"></iframe></section>
+  <section class="blk" id="stories" data-sec data-auth><h2>Stories, pravachan &amp; explainers</h2><p class="muted">1 to 30 minutes, written section by section and narrated over a raga.</p><iframe title="Stories" data-src="stories.html" allow="microphone"></iframe></section>
+  <section class="blk" id="people" data-sec data-auth><h2>People</h2><p class="muted">Voice samples and speaking styles, with consent.</p><iframe title="People" data-src="people.html" allow="microphone"></iframe></section>
+  <section class="blk" id="film" data-sec data-auth><h2>Film studio</h2><p class="muted">Auto-direct a storyboard, then edit scenes, effects and colour, and export.</p><iframe title="Film studio" data-src="film.html"></iframe></section>
+  <section class="blk" id="team" data-sec data-auth><h2>Team studio</h2><p class="muted">Up to 150 artists in one shared film or song. Each owns a layer, the director approves.</p><iframe title="Team studio" data-src="team.html"></iframe></section>
+  <section class="blk" id="studio" data-sec data-auth><h2>Studio</h2><p class="muted">The rules the AI follows and what it has learned.</p><iframe title="Studio" data-src="studio.html"></iframe></section>
+  <section class="blk" id="ragas" data-sec><h2>Explore the ragas</h2><p class="muted">Thirty classical ragas, the 72 melakartas, and Krishna's sixteen thousand.</p><iframe title="Ragas" data-src="ragas.html"></iframe></section>
+  <section class="blk" id="library" data-sec><h2>Library &amp; self-improving catalog</h2><p id="learn" class="muted">The agents compose, critics score, and the weakest songs are replaced.</p><div id="tunes" class="tunes"></div></section>
+  <section class="blk" id="app" data-sec><div class="card dl"><div><h3>Get the Android app</h3><p>The same studio in your pocket, with microphone access. Allow installs from your browser to install the file.</p></div><a class="btn" href="mhraaga.apk" download>Download APK</a></div></section>
 </main>
 <footer class="foot">mhRaaga · music is made in your browser · speech uses your device's own speech service</footer>
 <script type="module" src="home.js"></script><script type="module" src="onepage.js"></script>
