@@ -1,8 +1,17 @@
 // mhRaaga synth: renders a score (from the API) with Web Audio. Same code drives live playback and offline WAV export.
 
-export function reverbIR(ctx, seconds = 2.6) {
-  const n = Math.floor(ctx.sampleRate * seconds), b = ctx.createBuffer(2, n, ctx.sampleRate);
-  for (let c = 0; c < 2; c++) { const d = b.getChannelData(c); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2.6); }
+export function reverbIR(ctx, seconds = 2.4) {
+  // A room, not white noise: 20 ms pre-delay, a few early reflections, then a tail that darkens as it decays (air absorbs highs).
+  const sr = ctx.sampleRate, n = Math.floor(sr * seconds), pre = Math.floor(sr * 0.02), b = ctx.createBuffer(2, n, sr);
+  for (let c = 0; c < 2; c++) {
+    const d = b.getChannelData(c); let lp = 0, seed = 12345 + c * 777;
+    const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 2147483648) - 1;
+    for (let i = pre; i < n; i++) {
+      const x = (i - pre) / (n - pre), a = 0.55 - 0.47 * Math.min(1, x * 1.6);      // low-pass gets heavier with time
+      lp += (rnd() - lp) * a; d[i] = lp * Math.pow(1 - x, 2.4) * 2.2;
+    }
+    for (const [ms, g] of [[11, 0.5], [19, 0.38], [29, 0.3], [41, 0.22], [57, 0.16]]) d[Math.floor(sr * (ms + c * 2.3) / 1000)] += g * (c ? -1 : 1);
+  }
   return b;
 }
 function noiseBuf(ctx) {
@@ -10,24 +19,56 @@ function noiseBuf(ctx) {
   for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   return b;
 }
-function wave(ctx, kind) {
-  const N = 24, re = new Float32Array(N), im = new Float32Array(N);
-  for (let n = 1; n < N; n++) {
-    if (kind === "tanpura") im[n] = (1 / Math.pow(n, 0.75)) * (n >= 4 && n <= 7 ? 1.7 : 1); // jawari: bright 4th-7th partials
-    else if (kind === "veena") im[n] = 1 / Math.pow(n, 1.1);
-    else im[n] = 1 / n; // sawtooth-like
-  }
+// A set of harmonics as a periodic wave. amps[k-1] is partial k.
+function harm(ctx, amps) {
+  const re = new Float32Array(amps.length + 1), im = new Float32Array(amps.length + 1);
+  amps.forEach((a, i) => { im[i + 1] = a; });
   return ctx.createPeriodicWave(re, im);
+}
+
+// Karplus-Strong plucked string, rendered once per pitch into a buffer: a real string model (a delay loop with loss), so the
+// attack, the way highs die first, and the slow beating all happen the way they do on a tanpura or veena.
+// `buzz` adds the jawari bridge: a soft clip that makes the early sound bright and lets it mellow as the string quietens.
+const _pluck = new Map();
+function pluckBuf(ctx, f, secs, rho, bright, buzz, seed) {
+  const key = [ctx.sampleRate, Math.round(f * 8), secs, rho, bright, buzz].join("|");
+  if (_pluck.has(key)) return _pluck.get(key);
+  const sr = ctx.sampleRate, len = Math.floor(sr * secs), want = sr / f - 0.5, N = Math.max(2, Math.floor(want)), frac = want - N;
+  const ap = (1 - frac) / (1 + frac), line = new Float32Array(N + 1), out = ctx.createBuffer(1, len, sr), d = out.getChannelData(0);
+  let s = (seed || 1) >>> 0;
+  const rnd = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 2147483648) - 1;
+  let lp = 0;
+  for (let i = 0; i <= N; i++) { lp += (rnd() - lp) * bright; line[i] = lp * (0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, i / (N * 0.25)))); }  // plucked near one end
+  let idx = 0, prev = 0, apx = 0, apy = 0, peak = 1e-9;
+  for (let i = 0; i < len; i++) {
+    const a = line[idx], b2 = line[(idx + 1) % (N + 1)];
+    let y = rho * (0.5 * a + 0.5 * b2);                                  // loss filter: highs fade first
+    const ay = ap * (y - apy) + apx; apx = y; apy = ay; y = ay;           // fine tuning to the exact pitch
+    line[idx] = y; idx = (idx + 1) % (N + 1);
+    const o = buzz ? Math.tanh(buzz * y) : y;
+    d[i] = o - prev * 0.995; prev = o;                                    // remove DC
+    peak = Math.max(peak, Math.abs(d[i]));
+  }
+  for (let i = 0; i < len; i++) d[i] /= peak;
+  const fade = Math.floor(sr * 0.05); for (let i = 0; i < fade; i++) d[len - 1 - i] *= i / fade;
+  _pluck.set(key, out);
+  return out;
 }
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 
 export function master(ctx, volume = 0.8) {
   const out = ctx.createGain(); out.gain.value = volume;
-  const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3;
+  const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 1.8; comp.attack.value = 0.02; comp.release.value = 0.25;
   const dry = ctx.createGain(), wet = ctx.createGain(), conv = ctx.createConvolver();
-  dry.gain.value = 0.78; wet.gain.value = 0.3; conv.buffer = reverbIR(ctx);
-  const bus = ctx.createGain(), duck = ctx.createGain(), voice = ctx.createGain();   // `duck` lets the music step back while someone speaks
-  bus.connect(duck); duck.connect(dry); duck.connect(conv); conv.connect(wet); dry.connect(comp); wet.connect(comp); comp.connect(out);
+  dry.gain.value = 0.74; wet.gain.value = 0.34; conv.buffer = reverbIR(ctx);
+  const bus = ctx.createGain(), duck = ctx.createGain(), voice = ctx.createGain(); bus.gain.value = 1.5;   // `duck` lets the music step back while someone speaks
+  bus.connect(duck); duck.connect(dry); duck.connect(conv); conv.connect(wet); dry.connect(comp); wet.connect(comp);
+  // Warmth: a soft tape-style saturation (unity for quiet sounds, rounds the peaks) and a gentle roll-off of the digital top end.
+  const sat = ctx.createWaveShaper(), curve = new Float32Array(2049); for (let i = 0; i < 2049; i++) { const x = (i - 1024) / 1024; curve[i] = Math.tanh(1.5 * x) / 1.5; }
+  sat.curve = curve; sat.oversample = "2x";
+  const shelf = ctx.createBiquadFilter(); shelf.type = "highshelf"; shelf.frequency.value = 6500; shelf.gain.value = -4;
+  const low = ctx.createBiquadFilter(); low.type = "lowshelf"; low.frequency.value = 180; low.gain.value = 2;
+  comp.connect(sat); sat.connect(shelf); shelf.connect(low); low.connect(out);
   const lim = ctx.createDynamicsCompressor(); lim.threshold.value = -3; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = 0.002; lim.release.value = 0.12;   // limiter: peaks never clip
   out.connect(lim); lim.connect(ctx.destination);
   voice.gain.value = 1.4; voice.connect(dry); voice.connect(conv);   // the voice joins after the duck, so it is never turned down, and shares the room reverb
@@ -41,12 +82,14 @@ export function duckAt(m, t, dur, level = 0.45) {
 export const duckNow = (ctx, m, level = 0.4) => m.duck.gain.setTargetAtTime(level, ctx.currentTime, 0.1);
 export const releaseNow = (ctx, m) => m.duck.gain.setTargetAtTime(1, ctx.currentTime, 0.5);
 
-// A soft sustained pad: Sa, Pa and the octave as slow detuned sines, so speech has a warm floor without a melody competing with it.
+// A soft sustained pad: Sa, Pa and the octave as slow detuned voices, so speech has a warm floor without a melody competing with it.
 function pad(ctx, dest, sa, t, dur, vol) {
-  const g = ctx.createGain(), lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 900;
+  const g = ctx.createGain(), lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 800;
   g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + dur * 0.35); g.gain.linearRampToValueAtTime(0.0001, t + dur);
-  for (const [m, det] of [[1, -4], [1, 5], [1.5, 0], [2, 3], [0.5, 0]]) {
-    const o = ctx.createOscillator(); o.type = m === 0.5 ? "sine" : "triangle"; o.frequency.value = sa * m; o.detune.value = det; o.connect(g); o.start(t); o.stop(t + dur + 0.1);
+  for (const [m, det] of [[1, -5], [1, 6], [1.5, 0], [2, 3], [0.5, 0]]) {
+    const o = ctx.createOscillator(); o.type = m === 0.5 ? "sine" : "triangle"; o.frequency.value = sa * m; o.detune.value = det;
+    const lfo = ctx.createOscillator(), lg = ctx.createGain(); lfo.frequency.value = 0.13 + Math.random() * 0.2; lg.gain.value = 3; lfo.connect(lg); lg.connect(o.detune); lfo.start(t); lfo.stop(t + dur + 0.1);
+    o.connect(g); o.start(t); o.stop(t + dur + 0.1);
   }
   g.connect(lp); lp.connect(dest);
 }
@@ -60,83 +103,112 @@ export function startBed(ctx, level = 0.5, sa = 233) {
   return { m, stop: () => { try { m.out.gain.setTargetAtTime(0, ctx.currentTime, 0.4); } catch {} } };
 }
 
+// Tanpura: four plucked strings with the jawari buzz. Each pluck is a real string model, and the strings overlap and ring together.
 function tanpura(ctx, dest, f, t, vol, life) {
-  const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), lp = ctx.createBiquadFilter();
-  o.setPeriodicWave(wave(ctx, "tanpura")); o2.setPeriodicWave(wave(ctx, "tanpura"));
-  o.frequency.value = f; o2.frequency.value = f * 1.0016; // slight beating = the shimmer
-  lp.type = "lowpass"; lp.frequency.setValueAtTime(5200, t); lp.frequency.exponentialRampToValueAtTime(900, t + life);
-  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0002, t + life);
-  o.connect(lp); o2.connect(lp); lp.connect(g); g.connect(dest);
-  o.start(t); o2.start(t); o.stop(t + life + 0.1); o2.stop(t + life + 0.1);
+  const src = ctx.createBufferSource(), g = ctx.createGain();
+  src.buffer = pluckBuf(ctx, f, 5, 0.9992, 0.5, 2.6, Math.round(f * 3));
+  src.playbackRate.value = 1 + (Math.random() - 0.5) * 0.0006;
+  g.gain.setValueAtTime(vol * 2.2, t); g.gain.exponentialRampToValueAtTime(0.0002, t + life + 0.8);
+  src.connect(g); g.connect(dest); src.start(t); src.stop(t + life + 0.9);
 }
 
+// Bansuri: a bamboo flute. A blown tube has a strong fundamental, weak overtones, a puff of air at the start, breath noise all through
+// the note, a slow vibrato that arrives after the note has begun, and pitch that is never perfectly still.
 function bansuri(ctx, dest, nz, f, t, d, orn, prev, vol, gl) {
-  const a = 0.07, rel = 0.14, end = t + d;
-  const o1 = ctx.createOscillator(), o2 = ctx.createOscillator(), o3 = ctx.createOscillator(), g = ctx.createGain();
-  o1.type = "sine"; o2.type = "triangle"; o3.type = "sine";
-  const g2 = ctx.createGain(), g3 = ctx.createGain(); g2.gain.value = 0.16; g3.gain.value = 0.06;
-  const start = orn === 1 && prev ? prev : orn === 2 ? f * 1.0595 : f;
-  const glide = orn === 1 ? (gl || Math.min(0.16, d * 0.45)) : orn === 2 ? 0.07 : 0;
-  for (const [o, m] of [[o1, 1], [o2, 2], [o3, 3]]) {
-    if (glide) { o.frequency.setValueAtTime(start * m, t); o.frequency.exponentialRampToValueAtTime(f * m, t + glide); } else o.frequency.setValueAtTime(f * m, t);
-  }
-  const lfo = ctx.createOscillator(), lg = ctx.createGain(); lfo.frequency.value = 5.2; lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(f * 0.006, t + 0.4);
-  lfo.connect(lg); lg.connect(o1.frequency); lfo.start(t); lfo.stop(end + rel);
-  g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + a); g.gain.setValueAtTime(vol * 0.9, Math.max(t + a, end - 0.02)); g.gain.exponentialRampToValueAtTime(0.0002, end + rel);
-  o1.connect(g); o2.connect(g2); g2.connect(g); o3.connect(g3); g3.connect(g);
-  // breath
+  const a = 0.09 + Math.random() * 0.03, rel = 0.18, end = t + d;
+  const body = ctx.createOscillator(), g = ctx.createGain(), tone = ctx.createBiquadFilter();
+  body.setPeriodicWave(harm(ctx, [1, 0.3 + Math.random() * 0.06, 0.1, 0.045, 0.02]));
+  tone.type = "lowpass"; tone.frequency.value = clamp(f * 5.5, 1800, 6000); tone.Q.value = 0.5;
+  const start = orn === 1 && prev ? prev : orn === 2 ? f * 1.0595 : f * 0.985;           // an unslurred note is scooped up into pitch
+  const glide = orn === 1 ? (gl || Math.min(0.16, d * 0.45)) : orn === 2 ? 0.07 : 0.05;
+  body.frequency.setValueAtTime(start, t); body.frequency.exponentialRampToValueAtTime(f, t + glide);
+  const vib = ctx.createOscillator(), vg = ctx.createGain(); vib.frequency.value = 4.7 + Math.random() * 0.9;
+  vg.gain.setValueAtTime(0, t); vg.gain.setValueAtTime(0, t + 0.22); vg.gain.linearRampToValueAtTime(f * 0.0065, t + 0.7);
+  vib.connect(vg); vg.connect(body.frequency); vib.start(t); vib.stop(end + rel);
+  const drift = ctx.createOscillator(), dg = ctx.createGain(); drift.frequency.value = 0.4 + Math.random() * 0.5; dg.gain.value = f * 0.0016; drift.connect(dg); dg.connect(body.frequency); drift.start(t); drift.stop(end + rel);
+  const trem = ctx.createOscillator(), tg = ctx.createGain(), tgain = ctx.createGain(); trem.frequency.value = vib.frequency.value; tg.gain.value = 0.05; tgain.gain.value = 1;   // breath pulses with the vibrato
+  trem.connect(tg); tg.connect(tgain.gain); trem.start(t); trem.stop(end + rel);
+  g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol * 1.12, t + a * 0.8); g.gain.linearRampToValueAtTime(vol * 0.9, t + a + 0.12);
+  g.gain.setValueAtTime(vol * 0.92, Math.max(t + a + 0.12, end - 0.02)); g.gain.exponentialRampToValueAtTime(0.0002, end + rel);
+  body.connect(tone); tone.connect(tgain); tgain.connect(g);
   const n = ctx.createBufferSource(); n.buffer = nz; n.loop = true;
-  const bp = ctx.createBiquadFilter(), ng = ctx.createGain(); bp.type = "bandpass"; bp.frequency.value = clamp(f * 2.2, 500, 4500); bp.Q.value = 1.2;
-  ng.gain.setValueAtTime(0.0001, t); ng.gain.linearRampToValueAtTime(vol * 0.2, t + 0.03); ng.gain.exponentialRampToValueAtTime(vol * 0.05, t + 0.25); ng.gain.exponentialRampToValueAtTime(0.0002, end + rel);
+  const bp = ctx.createBiquadFilter(), ng = ctx.createGain(); bp.type = "bandpass"; bp.frequency.value = clamp(f * 2.4, 700, 4200); bp.Q.value = 0.8;
+  ng.gain.setValueAtTime(0.0001, t); ng.gain.linearRampToValueAtTime(vol * 0.46, t + 0.018); ng.gain.exponentialRampToValueAtTime(vol * 0.11, t + 0.2); ng.gain.setValueAtTime(vol * 0.11, Math.max(t + 0.2, end - 0.05)); ng.gain.exponentialRampToValueAtTime(0.0002, end + rel);
   n.connect(bp); bp.connect(ng); ng.connect(g);
   g.connect(dest);
-  for (const o of [o1, o2, o3]) { o.start(t); o.stop(end + rel + 0.05); }
-  n.start(t); n.stop(end + rel + 0.05);
+  body.start(t); body.stop(end + rel + 0.05); n.start(t, Math.random() * 0.5); n.stop(end + rel + 0.05);
 }
 
+// Harmonium: free reeds driven by bellows. Two reed banks a hair out of tune (the chorus you hear), a lower octave bank, a slow
+// uneven bellows pressure, a wooden body that boosts 700 and 2100 Hz, and the rattle of the reeds under the note.
 function harmonium(ctx, dest, f, t, d, orn, prev, vol, gl) {
-  const end = t + d, rel = 0.1;
-  const g = ctx.createGain(), lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2300; lp.Q.value = 0.9;
-  g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol * 0.8, t + 0.05); g.gain.setValueAtTime(vol * 0.8, Math.max(t + 0.05, end - 0.02)); g.gain.exponentialRampToValueAtTime(0.0002, end + rel);
+  const end = t + d, rel = 0.14, g = ctx.createGain();
+  const body1 = ctx.createBiquadFilter(), body2 = ctx.createBiquadFilter(), lp = ctx.createBiquadFilter();
+  body1.type = "peaking"; body1.frequency.value = 700; body1.Q.value = 1.1; body1.gain.value = 4;
+  body2.type = "peaking"; body2.frequency.value = 2100; body2.Q.value = 1.4; body2.gain.value = 3;
+  lp.type = "lowpass"; lp.frequency.value = 2600; lp.Q.value = 0.5;
+  const reed = []; for (let k = 1; k <= 22; k++) reed.push(1 / Math.pow(k, 0.95) * (k % 2 ? 1 : 0.8));
+  const wv = harm(ctx, reed);
+  const att = 0.07 + Math.random() * 0.03;
+  g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol * 0.8, t + att); g.gain.setValueAtTime(vol * 0.8, Math.max(t + att, end - 0.02)); g.gain.exponentialRampToValueAtTime(0.0002, end + rel);
   const start = orn === 1 && prev ? prev : f, glide = orn === 1 ? (gl || Math.min(0.12, d * 0.4)) : 0;
-  for (const [type, m, det] of [["sawtooth", 1, 5], ["sawtooth", 1, -5], ["square", 2, 0]]) {
-    const o = ctx.createOscillator(), og = ctx.createGain(); o.type = type; o.detune.value = det; og.gain.value = m === 2 ? 0.12 : 0.5;
+  const bell = ctx.createOscillator(), bg = ctx.createGain(); bell.frequency.value = 0.35 + Math.random() * 0.2; bg.gain.value = 0.035 * vol; bell.connect(bg); bg.connect(g.gain); bell.start(t); bell.stop(end + rel);
+  for (const [m, det, lv] of [[1, 6, 0.42], [1, -7, 0.42], [0.5, 1, 0.2], [2, 3, 0.07]]) {
+    const o = ctx.createOscillator(), og = ctx.createGain(); o.setPeriodicWave(wv); o.detune.value = det; og.gain.value = lv;
     if (glide) { o.frequency.setValueAtTime(start * m, t); o.frequency.exponentialRampToValueAtTime(f * m, t + glide); } else o.frequency.value = f * m;
     o.connect(og); og.connect(lp); o.start(t); o.stop(end + rel + 0.05);
   }
-  lp.connect(g); g.connect(dest);
+  lp.connect(body1); body1.connect(body2); body2.connect(g); g.connect(dest);
 }
 
+// Veena / sitar-like lead: a plucked string with the bridge buzz, so every note starts bright and sings down. A meend is a real
+// pitch slide of the sounding string.
 function veena(ctx, dest, f, t, d, orn, prev, vol, gl) {
-  const life = clamp(d * 1.5, 0.7, 2.6), o = ctx.createOscillator(), g = ctx.createGain(), lp = ctx.createBiquadFilter();
-  o.setPeriodicWave(wave(ctx, "veena"));
-  const start = orn === 1 && prev ? prev : f;
-  if (start !== f) { o.frequency.setValueAtTime(start, t); o.frequency.exponentialRampToValueAtTime(f, t + (gl || Math.min(0.1, d * 0.4))); } else o.frequency.value = f;
-  lp.type = "lowpass"; lp.frequency.setValueAtTime(4200, t); lp.frequency.exponentialRampToValueAtTime(700, t + life);
-  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0002, t + life);
-  o.connect(lp); lp.connect(g); g.connect(dest); o.start(t); o.stop(t + life + 0.05);
+  const life = clamp(d * 1.6, 0.8, 3.2), src = ctx.createBufferSource(), g = ctx.createGain(), lp = ctx.createBiquadFilter();
+  src.buffer = pluckBuf(ctx, f, 3.4, 0.9987, 0.62, 1.6, Math.round(f * 7));
+  const from = orn === 1 && prev ? prev / f : 1;
+  if (from !== 1) { src.playbackRate.setValueAtTime(from, t); src.playbackRate.exponentialRampToValueAtTime(1, t + (gl || Math.min(0.12, d * 0.4))); }
+  lp.type = "lowpass"; lp.frequency.setValueAtTime(5200, t); lp.frequency.exponentialRampToValueAtTime(1100, t + life);
+  g.gain.setValueAtTime(vol * 1.5, t); g.gain.setValueAtTime(vol * 1.5, t + Math.min(d, life) * 0.5); g.gain.exponentialRampToValueAtTime(0.0002, t + life);
+  src.connect(lp); lp.connect(g); g.connect(dest); src.start(t); src.stop(t + life + 0.05);
 }
 
+// Tabla by its modes. The dayan (right drum) rings at harmonic partials of Sa that decay at different rates, with a skin slap and a
+// rim click at the start. The bayan (left drum) is a low boom whose pitch rises when the heel presses, with a wet thud.
 function tabla(ctx, dest, nz, sa, bol, cls, t, vol) {
   const day = clamp(sa, 150, 300), bay = clamp(sa / 2, 70, 140), low = bol.toLowerCase();
-  const tone = (f0, f1, dur, v, type = "sine") => {
-    const o = ctx.createOscillator(), g = ctx.createGain(); o.type = type;
-    o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur * 0.4);
+  const jit = (Math.random() - 0.5) * 0.008; t += Math.max(0, jit); vol *= 0.9 + Math.random() * 0.2;       // no two strokes are the same
+  const mode = (f0, f1, dur, v) => {
+    const o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine";
+    o.frequency.setValueAtTime(f0, t); if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + Math.min(0.12, dur * 0.4));
     g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.0002, t + dur); o.connect(g); g.connect(dest); o.start(t); o.stop(t + dur + 0.02);
   };
-  const click = (freq, dur, v) => {
+  const hit = (freq, q, dur, v) => {
     const n = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), g = ctx.createGain(); n.buffer = nz;
-    bp.type = "bandpass"; bp.frequency.value = freq; bp.Q.value = 1.4; g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.0002, t + dur);
+    bp.type = "bandpass"; bp.frequency.value = freq; bp.Q.value = q; g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(0.0002, t + dur);
     n.connect(bp); bp.connect(g); g.connect(dest); n.start(t, Math.random() * 0.5); n.stop(t + dur + 0.01);
   };
-  if (cls === "left" || cls === "both") { // bayan: pitch rises as the heel presses
-    const muted = low === "ka" || low === "kat";
-    tone(bay * (muted ? 1.1 : 1.6), bay, muted ? 0.09 : 0.32, 0.9 * vol); click(250, 0.03, 0.12 * vol);
+  if (cls === "left" || cls === "both") {
+    const muted = low === "ka" || low === "kat" || low === "ke";
+    if (muted) { hit(900, 2, 0.05, 0.3 * vol); mode(bay * 1.2, bay, 0.07, 0.35 * vol); }
+    else { mode(bay * 1.7, bay * 0.92, 0.5, 0.9 * vol); mode(bay * 2.6, bay * 1.9, 0.18, 0.18 * vol); hit(320, 1.2, 0.05, 0.22 * vol); }
   }
-  if (cls === "right" || cls === "both") { // dayan: tuned to Sa; 'na/ti' rim strokes are short, 'tin/ta/dha' ring
-    const rim = ["na", "ti", "ra", "ki", "tu"].includes(low), len = rim ? 0.16 : 0.55;
-    tone(day * 1.04, day, len, 0.55 * vol); tone(day * 2.01, day * 2, len * 0.6, 0.18 * vol); click(rim ? 4200 : 2800, 0.025, 0.22 * vol);
+  if (cls === "right" || cls === "both") {
+    const rim = ["na", "ti", "ra", "ki", "tu", "te"].includes(low), len = rim ? 0.2 : 0.7;
+    const parts = rim ? [[1, 0.5], [2, 0.34], [3, 0.2], [4, 0.1]] : [[1, 0.52], [2, 0.3], [3, 0.2], [4, 0.1], [5, 0.06]];
+    parts.forEach(([k, v], i) => mode(day * k * 1.02, day * k, len / (1 + i * 0.7), v * 0.8 * vol));
+    hit(rim ? 3800 : 2400, 1.3, 0.03, 0.28 * vol); hit(1500, 0.9, 0.018, 0.15 * vol);
   }
+}
+
+// Manjira: a pair of small brass cymbals. Inharmonic metal partials that ring, played softly on the beat in devotional songs.
+function manjira(ctx, dest, nz, t, vol) {
+  for (const [f, v, dur] of [[2870, 1, 0.34], [4130, 0.7, 0.26], [5870, 0.5, 0.2], [7420, 0.3, 0.14]]) {
+    const o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine"; o.frequency.value = f * (1 + (Math.random() - 0.5) * 0.004);
+    g.gain.setValueAtTime(vol * v * 0.06, t); g.gain.exponentialRampToValueAtTime(0.0002, t + dur); o.connect(g); g.connect(dest); o.start(t); o.stop(t + dur + 0.02);
+  }
+  const n = ctx.createBufferSource(), hp = ctx.createBiquadFilter(), g = ctx.createGain(); n.buffer = nz; hp.type = "highpass"; hp.frequency.value = 5000;
+  g.gain.setValueAtTime(vol * 0.05, t); g.gain.exponentialRampToValueAtTime(0.0002, t + 0.05); n.connect(hp); hp.connect(g); g.connect(dest); n.start(t, Math.random() * 0.5); n.stop(t + 0.06);
 }
 
 // Schedule the whole score on ctx. `from` seconds skips ahead (seeking). Returns the audible end time.
@@ -148,15 +220,28 @@ export function schedule(ctx, bus, score, t0, from = 0, opts = {}) {
     if (t < from - 3) continue;
     tanpura(ctx, bus, strings[k % 4], rel(t), (k % 4 === 3 ? 0.13 : 0.1), 4.2);
   }
+  // Music breathes: the alap opens quietly and grows, the gat swells and settles with each phrase and over longer arcs, the tihai is strongest.
+  const secs = score.sections || [], dyn = (t) => {
+    const sec = secs.find((x) => t >= x.t0 && t < x.t1) || secs[secs.length - 1] || { name: "gat", t0: 0, t1: score.duration };
+    const p = clamp((t - sec.t0) / Math.max(1, sec.t1 - sec.t0), 0, 1);
+    if (sec.name === "alap") return 0.5 + 0.38 * p + 0.1 * Math.sin(t * 0.9);
+    if (sec.name === "tihai") return 1.12;
+    return 0.66 + 0.2 * Math.sin(t * 0.38 + 1) + 0.12 * Math.sin(t * 0.083) + 0.14 * Math.sin(Math.PI * p);
+  };
   let prev = null;
   for (const [t, f, d, orn, vel, gl] of score.lead) {
     if (t + d < from) { prev = f; continue; }
-    const st = Math.max(rel(t), t0), dd = d;
-    if (voice === "harmonium") harmonium(ctx, bus, f, st, dd, orn, prev, 0.2 * (vel || 1), gl);
-    else if (voice === "veena") veena(ctx, bus, f, st, dd, orn, prev, 0.34 * (vel || 1), gl);
-    else bansuri(ctx, bus, nz, f, st, dd, orn, prev, 0.3 * (vel || 1), gl);
+    const st = Math.max(rel(t) + (Math.random() - 0.5) * 0.012, t0), dd = d, v = (vel || 1) * dyn(t) * (0.95 + Math.random() * 0.1);   // a player is never exact
+    if (voice === "harmonium") harmonium(ctx, bus, f, st, dd, orn, prev, 0.2 * v, gl);
+    else if (voice === "veena") veena(ctx, bus, f, st, dd, orn, prev, 0.34 * v, gl);
+    else bansuri(ctx, bus, nz, f, st, dd, orn, prev, 0.3 * v, gl);
     prev = f;
   }
-  for (const [t, bol, cls, vol] of score.tabla) if (t >= from) tabla(ctx, bus, nz, score.sa, bol, cls, rel(t), vol * 0.8);
+  const meta = (score.meta || {}), devo = /devot|bhakti|bhajan|krishna|calm|peace|meditat/i.test(String(meta.mood || "")) || meta.kind === "devotional";
+  for (const [t, bol, cls, vol] of score.tabla) {
+    if (t < from) continue;
+    tabla(ctx, bus, nz, score.sa, bol, cls, rel(t), vol * 0.8 * (0.7 + 0.3 * dyn(t)));
+    if (devo && vol >= 0.7) manjira(ctx, bus, nz, rel(t), vol * (0.6 + 0.4 * dyn(t)));
+  }
   return t0 + score.duration - from;
 }

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>mhRaaga for developers</title><meta name="description" content="Architecture of mhRaaga and how to use its API from outside.">
+<link rel="stylesheet" href="dev.css"></head><body><div class="wrap">
+<header><h1>mhRaaga for developers</h1><p class="mut">How it is built, and how to use the API from your own code.</p></header>
+<nav><a href="#arch">Architecture</a><a href="#flow">Song flow</a><a href="#sound">Sound</a><a href="#api">API</a><a href="#score">Score format</a><a href="#run">Run and deploy</a><a href="#limits">Limits</a></nav>
+
+<h2 id="arch">Architecture</h2>
+<svg class="diagram" viewBox="0 0 900 360" role="img" aria-label="Browser and app to CloudFront, then S3 or API Gateway to Lambda, DynamoDB, SSM, OpenRouter">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="box" x="10" y="30" width="170" height="70" rx="8"/><text x="24" y="58">Web app (browser)</text><text class="sub" x="24" y="78">synth.js, Web Audio</text>
+<rect class="box" x="10" y="140" width="170" height="70" rx="8"/><text x="24" y="168">Android app</text><text class="sub" x="24" y="188">Flutter, synth.dart</text>
+<rect class="box" x="10" y="250" width="170" height="70" rx="8"/><text x="24" y="278">Your server</text><text class="sub" x="24" y="298">calls the API (token)</text>
+<rect class="box hot" x="250" y="130" width="170" height="90" rx="8"/><text x="264" y="162">CloudFront</text><text class="sub" x="264" y="182">www.mhraaga.in, HTTPS</text><text class="sub" x="264" y="198">/ site, /api/* API</text>
+<rect class="box" x="500" y="30" width="170" height="70" rx="8"/><text x="514" y="58">S3 (private)</text><text class="sub" x="514" y="78">site, tts audio, catalog</text>
+<rect class="box" x="500" y="140" width="170" height="70" rx="8"/><text x="514" y="168">API Gateway</text><text class="sub" x="514" y="188">throttled, origin secret</text>
+<rect class="box hot" x="500" y="250" width="170" height="80" rx="8"/><text x="514" y="278">Lambda (Python 3.12)</text><text class="sub" x="514" y="298">engine + Box2D + GAN</text><text class="sub" x="514" y="314">x86_64</text>
+<rect class="box" x="730" y="140" width="160" height="60" rx="8"/><text x="744" y="168">DynamoDB</text><text class="sub" x="744" y="186">users, songs</text>
+<rect class="box" x="730" y="215" width="160" height="60" rx="8"/><text x="744" y="243">SSM</text><text class="sub" x="744" y="261">keys, JWT secret</text>
+<rect class="box" x="730" y="290" width="160" height="60" rx="8"/><text x="744" y="318">OpenRouter</text><text class="sub" x="744" y="336">brief, translate, voice</text>
+<path class="arr" marker-end="url(#ah)" d="M180 65 L250 160"/><path class="arr" marker-end="url(#ah)" d="M180 175 L250 175"/><path class="arr" marker-end="url(#ah)" d="M180 285 L250 195"/>
+<path class="arr" marker-end="url(#ah)" d="M420 150 L500 70"/><path class="arr" marker-end="url(#ah)" d="M420 175 L500 175"/><path class="arr" marker-end="url(#ah)" d="M585 210 L585 250"/>
+<path class="arr" marker-end="url(#ah)" d="M670 280 L730 175"/><path class="arr" marker-end="url(#ah)" d="M670 290 L730 245"/><path class="arr" marker-end="url(#ah)" d="M670 310 L730 320"/><path class="arr" marker-end="url(#ah)" d="M585 250 L585 100"/>
+</svg>
+<div class="card"><b>Tiers.</b> <span class="pill">music engine</span> raga grammar, composer, physics, GAN, auto-tune (<code>music_engine_framework_layer/mhraaga_engine</code>) ·
+<span class="pill">cloud</span> <code>api/</code> Lambda, <code>web/</code> site, <code>infra/</code> CloudFormation ·
+<span class="pill">app</span> <code>mhraaga-app</code> Flutter · <span class="pill">factory</span> Kalkee agents that fill the catalog.</div>
+<p>Everything is served from one domain. The browser never talks to another origin (a strict CSP: no inline scripts or styles, <code>connect-src 'self'</code>).
+The Lambda is reachable only through CloudFront, which adds a secret header; the raw API Gateway address returns 403.</p>
+
+<h2 id="flow">How a song is made</h2>
+<ol><li><b>Brief</b>: a language model (OpenRouter) turns the prompt into raga, tala, tempo, mood, language, lead and lyrics. If it fails, keyword rules still produce a song.</li>
+<li><b>Raga</b>: 30 classical ragas, the 72 melakartas, or a gopi raga from 1 to 16000.</li>
+<li><b>Score</b>: <code>compose.py</code> writes alap, gat and tihai (landing exactly on sam). Then the physics (Box2D) adds rubato, note weight, meend glide and drift; the GAN offers phrases; auto-tune pulls pitch back to the shruti.</li>
+<li><b>Sound</b>: the score is plain JSON, rendered on the device by <code>synth.js</code> or <code>synth.dart</code>.</li>
+<li><b>Voice</b>: each lyric line is spoken by a neural voice model, cached in S3 and shared by everyone, then mixed over the music with ducking.</li></ol>
+
+<h2 id="sound">Sound</h2>
+<p>The instruments are physical models, not samples: Karplus-Strong plucked strings for tanpura and veena, a breathy bansuri, a reed harmonium with body resonance, tabla by its modes, a room reverb, tape-style saturation, human timing and phrase dynamics.
+Details and measurements: <code>docs/SOUND.md</code> in the repository.</p>
+
+<h2 id="api">API for external developers</h2>
+<div class="card"><b>Read this first.</b> There are <b>no API keys</b>: you create an account and send its token. Each account has a quota of 30 songs a day.
+Call the API from a <b>server or app</b>, not from another website's JavaScript: no CORS headers are sent, so browsers on other domains are blocked.
+Base URL: <code>https://www.mhraaga.in/api</code>. Throttled to about 20 requests a second; sign-in 2 a second; 8 wrong passwords lock an account for 10 minutes.</div>
+<pre><code>B=https://www.mhraaga.in/api
+TOKEN=$(curl -s $B/auth/login -H 'Content-Type: application/json' \
+   -d '{"email":"me@example.com","password":"..."}' | python3 -c 'import sys,json;print(json.load(sys.stdin)["token"])')
+
+curl -s $B/compose -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+   -d '{"prompt":"a calm morning bhajan to Krishna","language":"hindi","duration":120}' &gt; song.json</code></pre>
+<table><tr><th>Endpoint</th><th>Auth</th><th>Purpose</th></tr>
+<tr><td><code>POST /auth/signup</code></td><td>no</td><td>{name, email, password 8-128} to {token, user}</td></tr>
+<tr><td><code>POST /auth/login</code></td><td>no</td><td>{email, password} to {token, user}; the token lasts 7 days</td></tr>
+<tr><td><code>GET /me</code></td><td>yes</td><td>name, composed_today, daily_limit</td></tr>
+<tr><td><code>GET /ragas</code>, <code>/ragas/{name}</code></td><td>no</td><td>raga catalogue and one raga</td></tr>
+<tr><td><code>GET /playlist</code>, <code>/playlist/{id}</code></td><td>no</td><td>community songs; the second has the full score</td></tr>
+<tr><td><code>POST /compose</code></td><td>yes</td><td>make a song: prompt, lyrics, language, raga, tala, lead, tempo, duration, poem, instrumental, tonic, title</td></tr>
+<tr><td><code>GET /songs</code>, <code>/songs/{id}</code>, <code>DELETE /songs/{id}</code></td><td>yes</td><td>your songs</td></tr>
+<tr><td><code>POST /translate</code></td><td>yes</td><td>{text, to}</td></tr>
+<tr><td><code>POST /tts</code></td><td>yes</td><td>{text (320 chars), lang, style, voice} to {url, seconds, cached}; the url is a WAV on the site</td></tr>
+<tr><td><code>/teams</code>, <code>/films</code>, <code>/people</code>, <code>/story/*</code></td><td>yes</td><td>shared studio and creative tools (see docs/API.md)</td></tr></table>
+<p class="mut">Errors are <code>{"error": "..."}</code> with 400, 401, 403, 404, 409, 429 (limit reached) or 502/503 (a hosted service is busy: retry shortly).
+The full reference is <code>docs/API.md</code> in the repository.</p>
+
+<h2 id="score">Score format</h2>
+<pre><code>{ "sa": 233, "duration": 238.4, "lead_voice": "bansuri",
+  "drone":  {"sa": 233, "second": 349.5, "low_sa": 116.5, "pluck": 1.5},
+  "lead":   [[t, hz, dur, ornament, velocity, glide], ...],   // ornament 0 none, 1 meend, 2 kan
+  "tabla":  [[t, "Dha", "both", 1.0], ...],                    // class: left, right, both
+  "lyrics": [{"t": 40.1, "dur": 3.2, "text": "...", "tag": ""}],
+  "sections": [{"name": "alap", "t0": 0, "t1": 37.9}, {"name": "gat", ...}, {"name": "tihai", ...}],
+  "meta": {"raga": "Bhairavi", "tala": "keherwa", "tempo": 76, "physics": {...}} }</code></pre>
+<p>It is plain JSON, so you can render it with your own engine, export MIDI, or use <code>web/synth.js</code> and <code>mhraaga-app/lib/synth.dart</code> as references.</p>
+
+<h2 id="run">Run and deploy</h2>
+<pre><code>python3 tool_layer_mhraga/mhraaga-cloud/api/local_server.py      # http://localhost:8787, JSON-file DB
+python3 tool_layer_mhraga/mhraaga-cloud/tests/test_engine_api.py # tests
+DOMAIN_NAME=example.com CERT_ARN=... AWS_PROFILE=default bash tool_layer_mhraga/mhraaga-cloud/infra/deploy.sh</code></pre>
+<p>Secrets (OpenRouter key, JWT secret, origin secret) live in SSM Parameter Store, never in the repository.</p>
+
+<h2 id="limits">Limits, stated plainly</h2>
+<ul><li>The instruments are models, not recordings: far less electronic than before, but not a live band.</li>
+<li>The voice speaks the words; it does not sing them to the tune. Indic pronunciation is good but not perfect.</li>
+<li>Composing and speech call paid hosted models, so they are capped per user per day and per site per day.</li>
+<li>There is no API key system or CORS yet. If you need either, deploy your own copy or open an issue.</li></ul>
+</div></body></html>

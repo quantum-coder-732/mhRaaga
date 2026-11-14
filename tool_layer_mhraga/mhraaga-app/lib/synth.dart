@@ -70,36 +70,68 @@ class _Synth {
   final double sa;
   final Float64List buf;
   final _Rng rng = _Rng();
-  final tanTab = _table([for (var n = 1; n < 24; n++) (1 / m.pow(n, 0.75)) * (n >= 4 && n <= 7 ? 1.7 : 1.0)]);
-  final veeTab = _table([for (var n = 1; n < 24; n++) 1 / m.pow(n, 1.1)]);
+  final banTab = _table(const [1, 0.32, 0.1, 0.045, 0.02]);
+  final harmTab = _table([for (var n = 1; n <= 22; n++) 1 / m.pow(n, 0.95) * (n.isOdd ? 1.0 : 0.8)]);
 
-  void tanpura(double f, double t, double vol, double life) {
-    final n = (life * sr).floor(), s0 = (t * sr).round();
-    final mul = m.pow(0.0002 / vol, 1 / ((life - 0.015) * sr)).toDouble();
-    var env = vol, p1 = 0.0, p2 = 0.0, lp = 0.0, a = _lpA(5200);
-    var decaying = false;
+  // Karplus-Strong plucked string (a delay loop with loss), rendered once per pitch. Gives the tanpura and veena a real
+  // string attack, highs that die first and, with `buzz`, the jawari bridge. Cached by pitch.
+  final Map<String, Float64List> _pl = {};
+  Float64List _pluck(double f, double secs, double rho, double bright, double buzz, int seed) {
+    final key = '${(f * 8).round()}|$secs|$rho|$bright|$buzz';
+    final hit = _pl[key];
+    if (hit != null) return hit;
+    final len = (secs * sr).floor(), want = sr / f - 0.5, n = m.max(2, want.floor()), frac = want - n;
+    final ap = (1 - frac) / (1 + frac), line = Float64List(n + 1), out = Float64List(len);
+    final r = _Rng()..s = seed.abs() + 12345;
+    var lp = 0.0;
+    for (var i = 0; i <= n; i++) {
+      lp += (r.next() - lp) * bright;
+      line[i] = lp * (0.5 - 0.5 * m.cos(m.pi * m.min(1.0, i / (n * 0.25))));
+    }
+    var idx = 0, prev = 0.0, apx = 0.0, apy = 0.0, peak = 1e-9;
+    for (var i = 0; i < len; i++) {
+      final a0 = line[idx], b0 = line[(idx + 1) % (n + 1)];
+      var y = rho * (0.5 * a0 + 0.5 * b0);
+      final ay = ap * (y - apy) + apx;
+      apx = y;
+      apy = ay;
+      y = ay;
+      line[idx] = y;
+      idx = (idx + 1) % (n + 1);
+      final o = buzz > 0 ? (m.exp(2 * buzz * y) - 1) / (m.exp(2 * buzz * y) + 1) : y;
+      out[i] = o - prev * 0.995;
+      prev = o;
+      if (out[i].abs() > peak) peak = out[i].abs();
+    }
+    final fade = (sr * 0.05).floor();
+    for (var i = 0; i < len; i++) {
+      out[i] /= peak;
+      if (i >= len - fade) out[i] *= (len - 1 - i) / fade;
+    }
+    return _pl[key] = out;
+  }
+
+  void _play(Float64List w, double t, double gain, double life, {double rate = 1.0, double from = 1.0, double slide = 0.0}) {
+    final s0 = (t * sr).round(), n = m.min((life * sr).floor(), (w.length / rate).floor());
+    var pos = 0.0;
+    final mul = m.pow(0.0002 / gain, 1 / (life * sr)).toDouble();
+    var env = gain;
     for (var i = 0; i < n; i++) {
       final idx = s0 + i;
       if (idx >= buf.length) break;
       final tau = i / sr;
-      if (i % 64 == 0) a = _lpA(5200 * m.pow(900 / 5200, tau / life).toDouble());
-      if (tau < 0.015) {
-        env = vol * tau / 0.015;
-      } else {
-        if (!decaying) {
-          decaying = true;
-          env = vol;
-        }
-        env *= mul;
-      }
-      final x = _read(tanTab, p1) + _read(tanTab, p2);
-      lp += a * (x - lp);
-      if (idx >= 0) buf[idx] += lp * env;
-      p1 += f / sr;
-      if (p1 >= 1) p1 -= 1;
-      p2 += f * 1.0016 / sr;
-      if (p2 >= 1) p2 -= 1;
+      final r = (slide > 0 && tau < slide) ? from * m.pow(1 / from, tau / slide) : 1.0;
+      pos += rate * r;
+      final k = pos.floor();
+      if (k + 1 >= w.length) break;
+      final fr = pos - k;
+      if (idx >= 0) buf[idx] += (w[k] * (1 - fr) + w[k + 1] * fr) * env;
+      env *= mul;
     }
+  }
+
+  void tanpura(double f, double t, double vol, double life) {
+    _play(_pluck(f, 5, 0.9992, 0.5, 2.6, (f * 3).round()), t, vol * 2.2, life + 0.8, rate: 1 + rng.next() * 0.0003);
   }
 
   // vibrato + glide shared by the sustained voices
@@ -110,41 +142,43 @@ class _Synth {
   }
 
   void bansuri(double f, double t, double d, int orn, double? prev, double vol) {
-    const a = 0.07, rel = 0.14;
+    final att = 0.09 + 0.015 * (rng.next() + 1), rel = 0.18;
     final s0 = (t * sr).round(), n = ((d + rel) * sr).floor();
-    final start = orn == 1 && prev != null ? prev : (orn == 2 ? f * 1.0595 : f);
-    final glide = orn == 1 ? m.min(0.16, d * 0.45) : (orn == 2 ? 0.07 : 0.0);
-    final center = _clamp(f * 2.2, 500, 4500);
-    final hi = _lpA(center * 1.6), lo = _lpA(center * 0.6);
-    var ph = 0.0, nh = 0.0, nl = 0.0;
-    final hold = vol * 0.9, relStart = m.max(a, d - 0.02);
+    final start = orn == 1 && prev != null ? prev : (orn == 2 ? f * 1.0595 : f * 0.985);
+    final glide = orn == 1 ? m.min(0.16, d * 0.45) : (orn == 2 ? 0.07 : 0.05);
+    final center = _clamp(f * 2.4, 700, 4200);
+    final hi = _lpA(center * 1.5), lo = _lpA(center * 0.65), tone = _lpA(_clamp(f * 5.5, 1800, 6000));
+    var ph = 0.0, nh = 0.0, nl = 0.0, lt = 0.0;
+    final vr = 4.7 + 0.45 * (rng.next() + 1), dr = 0.4 + 0.25 * (rng.next() + 1);
+    final hold = vol * 0.9, relStart = m.max(att + 0.12, d - 0.02);
     for (var i = 0; i < n; i++) {
       final idx = s0 + i;
       if (idx >= buf.length) break;
       if (idx < 0) continue;
       final tau = i / sr;
-      final ff = _freq(f, start, glide, tau, 1);
+      var ff = (tau < glide) ? start * m.pow(f / start, tau / glide) : f;
+      ff += f * 0.0065 * _clamp((tau - 0.22) / 0.48, 0, 1) * m.sin(_twoPi * vr * tau) + f * 0.0016 * m.sin(_twoPi * dr * tau);
       ph += ff / sr;
       if (ph >= 1) ph -= 1;
-      var env = tau < a ? vol * tau / a : hold;
+      var env = tau < att ? vol * 1.12 * tau / att : (tau < att + 0.12 ? vol * 1.12 - (vol * 0.22) * (tau - att) / 0.12 : hold);
       if (tau > relStart) env = hold * m.pow(0.0002 / hold, (tau - relStart) / (rel + 0.02));
-      final tri = 4 * ((2 * ph) % 1 - 0.5).abs() - 1;
-      final tone = m.sin(_twoPi * ph) + 0.16 * tri + 0.06 * m.sin(_twoPi * 3 * ph);
+      lt += tone * (_read(banTab, ph) - lt);
       final z = rng.next();
       nh += hi * (z - nh);
       nl += lo * (z - nl);
-      final breath = (nh - nl) * 2.6 * (0.05 + 0.15 * m.exp(-tau / 0.08));
-      buf[idx] += env * (tone + breath);
+      final breath = (nh - nl) * 3.0 * (0.11 + 0.35 * m.exp(-tau / 0.06));
+      buf[idx] += env * (lt * (1 + 0.05 * m.sin(_twoPi * vr * tau)) + breath * vol * 0.8);
     }
   }
 
   void harmonium(double f, double t, double d, int orn, double? prev, double vol) {
-    const rel = 0.1;
+    const rel = 0.14;
     final s0 = (t * sr).round(), n = ((d + rel) * sr).floor();
     final start = orn == 1 && prev != null ? prev : f, glide = orn == 1 ? m.min(0.12, d * 0.4) : 0.0;
-    final up = m.pow(2, 5 / 1200).toDouble(), dn = 1 / up, a = _lpA(2300);
+    final up = m.pow(2, 6 / 1200).toDouble(), dn = m.pow(2, -7 / 1200).toDouble(), a = _lpA(2600);
     var p1 = 0.0, p2 = 0.0, p3 = 0.0, l1 = 0.0, l2 = 0.0;
-    final top = vol * 0.8, relStart = m.max(0.05, d - 0.02);
+    final top = vol * 0.8, att = 0.07 + 0.015 * (rng.next() + 1), relStart = m.max(att, d - 0.02), bp = 0.35 + 0.1 * (rng.next() + 1);
+    final w700 = _BP(700, 1.1), w2100 = _BP(2100, 1.4);
     for (var i = 0; i < n; i++) {
       final idx = s0 + i;
       if (idx >= buf.length) break;
@@ -152,41 +186,20 @@ class _Synth {
       final tau = i / sr, ff = _freq(f, start, glide, tau, 0);
       p1 = (p1 + ff * up / sr) % 1;
       p2 = (p2 + ff * dn / sr) % 1;
-      p3 = (p3 + 2 * ff / sr) % 1;
-      var env = tau < 0.05 ? top * tau / 0.05 : top;
+      p3 = (p3 + 0.5 * ff / sr) % 1;
+      var env = tau < att ? top * tau / att : top * (1 + 0.04 * m.sin(_twoPi * bp * tau));
       if (tau > relStart) env = top * m.pow(0.0002 / top, (tau - relStart) / (rel + 0.02));
-      final x = 0.5 * (2 * p1 - 1) + 0.5 * (2 * p2 - 1) + 0.12 * (p3 < 0.5 ? 1 : -1);
+      final x = 0.42 * _read(harmTab, p1) + 0.42 * _read(harmTab, p2) + 0.2 * _read(harmTab, p3);
       l1 += a * (x - l1);
       l2 += a * (l1 - l2);
-      buf[idx] += env * l2 * 0.8;
+      final body = l2 + 1.6 * w700.p(l2) + 1.2 * w2100.p(l2);   // wooden body resonances
+      buf[idx] += env * body * 0.8;
     }
   }
 
   void veena(double f, double t, double d, int orn, double? prev, double vol) {
-    final life = _clamp(d * 1.5, 0.7, 2.6), n = (life * sr).floor(), s0 = (t * sr).round();
-    final start = orn == 1 && prev != null ? prev : f, glide = start != f ? m.min(0.1, d * 0.4) : 0.0;
-    final mul = m.pow(0.0002 / vol, 1 / ((life - 0.008) * sr)).toDouble();
-    var ph = 0.0, lp = 0.0, a = _lpA(4200), env = vol;
-    var decaying = false;
-    for (var i = 0; i < n; i++) {
-      final idx = s0 + i;
-      if (idx >= buf.length) break;
-      if (idx < 0) continue;
-      final tau = i / sr;
-      if (i % 64 == 0) a = _lpA(4200 * m.pow(700 / 4200, tau / life).toDouble());
-      if (tau < 0.008) {
-        env = vol * tau / 0.008;
-      } else {
-        if (!decaying) {
-          decaying = true;
-          env = vol;
-        }
-        env *= mul;
-      }
-      ph = (ph + _freq(f, start, glide, tau, 0) / sr) % 1;
-      lp += a * (_read(veeTab, ph) - lp);
-      buf[idx] += lp * env;
-    }
+    final life = _clamp(d * 1.6, 0.8, 3.2), from = orn == 1 && prev != null ? prev / f : 1.0;
+    _play(_pluck(f, 3.4, 0.9987, 0.62, 1.6, (f * 7).round()), t, vol * 1.5, life, from: from, slide: from != 1.0 ? m.min(0.12, d * 0.4) : 0.0);
   }
 
   void _tone(double t, double f0, double f1, double dur, double v) {
@@ -213,16 +226,27 @@ class _Synth {
 
   void tabla(String bol, String cls, double t, double vol) {
     final day = _clamp(sa, 150, 300), bay = _clamp(sa / 2, 70, 140), low = bol.toLowerCase();
+    t += (rng.next() + 1) * 0.004;
+    vol *= 0.9 + 0.1 * (rng.next() + 1);   // no two strokes are the same
     if (cls == 'left' || cls == 'both') {
-      final muted = low == 'ka' || low == 'kat';
-      _tone(t, bay * (muted ? 1.1 : 1.6), bay, muted ? 0.09 : 0.32, 0.9 * vol);
-      _click(t, 250, 0.03, 0.12 * vol);
+      final muted = low == 'ka' || low == 'kat' || low == 'ke';
+      if (muted) {
+        _click(t, 900, 0.05, 0.15 * vol);
+        _tone(t, bay * 1.2, bay, 0.07, 0.35 * vol);
+      } else {
+        _tone(t, bay * 1.7, bay * 0.92, 0.5, 0.9 * vol);
+        _tone(t, bay * 2.6, bay * 1.9, 0.18, 0.18 * vol);
+        _click(t, 320, 0.05, 0.11 * vol);
+      }
     }
     if (cls == 'right' || cls == 'both') {
-      final rim = const ['na', 'ti', 'ra', 'ki', 'tu'].contains(low), len = rim ? 0.16 : 0.55;
-      _tone(t, day * 1.04, day, len, 0.55 * vol);
-      _tone(t, day * 2.01, day * 2, len * 0.6, 0.18 * vol);
-      _click(t, rim ? 4200 : 2800, 0.025, 0.22 * vol);
+      final rim = const ['na', 'ti', 'ra', 'ki', 'tu', 'te'].contains(low), len = rim ? 0.2 : 0.7;
+      final parts = rim ? const [[1.0, 0.5], [2.0, 0.34], [3.0, 0.2], [4.0, 0.1]] : const [[1.0, 0.52], [2.0, 0.3], [3.0, 0.2], [4.0, 0.1], [5.0, 0.06]];
+      for (var i = 0; i < parts.length; i++) {
+        _tone(t, day * parts[i][0] * 1.02, day * parts[i][0], len / (1 + i * 0.7), parts[i][1] * 0.8 * vol);
+      }
+      _click(t, rim ? 3800 : 2400, 0.03, 0.14 * vol);
+      _click(t, 1500, 0.018, 0.08 * vol);
     }
   }
 }
@@ -233,9 +257,11 @@ Float64List _reverb(Float64List x) {
   for (final (d, g) in [(1687, 0.88), (2053, 0.87), (2377, 0.86), (2833, 0.85)]) {
     final b = Float64List(d);
     var p = 0;
+    var damp = 0.0;
     for (var i = 0; i < x.length; i++) {
       final y = b[p];
-      b[p] = x[i] + y * g;
+      damp += 0.45 * (y - damp);   // air absorbs the highs in the tail
+      b[p] = x[i] + damp * g;
       p = (p + 1) % d;
       wet[i] += y * 0.25;
     }
@@ -251,7 +277,8 @@ Float64List _reverb(Float64List x) {
     }
   }
   for (var i = 0; i < x.length; i++) {
-    out[i] = x[i] * 0.78 + wet[i] * 0.55;
+    final v = x[i] * 0.74 + wet[i] * 0.6;
+    out[i] = (m.exp(3 * v) - 1) / (m.exp(3 * v) + 1) / 1.5;   // soft tape-style saturation
   }
   return out;
 }
@@ -297,9 +324,21 @@ Uint8List renderScore(Map<String, dynamic> score) {
     sy.tanpura(strings[k % 4], t, k % 4 == 3 ? 0.13 : 0.1, 4.2);
   }
   final voice = score['lead_voice'] as String;
+  final secs = (score['sections'] as List?) ?? const [];
+  double dyn(double t) {   // the music breathes: quiet alap that grows, a gat that swells and settles, a strong tihai
+    Map? sec;
+    for (final x in secs) {
+      if (t >= _num(x['t0']) && t < _num(x['t1'])) sec = x as Map;
+    }
+    final name = sec?['name'], t0 = sec == null ? 0.0 : _num(sec['t0']), t1 = sec == null ? duration : _num(sec['t1']);
+    final p = _clamp((t - t0) / m.max(1, t1 - t0), 0, 1);
+    if (name == 'alap') return 0.5 + 0.38 * p + 0.1 * m.sin(t * 0.9);
+    if (name == 'tihai') return 1.12;
+    return 0.66 + 0.2 * m.sin(t * 0.38 + 1) + 0.12 * m.sin(t * 0.083) + 0.14 * m.sin(m.pi * p);
+  }
   double? prev;
   for (final n in score['lead'] as List) {
-    final t = _num(n[0]), f = _num(n[1]), d = _num(n[2]), orn = (n[3] as num).toInt(), vel = n.length > 4 ? _num(n[4]) : 1.0;
+    final t = _num(n[0]) + sy.rng.next() * 0.006, f = _num(n[1]), d = _num(n[2]), orn = (n[3] as num).toInt(), vel = (n.length > 4 ? _num(n[4]) : 1.0) * dyn(_num(n[0])) * (0.95 + 0.05 * (sy.rng.next() + 1));
     if (voice == 'harmonium') {
       sy.harmonium(f, t, d, orn, prev, 0.2 * vel);
     } else if (voice == 'veena') {
@@ -310,7 +349,7 @@ Uint8List renderScore(Map<String, dynamic> score) {
     prev = f;
   }
   for (final b in score['tabla'] as List) {
-    sy.tabla(b[1] as String, b[2] as String, _num(b[0]), _num(b[3]) * 0.8);
+    sy.tabla(b[1] as String, b[2] as String, _num(b[0]), _num(b[3]) * 0.8 * (0.7 + 0.3 * dyn(_num(b[0]))));
   }
   return _wav(_reverb(sy.buf));
 }

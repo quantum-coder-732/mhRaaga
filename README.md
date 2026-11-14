@@ -17,8 +17,7 @@ music_engine_framework_layer/mhraaga_engine/   raga grammar, 72 melakartas, 16,0
    The model has 72x72x3 = 15,552 scale-tonic pairs; ids 1-16000 give **15,947 distinct** ragas (tested), not exactly 16,000.
 3. **Score** - `compose.py` follows the classical form: *alap* (drone, free) -> *gat* (tabla enters, each avartan opens with the pakaḍ on sam,
    vādī/samvādī held longer, meend and kan ornaments) -> *tihai* (closing phrase x3 landing exactly on sam). Output is a small JSON score.
-4. **Sound** - the browser synthesises it (Web Audio): tanpura, lead voice, tabla bols, reverb. Piano-roll view, lyrics, seek, WAV export
-   (instruments only; the browser cannot capture the speech voice).
+4. **Sound** - the browser synthesises it (Web Audio) from physical models: plucked-string tanpura and veena, breathy bansuri, reed harmonium, tabla by its modes, a room reverb, human timing and dynamics. See [docs/SOUND.md](docs/SOUND.md). Piano-roll view, lyrics, seek, MP3/WAV export (with the AI voice).
 5. **Voice** - speech-to-text (mic buttons) and text-to-speech use the browser's Web Speech API (Chrome/Edge/Safari). The browser vendor's
    speech service processes the audio. TTS recites the words over the music; it does not pitch syllables to the raga.
 
@@ -34,7 +33,7 @@ Put `OPENROUTER_API_KEY=...` in `.env` (gitignored) to use the LLM planner; with
 tool_layer_mhraga/mhraaga-cloud/infra/deploy.sh    # AWS profile "mhraaga"; prints the CloudFront URL and writes DEPLOY_URL.txt
 ```
 - **Site**: private S3 bucket behind CloudFront (OAC), HTTPS only, CSP + HSTS + microphone-only Permissions-Policy.
-- **API**: HTTP API -> Lambda (Python 3.12, arm64), reachable only through CloudFront (secret origin header). Throttled routes,
+- **API**: HTTP API -> Lambda (Python 3.12, x86_64), reachable only through CloudFront (secret origin header). Throttled routes,
   30 songs per user per day, 8 wrong passwords lock an account for 10 minutes.
 - **Data**: DynamoDB `mhraaga-users` (scrypt password hashes) and `mhraaga-songs`, on-demand.
 - **Secrets**: OpenRouter key and JWT secret in SSM Parameter Store (SecureString); never in the repo or template.
@@ -90,7 +89,10 @@ What is built and what is deliberately not: [docs/STUDIO.md](docs/STUDIO.md). Us
 The site exports **MP3** (lamejs, vendored as `web/lame.min.js`) and **WAV** in the browser. Shared-playlist songs count plays and downloads
 (`POST /api/playlist/{id}/play|download`, stored in DynamoDB, shown in the list and the app). `tool_layer_mhraga/tools/mediakit.py` converts
 audio and video locally with ffmpeg (mp3/wav/mp4 with a waveform video). Speech-to-text and text-to-speech are the browser's/phone's own services.
-Not built: YouTube download/transcribe/translate (it breaks YouTube's terms and needs server-side ffmpeg and a speech model).
+Not built, on purpose: a YouTube downloader or converter. It breaks YouTube's terms and copies other people's recordings.
 
 ## Secrets
 `.env` and `build/` are gitignored. The keys used during development were pasted into a chat: rotate the AWS key, OpenRouter key and GitHub token.
+
+## Documentation
+All docs are in [docs/](docs/README.md). For developers: [docs/API.md](docs/API.md) and the architecture page at https://www.mhraaga.in/developers.html.
