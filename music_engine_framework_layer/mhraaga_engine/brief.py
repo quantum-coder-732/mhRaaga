@@ -149,3 +149,31 @@ def make_brief(prompt: str, opts: dict | None = None, api_key: str = "", timeout
         brief["lyrics"] = ""
     brief["source"], brief["usage"] = source, usage
     return brief
+
+
+TARGETS = ("hindi", "marathi", "english", "telugu", "gujarati", "kannada", "tamil", "bengali", "punjabi", "urdu", "sanskrit",
+           "spanish", "french", "german", "italian", "portuguese", "russian", "japanese", "korean", "chinese", "arabic")
+
+
+def translate(text: str, to: str, api_key: str, timeout: float = 25.0) -> str:
+    """Translate `text` into `to` (one of TARGETS) with the same OpenRouter models. Raises RuntimeError if no model answers."""
+    if to not in TARGETS:
+        raise ValueError("unsupported language")
+    if not api_key:
+        raise RuntimeError("Translation needs the language model, which is not configured.")
+    msgs = [{"role": "system", "content": f"Translate the user's text into {to}, in its native script. Keep meaning, tone and line breaks. "
+                                          "Reply with the translation only, no notes, no quotes."},
+            {"role": "user", "content": text}]
+    for model in MODELS:
+        try:
+            req = urllib.request.Request("https://openrouter.ai/api/v1/chat/completions", method="POST",
+                                         data=json.dumps({"model": model, "temperature": 0.2, "max_tokens": 2500, "messages": msgs}).encode(),
+                                         headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json",
+                                                  "HTTP-Referer": "https://mhraaga.app", "X-Title": "mhRaaga"})
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                out = json.load(r)["choices"][0]["message"]["content"].strip()
+            if out:
+                return out
+        except Exception as e:
+            print(f"[translate] {model} failed: {type(e).__name__}: {str(e)[:100]}")
+    raise RuntimeError("Translation is unavailable right now. Try again in a moment.")

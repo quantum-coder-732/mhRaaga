@@ -142,12 +142,6 @@ class _RagaDetailState extends State<RagaDetail> {
                       _kv('Vādī · Samvādī', '${kSvara[vadi]} · ${kSvara[sam]}  (${((sam - vadi) % 12 + 12) % 12} semitones)'), _kv('Pakaḍ', pakad.map(_n).join(' ')),
                     ])),
                     const SizedBox(height: 18),
-                    const Text('Sa (tonic)', style: TextStyle(color: kMute, fontSize: 12)),
-                    const SizedBox(height: 6),
-                    Wrap(spacing: 8, children: [
-                      for (final v in [183.0, 233.0, 234.0])
-                        ChoiceChip(label: Text('${v.round()} Hz'), selected: sa == v, selectedColor: kGold, labelStyle: TextStyle(color: sa == v ? const Color(0xFF1A1033) : kMute), onSelected: (_) => setState(() => sa = v)),
-                    ]),
                     const SizedBox(height: 16),
                     FilledButton.icon(
                       onPressed: () => Player.i.preview(widget.spec, r, sa),

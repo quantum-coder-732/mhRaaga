@@ -62,7 +62,7 @@ async function compose(extra = {}) {
   if (prompt.length < 3) { $("status").className = "err"; $("status").textContent = "Describe the song first."; return; }
   $("go").disabled = true; $("surprise").disabled = true; $("status").className = ""; $("status").textContent = "Composing… the planner is choosing raga, tāla and words.";
   try {
-    const bits = styleBits(), kr = tags.has("krishna"), body = { prompt: bits.length ? `${prompt}. Style: ${bits.join(", ")}` : prompt, raga: raga(), tala: $("tala").value, language: $("language").value, lead: leadTag || (kr ? "bansuri" : $("lead").value), tonic: +$("tonic").value || undefined,
+    const bits = styleBits(), kr = tags.has("krishna"), body = { prompt: bits.length ? `${prompt}. Style: ${bits.join(", ")}` : prompt, raga: raga(), title: $("title").value.trim() || undefined, tala: $("tala").value, language: $("language").value, lead: leadTag || (kr ? "bansuri" : $("lead").value), tonic: +$("tonic").value || undefined,
       tempo: +$("tempo").value === 40 ? undefined : +$("tempo").value, duration: +$("dur").value, instrumental: $("instr").checked, lyrics: $("lyrics").value, ...extra };
     song = await api("/compose", { method: "POST", body });
     $("status").textContent = ""; await show(song); refreshLibrary(); me = await api("/me");

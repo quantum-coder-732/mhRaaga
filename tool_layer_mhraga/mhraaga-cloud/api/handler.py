@@ -1,6 +1,7 @@
 """mhRaaga API: one Lambda behind API Gateway (HTTP API). Stdlib + boto3 only (boto3 ships with the Lambda runtime).
 
 Routes (all under /api):
+  POST /translate (auth)  text -> another language
   POST /playlist/{id}/play|download  public counters
   GET  /health, /ragas, /ragas/{name|gopi:N|mela:N}, /playlist, /playlist/{id}   public
   POST /auth/signup, /auth/login            public, returns a 7-day signed token
@@ -26,6 +27,7 @@ import boto3
 from boto3.dynamodb.conditions import Key
 
 from mhraaga_engine import catalog, compose, get_raga, make_brief
+from mhraaga_engine.brief import TARGETS, translate
 from mhraaga_engine.tala import TALAS
 
 USERS = os.environ.get("USERS_TABLE", "mhraaga-users")
@@ -202,6 +204,8 @@ def make_song(event):
             "lead": text(b.get("lead"), 12), "lyrics": text(b.get("lyrics"), 3000), "instrumental": bool(b.get("instrumental")),
             "tempo": int(b["tempo"]) if isinstance(b.get("tempo"), (int, float)) and 40 <= b["tempo"] <= 180 else 0}
     brief = make_brief(prompt, opts, secret("openrouter_key"))
+    if text(b.get("title"), 60):
+        brief["title"] = text(b.get("title"), 60)
     try:
         tonic = float(b["tonic"]) if b.get("tonic") in (183, 233, 234, 183.0, 233.0, 234.0) else None
         raga = get_raga(brief["raga"], tonic)
@@ -306,6 +310,16 @@ def handler(event, context=None):
             status, out = login(event)
         elif (method, path) == ("GET", "/me"):
             status, out = me(event)
+        elif (method, path) == ("POST", "/translate"):
+            u = user_from(event)
+            b = body_of(event)
+            src, to = text(b.get("text"), 2500), text(b.get("to"), 12).lower()
+            if len(src) < 1 or to not in TARGETS:
+                raise ApiError(400, "Give some text and a target language.")
+            try:
+                status, out = 200, {"text": translate(src, to, secret("openrouter_key")), "to": to}
+            except RuntimeError as e:
+                raise ApiError(503, str(e))
         elif (method, path) == ("POST", "/compose"):
             status, out = make_song(event)
         elif (method, path) == ("GET", "/songs"):

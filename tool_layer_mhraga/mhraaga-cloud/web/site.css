@@ -84,3 +84,10 @@ main,.wrap{max-width:1180px}
 .tag{padding:6px 14px;border-radius:99px;background:var(--bg2);border:1px solid var(--line);color:var(--mute);font-size:.85rem;cursor:pointer}
 .tag.on{background:var(--gold);color:#1a1033;border-color:var(--gold);font-weight:700}
 .tag.krishna{border-color:var(--gold);color:var(--gold)}.tag.krishna.on{color:#1a1033}.tag i{font-style:normal;opacity:.7;font-size:.72rem;margin-left:4px}
+
+/* Suno-like create tabs, simple/advanced switch, voice list */
+.tabs{display:flex;border-bottom:1px solid var(--line);margin:-6px -6px 14px}.tabs button{flex:1;background:none;border:0;border-bottom:2px solid transparent;color:var(--mute);padding:12px;font-weight:700;cursor:pointer;border-radius:0}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--ink)}
+.seg{display:inline-flex;background:var(--bg);border-radius:99px;padding:3px;margin-bottom:14px}.seg button{background:none;border:0;color:var(--mute);padding:6px 16px;border-radius:99px;cursor:pointer}.seg button.on{background:var(--bg2);color:var(--ink)}
+.vlist{max-height:260px;overflow:auto;margin-top:8px}.vrow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid #ffffff10;font-size:.85rem}
+#sp-status{color:var(--mute)}

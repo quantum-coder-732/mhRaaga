@@ -35,7 +35,7 @@ class NowPlaying extends StatelessWidget {
                   Text(s['title'] ?? '', textAlign: TextAlign.center, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
                   const SizedBox(height: 8),
                   Wrap(alignment: WrapAlignment.center, spacing: 6, runSpacing: 6, children: [
-                    Chipx('${s['raga']}', gold: true), Chipx('${s['tala']}'), Chipx('${s['tempo']} bpm'), Chipx('Sa ${(score['sa'] as num).round()} Hz'),
+                    Chipx('${s['raga']}', gold: true), Chipx('${s['tala']}'), Chipx('${s['tempo']} bpm'),
                     Chipx('${score['lead_voice']}'), Chipx('vādī ${kSvara[(meta['vadi'] as num).toInt()]} · samvādī ${kSvara[(meta['samvadi'] as num).toInt()]}'),
                   ]),
                   const SizedBox(height: 18),

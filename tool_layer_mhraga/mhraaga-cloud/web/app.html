@@ -14,7 +14,9 @@
 
 <main id="app" hidden>
   <section class="card compose">
-    <h2>Compose</h2>
+    <div class="tabs" role="tablist"><button type="button" class="on" data-tab="songs" role="tab">Songs</button><button type="button" data-tab="speech" role="tab">Speech</button></div>
+    <div id="songs-pane">
+    <div class="seg" id="mode"><button type="button" data-mode="simple">Simple</button><button type="button" data-mode="adv" class="on">Advanced</button></div>
     <label class="field">
       <span>Describe the song <em>(type or speak)</em></span>
       <div class="withmic">
@@ -22,7 +24,7 @@
         <button class="mic" id="mic-prompt" type="button" title="Speak your idea" aria-label="Speak your idea">🎙</button>
       </div>
     </label>
-    <div class="styles" id="styles" role="group" aria-label="Styles">
+    <div class="adv"><div class="styles" id="styles" role="group" aria-label="Styles">
       <span class="lab">Styles</span>
       <button type="button" class="tag krishna" data-tag="krishna">🪈 Krishna flute <i>auto raga</i></button>
       <button type="button" class="tag" data-tag="devotional">devotional</button><button type="button" class="tag" data-tag="dawn">dawn</button>
@@ -31,7 +33,8 @@
       <button type="button" class="tag" data-tag="joyful">joyful</button><button type="button" class="tag" data-tag="bhajan">bhajan</button>
       <button type="button" class="tag" data-lead="bansuri">bansuri</button><button type="button" class="tag" data-lead="veena">veena</button><button type="button" class="tag" data-lead="harmonium">harmonium</button>
     </div>
-    <div class="grid">
+    </div>
+    <div class="grid adv">
       <label class="field"><span>Raga</span>
         <select id="raga"><option value="">Let the AI choose</option><optgroup id="og-classical" label="Classical"></optgroup></select></label>
       <label class="field"><span>Tāla</span><select id="tala"><option value="">Raga's own</option></select></label>
@@ -41,8 +44,9 @@
       <label class="field"><span>Tempo <b id="tempo-v">auto</b></span><input id="tempo" type="range" min="40" max="160" value="40"></label>
       <label class="field"><span>Length <b id="dur-v">90 s</b></span><input id="dur" type="range" min="40" max="180" step="10" value="90"></label>
     </div>
-    <label class="check"><input id="instr" type="checkbox"> Instrumental (no lyrics)</label>
-    <details>
+    <label class="field adv"><span>Song title <em>(optional)</em></span><input id="title" maxlength="60" placeholder="Leave blank and the planner names it"></label>
+    <label class="check adv"><input id="instr" type="checkbox"> Instrumental (no lyrics)</label>
+    <details class="adv">
       <summary>Write my own lyrics</summary>
       <div class="withmic"><textarea id="lyrics" rows="4" maxlength="3000" placeholder="[Mukhda]&#10;…&#10;[Antara]&#10;…"></textarea><button class="mic" id="mic-lyrics" type="button" aria-label="Speak lyrics">🎙</button></div>
     </details>
@@ -50,6 +54,24 @@
       <button id="go" class="primary">Compose</button>
       <button id="surprise" class="ghost" type="button">Surprise me</button>
       <span id="status" role="status" aria-live="polite"></span>
+    </div>
+    </div>
+    <div id="speech-pane" hidden>
+      <label class="field"><span>Script <em>(type, dictate, or paste a transcript, e.g. from a video's “Show transcript”)</em></span>
+        <div class="withmic"><textarea id="sp-text" rows="6" maxlength="2500" placeholder="Write or paste your speech"></textarea><button class="mic" id="sp-mic" type="button" aria-label="Dictate">🎙</button></div></label>
+      <div class="grid">
+        <label class="field"><span>I'm speaking in</span><select id="sp-stt"></select></label>
+        <label class="field"><span>Translate to</span><div class="row"><select id="sp-to"></select><button type="button" id="sp-tr" class="ghost">Translate</button></div></label>
+      </div>
+      <div class="styles" id="sp-tone"><span class="lab">Tone</span></div>
+      <div class="grid">
+        <label class="field"><span>Vocal gender</span><select id="sp-gender"><option value="">Any</option><option value="f">Female</option><option value="m">Male</option></select></label>
+        <label class="field"><span>Voice</span><select id="sp-voice"></select></label>
+        <label class="field"><span>Background music</span><select id="sp-bg"><option value="1">On: raga bed</option><option value="0">Off</option></select></label>
+        <label class="field"><span>Variety <b id="sp-var-v">3</b></span><input id="sp-var" type="range" min="1" max="7" value="3"></label>
+      </div>
+      <div class="actions"><button id="sp-go" class="primary" type="button">Speak</button><button id="sp-stop" class="ghost" type="button">Stop</button><span id="sp-status" role="status"></span></div>
+      <details><summary>Test the voices on this device</summary><div id="sp-voices" class="vlist"></div></details>
     </div>
   </section>
 
@@ -82,5 +104,6 @@
 <div id="toast" class="toast" role="status" hidden></div>
 <script src="lame.min.js"></script><script type="module" src="site.js"></script>
 <script type="module" src="app.js"></script>
+<script type="module" src="speech.js"></script>
 </body>
 </html>

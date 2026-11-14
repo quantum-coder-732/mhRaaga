@@ -76,6 +76,12 @@ First runs lifted the mean critic reward from 0.862 to 0.969. The critics are ru
 ### Look and Krishna flute style
 The site uses a Suno-style sidebar layout with song rows, thumbnails and style tags. “Krishna flute” is a tag on the Create page: it silently picks one of the 16,000 gopī ragas (the number and the Hz values are not shown) and sets the bansurī.
 
+### Speech tab (translate, speak, dictate)
+Create has Songs and Speech tabs (Simple / Advanced like Suno). Speech: type, dictate (21 input languages incl. Indian and foreign), translate with the language model
+(`POST /translate`, sign-in required), choose tone, vocal gender (a best guess from voice names), an Indian or foreign voice, and an optional raga bed under the voice.
+"Test the voices" plays a greeting in every voice the device has. It uses the browser's or phone's own speech engines, so the voices available differ per device.
+YouTube: there is no downloader. Paste a transcript (YouTube's “Show transcript”) or your own text and translate it.
+
 ### Downloads, counters, media tools
 The site exports **MP3** (lamejs, vendored as `web/lame.min.js`) and **WAV** in the browser. Shared-playlist songs count plays and downloads
 (`POST /api/playlist/{id}/play|download`, stored in DynamoDB, shown in the list and the app). `tool_layer_mhraga/tools/mediakit.py` converts
