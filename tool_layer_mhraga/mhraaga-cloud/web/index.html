@@ -1,42 +1,41 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mhRaaga · Raga music from a sentence</title>
-<meta name="description" content="Compose raga music from a sentence: sixteen thousand gopī ragas, tanpura, bansurī and tabla, with speech in and out.">
+<title>mhRaaga · Raga music, poems and stories from a sentence</title>
+<meta name="description" content="Compose raga songs, spoken poems, stories and talks from a sentence. Krishna's flute, 7 languages, speech in and out.">
 <meta name="theme-color" content="#120f2e">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231b1646'/%3E%3Cpath d='M9 21c4-10 10-10 14 0' stroke='%23f4b942' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css">
-</head><body>
-<nav class="nav" data-page="home"></nav>
-<main class="wrap landing">
-  <section class="hero">
-    <div>
-      <h1>Say a feeling.<br>Hear a <em>raga</em>.</h1>
-      <p class="lead">mhRaaga turns a sentence into a full raga performance: alap, gat and tihai over a tanpura, with bansurī, vīṇā or harmonium and live tabla. Pick one of the thirty classical ragas, one of the 72 melakartas, or one of Krishna's sixteen thousand gopī ragas.</p>
-      <div class="cta"><a class="btn" href="app.html">Start composing</a><a class="btn alt" href="app.html?style=krishna">Try the Krishna flute</a></div>
-      <div class="stats"><div><b>16,000</b>gopī ragas</div><div><b>72</b>melakartas</div><div><b>7</b>tālas</div><div><b>7</b>languages</div></div>
-    </div>
-    <div class="art"><canvas id="wave" width="560" height="560" aria-label="Animated sound wave"></canvas></div>
+</head><body class="one">
+<header class="top1"><a class="logo" href="#top"><span class="om">ॐ</span><b>mhRaaga</b></a><span class="sp"></span><span id="who" class="who"></span><a id="sign" class="btn" href="login.html">Sign in</a></header>
+
+<main class="one-main" id="top">
+  <section class="hero1">
+    <canvas id="wave" width="560" height="560" aria-hidden="true"></canvas>
+    <p class="hello" id="hello">Raga music from a sentence</p>
+    <h1>Say a feeling.<br>Hear a <em>raga</em>.</h1>
+    <p class="lead">Songs, spoken poems, stories and talks, in seven languages, over a tanpura, bansurī and tabla. Krishna's flute picks a raga for you from sixteen thousand.</p>
+    <form class="dprompt" id="dform">
+      <textarea id="dtext" rows="2" maxlength="800" placeholder="Describe the song you want to make…" aria-label="Describe the song"></textarea>
+      <div class="drow"><div class="dchips" id="dchips">
+        <button type="button" class="tag krishna" data-s="krishna">🪈 Krishna flute</button><button type="button" class="tag krishna" data-s="poem">📜 Spoken poem</button>
+        <button type="button" class="tag" data-s="devotional">devotional</button><button type="button" class="tag" data-s="dawn">dawn</button><button type="button" class="tag" data-s="rain">rain</button><button type="button" class="tag" data-s="night">night</button></div>
+        <button class="primary" type="submit">Create</button></div>
+    </form>
+    <p class="muted" id="quota"></p>
+    <div class="stats"><div><b>16,000</b>Krishna flute ragas</div><div><b>72</b>melakartas</div><div><b>7</b>languages</div><div><b>30</b>classical ragas</div></div>
   </section>
 
-  <section class="feat">
-    <div class="card"><h3>Rules of the raga</h3><p>Every song follows aroha and avaroha, vādī and samvādī a fourth or fifth apart, the pakaḍ, and ends with a tihai landing exactly on sam.</p></div>
-    <div class="card"><h3>Speak and listen</h3><p>Dictate your idea or your lyrics, and hear the words recited over the music, in Hindi, Marathi, Sanskrit or English.</p></div>
-    <div class="card"><h3>Krishna's flute</h3><p>One tap on “Krishna flute” and a surprise raga is chosen for you from sixteen thousand, played on the bansurī.</p></div>
-    <div class="card"><h3>Yours to keep</h3><p>Sign in, save your songs, download a WAV. Sign-in is protected and limited per day.</p></div>
-  </section>
+  <section class="gate card" id="gate"><h2>Sign in to create</h2><p class="muted">Songs, poems, stories, people and the studio need an account. Listening to the playlist and exploring ragas are open to everyone.</p><a class="btn" href="login.html">Sign in or create an account</a></section>
 
-  <section class="sec"><h2>Ragas for every hour</h2><p>A few from the atlas. Tap one to see its notes, vādī and samvādī.</p>
-    <div class="rg" id="featured"></div></section>
-
-  <section class="sec" id="library"><h2>Library &amp; self-improving catalog</h2>
-    <p id="learn">The agents compose, critics score, and the weakest songs are replaced. Reference tunes below teach the critics what real raga sounds like.</p>
-    <div id="tunes" class="tunes"></div></section>
-
-  <section class="sec" id="app"><div class="card dl">
-    <div><h3>Get the Android app</h3><p>The same raga studio in an app, with microphone access for speaking your ideas. Install from the file below (you may need to allow installs from your browser).</p></div>
-    <a class="btn" href="mhraaga.apk" download>Download APK</a></div></section>
+  <section class="blk" id="create" data-auth><h2>Create</h2><p class="muted">Songs, spoken poems, speech and translation, plus your library.</p><iframe title="Create" data-src="app.html" allow="microphone"></iframe></section>
+  <section class="blk" id="stories" data-auth><h2>Stories, pravachan &amp; explainers</h2><p class="muted">1 to 30 minutes, written section by section and narrated over a raga.</p><iframe title="Stories" data-src="stories.html" allow="microphone"></iframe></section>
+  <section class="blk" id="people" data-auth><h2>People</h2><p class="muted">Voice samples and speaking styles, with consent.</p><iframe title="People" data-src="people.html" allow="microphone"></iframe></section>
+  <section class="blk" id="studio" data-auth><h2>Studio</h2><p class="muted">The rules the AI follows and what it has learned.</p><iframe title="Studio" data-src="studio.html"></iframe></section>
+  <section class="blk" id="ragas"><h2>Explore the ragas</h2><p class="muted">Thirty classical ragas, the 72 melakartas, and Krishna's sixteen thousand.</p><iframe title="Ragas" data-src="ragas.html"></iframe></section>
+  <section class="blk" id="library"><h2>Library &amp; self-improving catalog</h2><p id="learn" class="muted">The agents compose, critics score, and the weakest songs are replaced.</p><div id="tunes" class="tunes"></div></section>
+  <section class="blk" id="app"><div class="card dl"><div><h3>Get the Android app</h3><p>The same studio in your pocket, with microphone access. Allow installs from your browser to install the file.</p></div><a class="btn" href="mhraaga.apk" download>Download APK</a></div></section>
 </main>
-<footer class="foot">mhRaaga · the music is made in your browser · speech uses your browser's own speech service</footer>
-<script type="module" src="site.js"></script><script type="module" src="home.js"></script>
+<footer class="foot">mhRaaga · music is made in your browser · speech uses your device's own speech service</footer>
+<script type="module" src="home.js"></script><script type="module" src="onepage.js"></script>
 </body></html>

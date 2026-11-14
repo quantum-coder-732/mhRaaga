@@ -149,11 +149,11 @@ Resources:
         SecurityHeadersConfig:
           StrictTransportSecurity: {AccessControlMaxAgeSec: 63072000, IncludeSubdomains: true, Preload: true, Override: true}
           ContentTypeOptions: {Override: true}
-          FrameOptions: {FrameOption: DENY, Override: true}
+          FrameOptions: {FrameOption: SAMEORIGIN, Override: true}
           ReferrerPolicy: {ReferrerPolicy: strict-origin-when-cross-origin, Override: true}
           ContentSecurityPolicy:
             Override: true
-            ContentSecurityPolicy: "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'; object-src 'none'"
+            ContentSecurityPolicy: "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'self'; object-src 'none'"
         CustomHeadersConfig:
           Items: [{Header: Permissions-Policy, Value: "microphone=(self), camera=(), geolocation=()", Override: true}]
   Distribution:

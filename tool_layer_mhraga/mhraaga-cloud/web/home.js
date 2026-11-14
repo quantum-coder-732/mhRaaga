@@ -1,4 +1,3 @@
-try { if (localStorage.getItem("mh_token") && !location.hash && !location.search) location.replace("dashboard.html"); } catch {}
 // Landing page: animated wave + featured ragas.
 const c = document.getElementById("wave"), g = c.getContext("2d");
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -16,17 +15,6 @@ function draw(t) {
   if (!reduce) requestAnimationFrame(draw);
 }
 requestAnimationFrame(draw);
-
-fetch("/api/ragas").then((r) => r.json()).then(({ classical }) => {
-  const want = ["Yaman", "Bhairav", "Bhoopali", "Malkauns", "Darbari", "Bageshri", "Todi", "Bhairavi"];
-  const box = document.getElementById("featured");
-  for (const r of classical.filter((x) => want.some((w) => x.name.startsWith(w))).slice(0, 8)) {
-    const a = document.createElement("a"); a.className = "rcard"; a.href = "ragas.html?r=" + encodeURIComponent(r.name);
-    const h = document.createElement("h3"); h.textContent = r.name;
-    const m = document.createElement("div"); m.className = "m"; m.textContent = `${r.time} · ${r.mood}`;
-    a.append(h, m); box.append(a);
-  }
-}).catch(() => {});
 
 // Reference library + the catalog's learning curve (both written by infra/publish_catalog.py).
 fetch("/library/index.json").then((r) => r.json()).then(({ tunes }) => {

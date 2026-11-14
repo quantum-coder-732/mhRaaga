@@ -3,10 +3,10 @@ export const $ = (id) => document.getElementById(id);
 let token = null; try { token = localStorage.getItem("mh_token"); } catch {}
 export const signedIn = () => !!token;
 export async function api(path, { method = "GET", body, auth = true } = {}) {
-  if (auth && !token) { location.href = "login.html?next=" + encodeURIComponent(location.pathname.split("/").pop() + location.hash); throw new Error("Sign in first."); }
+  if (auth && !token) { (window.top || window).location.href = "login.html"; throw new Error("Sign in first."); }
   const r = await fetch("/api" + path, { method, headers: { "Content-Type": "application/json", ...(token ? { Authorization: "Bearer " + token } : {}) }, body: body ? JSON.stringify(body) : undefined });
   const d = await r.json().catch(() => ({}));
-  if (r.status === 401 && auth) { try { localStorage.removeItem("mh_token"); } catch {} location.href = "login.html"; throw new Error("Sign in again."); }
+  if (r.status === 401 && auth) { try { localStorage.removeItem("mh_token"); } catch {} (window.top || window).location.href = "login.html"; throw new Error("Sign in again."); }
   if (!r.ok) throw new Error(d.error || "Error " + r.status);
   return d;
 }

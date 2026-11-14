@@ -24,7 +24,7 @@ const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(
 const chip = (txt, cls = "") => { const c = document.createElement("span"); c.className = "chip " + cls; c.textContent = txt; return c; };
 
 // ---------------------------------------------------------------- auth (sign-in lives on login.html)
-function signOut() { try { stop(); } catch {} token = null; me = null; song = null; store.set("mh_token", null); location.href = "login.html?next=app.html"; }
+function signOut() { try { stop(); } catch {} token = null; me = null; song = null; store.set("mh_token", null); (window.top || window).location.href = "index.html"; }
 
 async function enter() {
   me = await api("/me");
@@ -235,7 +235,7 @@ $("mic-lyrics").onclick = () => dictate($("mic-lyrics"), $("lyrics"));
 // ---------------------------------------------------------------- boot
 (async () => {
   token = store.get("mh_token");
-  if (!token) { location.href = "login.html?next=app.html"; return; }
+  if (!token) { (window.top || window).location.href = "login.html"; return; }
   try { await enter(); } catch { signOut(); return; }
   const qs = new URLSearchParams(location.search), pid = qs.get("play");
   if (qs.get("prompt")) $("prompt").value = qs.get("prompt").slice(0, 800);
