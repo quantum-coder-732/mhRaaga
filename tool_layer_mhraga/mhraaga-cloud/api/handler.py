@@ -362,6 +362,15 @@ def handler(event, context=None):
             status, out = studio.story_outline(user_from(event), body_of(event))
         elif (method, path) == ("POST", "/story/section"):
             status, out = studio.story_section(user_from(event), body_of(event))
+        elif (method, path) == ("GET", "/films"):
+            status, out = studio.films_list(user_from(event))
+        elif (method, path) == ("POST", "/films"):
+            status, out = studio.film_save(user_from(event), None, body_of(event, 400000))
+        elif (method, path) == ("POST", "/film/plan"):
+            status, out = studio.film_plan(user_from(event), body_of(event))
+        elif path.startswith("/films/") and method in ("GET", "PUT", "DELETE"):
+            fid, u = path[7:], user_from(event)
+            status, out = (studio.film_get(u, fid) if method == "GET" else studio.film_save(u, fid, body_of(event, 400000)) if method == "PUT" else studio.film_delete(u, fid))
         elif (method, path) == ("POST", "/compose"):
             status, out = make_song(event)
         elif (method, path) == ("GET", "/songs"):

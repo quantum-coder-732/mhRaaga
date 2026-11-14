@@ -307,3 +307,97 @@ def story_section(u, b):
     if len(text_) < 40:
         raise h.ApiError(503, "That section came out empty. Try again.")
     return 200, {"text": text_[:4000], "points": [str(x)[:80] for x in d.get("points", [])][:4], "calls_left": STORY_DAILY_CALLS - int(u.get("sn", 0))}
+
+
+# ------------------------------------------------------------------ film studio (projects + AI storyboard)
+EFFECTS = ["glow", "vignette", "grain", "blur", "lightleak", "particles", "kenburns", "fade", "bw", "warm", "cool"]
+MAX_PROJECT_BYTES = 330_000
+
+
+def _fkey(u): return f"film#{u['email']}"
+
+
+def _clean_scene(s: dict) -> dict:
+    h = H()
+    fx = [e for e in (s.get("effects") or []) if e in EFFECTS][:8]
+    bg = s.get("bg") if isinstance(s.get("bg"), dict) else {}
+    img = bg.get("image") if isinstance(bg.get("image"), str) and bg["image"].startswith("data:image/") else ""
+    return {"title": h.text(s.get("title"), 80), "text": h.text(s.get("text"), 300), "narration": h.text(s.get("narration"), 1200),
+            "duration": max(2.0, min(60.0, float(s.get("duration", 6) or 6))), "effects": fx,
+            "bg": {"c1": h.text(bg.get("c1"), 9) or "#241046", "c2": h.text(bg.get("c2"), 9) or "#120f2e", "image": img},
+            "grade": {k: max(-1.0, min(1.0, float((s.get("grade") or {}).get(k, 0) or 0))) for k in ("exposure", "contrast", "saturation", "hue")},
+            "mood": h.text(s.get("mood"), 30)}
+
+
+def _clean_project(b: dict) -> dict:
+    h = H()
+    scenes = [_clean_scene(s) for s in (b.get("scenes") or []) if isinstance(s, dict)][:60]
+    for s in scenes:
+        check(s["title"], s["text"], s["narration"])
+    p = {"title": h.text(b.get("title"), 80) or "Untitled film", "language": h.text(b.get("language"), 12) or "english", "scenes": scenes,
+         "music": bool(b.get("music", True)), "size": h.text(b.get("size"), 10) or "16:9"}
+    if len(json.dumps(p)) > MAX_PROJECT_BYTES:
+        raise h.ApiError(413, "This project is too big to save. Use smaller or fewer images.")
+    return p
+
+
+def films_list(u):
+    h = H()
+    from boto3.dynamodb.conditions import Key  # noqa: PLC0415
+    r = h._songs.query(KeyConditionExpression=Key("owner").eq(_fkey(u)), Limit=60, ProjectionExpression="id,title,updated,nscenes")
+    return 200, {"films": sorted(r["Items"], key=lambda x: x.get("updated", ""), reverse=True)}
+
+
+def film_save(u, fid, b):
+    h = H()
+    p = _clean_project(b)
+    if fid is None:
+        if len(films_list(u)[1]["films"]) >= 40:
+            raise h.ApiError(400, "You can keep up to 40 films.")
+        fid = "f-" + uuid.uuid4().hex[:10]
+    elif not re.fullmatch(r"f-[0-9a-f]{8,16}", fid):
+        raise h.ApiError(400, "Bad film id.")
+    now = datetime.now(timezone.utc).isoformat()
+    h._songs.put_item(Item={"owner": _fkey(u), "id": fid, "title": p["title"], "updated": now, "nscenes": len(p["scenes"]), "project": json.dumps(p, ensure_ascii=False, separators=(",", ":"))})
+    return 200, {"id": fid, "updated": now}
+
+
+def film_get(u, fid):
+    h = H()
+    it = h._songs.get_item(Key={"owner": _fkey(u), "id": fid}).get("Item") if re.fullmatch(r"f-[0-9a-f]{8,16}", fid) else None
+    if not it:
+        raise h.ApiError(404, "Film not found.")
+    return 200, {"id": fid, **json.loads(it["project"]), "updated": it.get("updated")}
+
+
+def film_delete(u, fid):
+    h = H()
+    if not re.fullmatch(r"f-[0-9a-f]{8,16}", fid):
+        raise h.ApiError(400, "Bad film id.")
+    h._songs.delete_item(Key={"owner": _fkey(u), "id": fid})
+    return 200, {"deleted": fid}
+
+
+def film_plan(u, b):
+    """Auto-prompt: expand a short idea into a director's brief, then a storyboard of scenes with effects. Two model calls, both rule-checked."""
+    h = H()
+    idea, lang = h.text(b.get("prompt"), 500), h.text(b.get("language"), 12).lower() or "english"
+    style = h.text(b.get("style"), 40)
+    secs = max(20, min(600, int(b.get("seconds", 60) or 60)))
+    if len(idea) < 4:
+        raise h.ApiError(400, "Describe the film in a sentence.")
+    check(idea, style)
+    take_story_calls(u, 2)
+    key = h.secret("openrouter_key")
+    brief = chat("You are a film director's assistant. Expand the idea into a tight production brief: theme, emotional arc, visual motifs, colour palette, pacing, and what each part should feel like. "
+                 "Be concrete, kind and truthful; no real people's likeness or voices. Under 180 words.", f"Idea: {idea}\nStyle: {style or 'cinematic'}\nLength: {secs} seconds", key, max_tokens=500, timeout=12.0)
+    n = max(3, min(14, round(secs / 6)))
+    out = chat(f"You turn a production brief into a storyboard of exactly {n} scenes totalling about {secs} seconds, in {lang}. Reply with ONE JSON object: "
+               '{"title": str, "scenes": [{"title": str, "text": on-screen caption under 12 words, "narration": 1 to 3 spoken sentences, "duration": seconds, '
+               f'"effects": subset of {EFFECTS}, "bg": {{"c1": "#rrggbb", "c2": "#rrggbb"}}, "grade": {{"exposure": -0.3..0.3, "contrast": -0.3..0.3, "saturation": -0.5..0.5, "hue": -0.2..0.2}}, "mood": one word}}]}}. '
+               "Vary effects across scenes, start gently, build, and end with a fade.", f"Brief:\n{brief}", key, max_tokens=2400, as_json=True, timeout=14.0)
+    d = json.loads(out[out.index("{"): out.rindex("}") + 1])
+    proj = _clean_project({"title": d.get("title") or idea[:60], "language": lang, "scenes": d.get("scenes", []), "music": True})
+    if not proj["scenes"]:
+        raise h.ApiError(503, "Could not plan that. Try again.")
+    return 200, {**proj, "brief": brief, "calls_left": STORY_DAILY_CALLS - int(u.get("sn", 0))}

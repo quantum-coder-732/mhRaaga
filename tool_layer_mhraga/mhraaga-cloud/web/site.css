@@ -136,3 +136,14 @@ body.one{padding-left:0!important;padding-bottom:0!important}
 html.embed,html.embed body{background:transparent!important}html.embed .wrap,html.embed main{padding:0!important;max-width:none!important}
 html.embed .pg>h1,html.embed .pg>h1+p{display:none}html.embed .pg{padding-top:0}html.embed .toast{bottom:20px}
 html.embed #gopi-sec,html.embed .foot,html.embed .sec>h1,html.embed .sec>h1+p{display:none}
+
+/* film studio */
+.filmbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.filmbar input{flex:1;min-width:180px}.filmbar select{max-width:260px}
+.editor{display:grid;grid-template-columns:190px minmax(0,1fr) 270px;gap:14px;align-items:start}
+.slist{display:flex;flex-direction:column;gap:6px;max-height:470px;overflow:auto}.sitem{text-align:left;padding:9px 10px;border-radius:10px;background:var(--bg2);border:1px solid var(--line);color:var(--ink);cursor:pointer;display:flex;flex-direction:column}
+.sitem.on{border-color:var(--gold)}.sitem small{color:var(--mute)}
+.stagebox canvas#cv{width:100%;border-radius:14px;border:1px solid var(--line);background:#000;cursor:pointer;display:block}
+.stagebox .transport{display:flex;gap:8px;align-items:center;margin:10px 0}.stagebox .transport input{flex:1}.scope{width:256px;height:64px;border-radius:8px;border:1px solid var(--line);margin-top:8px}
+.insp{display:flex;flex-direction:column;gap:2px}.insp h3{margin:10px 0 4px;font-size:1rem}
+@media(max-width:1000px){.editor{grid-template-columns:1fr}}
+.insp input[type=color]{height:42px;padding:3px}

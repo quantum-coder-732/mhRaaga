@@ -74,10 +74,13 @@ $("go").onclick = () => compose();
 $("surprise").onclick = () => { tags.add("krishna"); paintTags(); if ($("prompt").value.trim().length < 3) $("prompt").value = "Krishna's flute calling the gopis at dawn"; compose(); };
 
 // ---------------------------------------------------------------- library
+let plistAll = false;
 async function refreshPlaylist() {
   try {
     const { songs } = await api("/playlist"); const ul = $("plist"); ul.replaceChildren(); $("pempty").hidden = songs.length > 0; $("pempty").textContent = "No songs yet.";
-    for (const s of songs) { const li = document.createElement("li"); const b = document.createElement("button"); b.type = "button";
+    const shown = plistAll ? songs : songs.slice(0, 12);
+    if (songs.length > 12) { const m = document.createElement("li"); const mb = document.createElement("button"); mb.type = "button"; mb.className = "ghost"; mb.textContent = plistAll ? "Show fewer" : `Show all ${songs.length}`; mb.onclick = () => { plistAll = !plistAll; refreshPlaylist(); }; m.append(mb); ul.append(m); }
+    for (const s of shown) { const li = document.createElement("li"); const b = document.createElement("button"); b.type = "button";
       b.className = "srow"; const l = document.createElement("span"); l.textContent = s.title; const r = document.createElement("small"); r.textContent = `${s.raga} · ${s.language || ""} · ${s.tala}`; b.append(thumb(s), textBox(l, r), counts(s));
       b.onclick = async () => { try { song = await api("/playlist/" + s.id); song._shared = true; await show(song); await play(); api(`/playlist/${s.id}/play`, { method: "POST" }).then(refreshPlaylist).catch(() => {}); } catch (e) { toast(e.message); } };
       li.append(b); ul.append(li); }

@@ -7,6 +7,7 @@ import 'now_playing.dart';
 import 'player.dart';
 import 'playlist.dart';
 import 'ragas.dart';
+import 'studio.dart';
 import 'ui.dart';
 
 /// Set by the Ragas browser to jump to Compose with a raga preselected.
@@ -71,6 +72,7 @@ class _ShellState extends State<Shell> {
         libKey.currentState?.reload();
       }),
       const RagasScreen(),
+      const StudioScreen(),
     ];
     return Scaffold(
       body: SafeArea(
@@ -105,6 +107,7 @@ class _ShellState extends State<Shell> {
           NavigationDestination(icon: Icon(Icons.library_music_outlined), selectedIcon: Icon(Icons.library_music), label: 'My songs'),
           NavigationDestination(icon: Icon(Icons.auto_awesome_outlined), selectedIcon: Icon(Icons.auto_awesome), label: 'Compose'),
           NavigationDestination(icon: Icon(Icons.graphic_eq), selectedIcon: Icon(Icons.graphic_eq), label: 'Ragas'),
+          NavigationDestination(icon: Icon(Icons.movie_creation_outlined), selectedIcon: Icon(Icons.movie_creation), label: 'Studio'),
         ],
       ),
     );
