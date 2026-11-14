@@ -73,5 +73,11 @@ Kalkee's Shapley module splits the reward across the agents so each one learns w
 Songs go to S3 `catalog/`, the 14 reference tunes to S3 `library/` (shown on the landing page), and the shared playlist is synced.
 First runs lifted the mean critic reward from 0.862 to 0.969. The critics are rule-based, not listeners. Details and limits: [docs/AGENTIC_ARCHITECTURE.md](docs/AGENTIC_ARCHITECTURE.md).
 
+### Downloads, counters, media tools
+The site exports **MP3** (lamejs, vendored as `web/lame.min.js`) and **WAV** in the browser. Shared-playlist songs count plays and downloads
+(`POST /api/playlist/{id}/play|download`, stored in DynamoDB, shown in the list and the app). `tool_layer_mhraga/tools/mediakit.py` converts
+audio and video locally with ffmpeg (mp3/wav/mp4 with a waveform video). Speech-to-text and text-to-speech are the browser's/phone's own services.
+Not built: YouTube download/transcribe/translate (it breaks YouTube's terms and needs server-side ffmpeg and a speech model).
+
 ## Secrets
 `.env` and `build/` are gitignored. The keys used during development were pasted into a chat: rotate the AWS key, OpenRouter key and GitHub token.

@@ -60,6 +60,7 @@
     <div class="actions">
       <label class="check"><input id="sing" type="checkbox" checked> Voice: sing the lyrics aloud</label>
       <select id="voice" aria-label="Voice"></select>
+      <button id="mp3" class="ghost" type="button">Download MP3</button>
       <button id="wav" class="ghost" type="button">Download WAV</button>
       <button id="del" class="ghost danger" type="button">Delete</button>
     </div>
@@ -72,7 +73,7 @@
 </main>
 
 <div id="toast" class="toast" role="status" hidden></div>
-<script type="module" src="site.js"></script>
+<script src="lame.min.js"></script><script type="module" src="site.js"></script>
 <script type="module" src="app.js"></script>
 </body>
 </html>

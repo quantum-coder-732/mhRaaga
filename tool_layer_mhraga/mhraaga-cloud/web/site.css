@@ -38,3 +38,13 @@ footer.foot{padding:30px clamp(16px,4vw,40px);color:var(--mute);font-size:.85rem
 .tunes{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:14px}
 .tune{background:var(--card,rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;font-size:13px;display:grid;gap:8px}
 .tune audio{width:100%}
+
+/* polish: depth, motion, focus */
+.card,.rcard,.tune{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.card:hover,.rcard:hover,.tune:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(0,0,0,.35);border-color:rgba(244,185,66,.45)}
+.btn,button{transition:transform .15s ease,filter .15s ease}
+.btn:hover,button:not(:disabled):hover{transform:translateY(-1px);filter:brightness(1.1)}
+:focus-visible{outline:2px solid #f4b942;outline-offset:3px}
+#plist small,#songs small{opacity:.8;letter-spacing:.2px}
+#plist li button{border-radius:12px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}

@@ -1,6 +1,7 @@
 """mhRaaga API: one Lambda behind API Gateway (HTTP API). Stdlib + boto3 only (boto3 ships with the Lambda runtime).
 
 Routes (all under /api):
+  POST /playlist/{id}/play|download  public counters
   GET  /health, /ragas, /ragas/{name|gopi:N|mela:N}, /playlist, /playlist/{id}   public
   POST /auth/signup, /auth/login            public, returns a 7-day signed token
   GET  /me, /songs, /songs/{id}             signed in
@@ -225,7 +226,7 @@ PLAYLIST_OWNER = "playlist#common"   # the shared, read-only playlist everybody 
 def list_songs(event, owner=None):
     owner = owner or user_from(event)["email"]
     r = _songs.query(KeyConditionExpression=Key("owner").eq(owner), ScanIndexForward=False, Limit=100,
-                     ProjectionExpression="id,title,raga,tala,tempo,mood,#l,#d,created,#s,prompt",
+                     ProjectionExpression="id,title,raga,tala,tempo,mood,#l,#d,created,#s,prompt,plays,downloads",
                      ExpressionAttributeNames={"#l": "language", "#s": "source", "#d": "duration"})
     return 200, {"songs": r["Items"]}
 
@@ -277,6 +278,15 @@ def handler(event, context=None):
             status, out = 200, catalog()
         elif (method, path) == ("GET", "/playlist"):
             status, out = list_songs(event, PLAYLIST_OWNER)
+        elif method == "POST" and re.fullmatch(r"/playlist/[0-9a-f-]{10,40}/(play|download)", path):
+            _, _, sid, what = path.split("/")
+            field = "plays" if what == "play" else "downloads"
+            try:
+                r = _songs.update_item(Key={"owner": PLAYLIST_OWNER, "id": sid}, UpdateExpression=f"ADD {field} :one",
+                                       ConditionExpression="attribute_exists(id)", ExpressionAttributeValues={":one": 1}, ReturnValues="UPDATED_NEW")
+            except Exception:
+                raise ApiError(404, "Song not found.")
+            status, out = 200, {field: int(r["Attributes"][field])}
         elif method == "GET" and path.startswith("/playlist/"):
             sid = path[10:]
             if not re.fullmatch(r"[0-9a-f-]{10,40}", sid):

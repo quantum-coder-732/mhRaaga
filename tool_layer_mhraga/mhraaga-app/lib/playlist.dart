@@ -80,7 +80,7 @@ class _Tile extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(s['title'] ?? '', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: active ? kGold : kInk)),
               const SizedBox(height: 2),
-              Text('${s['raga']} · ${s['tala']} · ${s['tempo']} bpm', style: const TextStyle(color: kMute, fontSize: 12)),
+              Text('${s['raga']} · ${s['tala']} · ${s['tempo']} bpm · ▶ ${s['plays'] ?? 0}', style: const TextStyle(color: kMute, fontSize: 12)),
               Text('${s['mood']}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: kMute, fontSize: 12)),
             ]),
           ),

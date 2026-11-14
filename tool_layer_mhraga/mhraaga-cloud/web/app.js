@@ -73,8 +73,8 @@ async function refreshPlaylist() {
   try {
     const { songs } = await api("/playlist"); const ul = $("plist"); ul.replaceChildren(); $("pempty").hidden = songs.length > 0; $("pempty").textContent = "No songs yet.";
     for (const s of songs) { const li = document.createElement("li"); const b = document.createElement("button"); b.type = "button";
-      const l = document.createElement("span"); l.textContent = s.title; const r = document.createElement("small"); r.textContent = `${s.raga} · ${s.tala}`; b.append(l, r);
-      b.onclick = async () => { try { song = await api("/playlist/" + s.id); await show(song); await play(); } catch (e) { toast(e.message); } };
+      const l = document.createElement("span"); l.textContent = s.title; const r = document.createElement("small"); r.textContent = `${s.raga} · ${s.tala} · ▶ ${s.plays || 0} · ⬇ ${s.downloads || 0}`; b.append(l, r);
+      b.onclick = async () => { try { song = await api("/playlist/" + s.id); song._shared = true; await show(song); await play(); api(`/playlist/${s.id}/play`, { method: "POST" }).then(refreshPlaylist).catch(() => {}); } catch (e) { toast(e.message); } };
       li.append(b); ul.append(li); }
   } catch { $("pempty").textContent = "Playlist unavailable."; }
 }
@@ -173,21 +173,37 @@ function draw(t) {
   const sec = sc.sections.find((s) => t >= s.t0 && t < s.t1); if (sec) { g.fillStyle = "#f4b942"; g.font = "12px system-ui"; g.fillText(sec.name.toUpperCase(), W - 70, 14); }
 }
 
-// ---------------------------------------------------------------- wav export
-$("wav").onclick = async () => {
-  if (!song) return; $("wav").disabled = true; toast("Rendering WAV (instruments only; the speech voice can't be captured by the browser)…");
+// ---------------------------------------------------------------- audio export (WAV, MP3) + download counter
+async function renderStereo() {
+  const sr = 44100, D = song.score.duration + 2, oc = new OfflineAudioContext(2, Math.ceil(sr * D), sr), m = master(oc, 0.9);
+  schedule(oc, m.bus, song.score, 0.05, 0); const buf = await oc.startRendering();
+  return { sr, L: buf.getChannelData(0), R: buf.getChannelData(1) };
+}
+const pcm16 = (f) => { const o = new Int16Array(f.length); for (let i = 0; i < f.length; i++) o[i] = Math.max(-1, Math.min(1, f[i])) * 32767; return o; };
+function save(blob, ext) {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = song.title.replace(/[^\p{L}\p{N}]+/gu, "_").slice(0, 40) + "." + ext; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  if (song._shared) api(`/playlist/${song.id}/download`, { method: "POST" }).then(refreshPlaylist).catch(() => {});
+}
+async function exportAudio(kind) {
+  if (!song) return; const btn = $(kind); btn.disabled = true; toast(`Rendering ${kind.toUpperCase()} (instruments only; the browser can't capture the speech voice)…`);
   try {
-    const sr = 44100, D = song.score.duration + 2, oc = new OfflineAudioContext(2, Math.ceil(sr * D), sr), m = master(oc, 0.9);
-    schedule(oc, m.bus, song.score, 0.05, 0); const buf = await oc.startRendering();
-    const L = buf.getChannelData(0), R = buf.getChannelData(1), n = L.length, dv = new DataView(new ArrayBuffer(44 + n * 4));
-    const w = (o, s) => [...s].forEach((c, i) => dv.setUint8(o + i, c.charCodeAt(0)));
-    w(0, "RIFF"); dv.setUint32(4, 36 + n * 4, true); w(8, "WAVEfmt "); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 2, true);
-    dv.setUint32(24, sr, true); dv.setUint32(28, sr * 4, true); dv.setUint16(32, 4, true); dv.setUint16(34, 16, true); w(36, "data"); dv.setUint32(40, n * 4, true);
-    for (let i = 0; i < n; i++) { dv.setInt16(44 + i * 4, Math.max(-1, Math.min(1, L[i])) * 32767, true); dv.setInt16(46 + i * 4, Math.max(-1, Math.min(1, R[i])) * 32767, true); }
-    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([dv], { type: "audio/wav" }));
-    a.download = song.title.replace(/[^\w]+/g, "_").slice(0, 40) + ".wav"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-  } catch (e) { toast("WAV export failed: " + e.message); } finally { $("wav").disabled = false; }
-};
+    const { sr, L, R } = await renderStereo(), l = pcm16(L), r = pcm16(R);
+    if (kind === "mp3") {
+      const enc = new lamejs.Mp3Encoder(2, sr, 160), parts = [];
+      for (let i = 0; i < l.length; i += 1152) { const b = enc.encodeBuffer(l.subarray(i, i + 1152), r.subarray(i, i + 1152)); if (b.length) parts.push(new Uint8Array(b)); }
+      const e = enc.flush(); if (e.length) parts.push(new Uint8Array(e));
+      save(new Blob(parts, { type: "audio/mpeg" }), "mp3");
+    } else {
+      const n = l.length, dv = new DataView(new ArrayBuffer(44 + n * 4)), w = (o, s) => [...s].forEach((c, i) => dv.setUint8(o + i, c.charCodeAt(0)));
+      w(0, "RIFF"); dv.setUint32(4, 36 + n * 4, true); w(8, "WAVEfmt "); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 2, true);
+      dv.setUint32(24, sr, true); dv.setUint32(28, sr * 4, true); dv.setUint16(32, 4, true); dv.setUint16(34, 16, true); w(36, "data"); dv.setUint32(40, n * 4, true);
+      for (let i = 0; i < n; i++) { dv.setInt16(44 + i * 4, l[i], true); dv.setInt16(46 + i * 4, r[i], true); }
+      save(new Blob([dv], { type: "audio/wav" }), "wav");
+    }
+  } catch (e) { toast(`${kind.toUpperCase()} export failed: ` + e.message); } finally { btn.disabled = false; }
+}
+$("wav").onclick = () => exportAudio("wav"); $("mp3").onclick = () => exportAudio("mp3");
 $("del").onclick = async () => {
   if (!song || !confirm(`Delete "${song.title}"?`)) return;
   try { await api("/songs/" + song.id, { method: "DELETE" }); stop(); $("player").hidden = true; song = null; await refreshLibrary(); toast("Deleted."); } catch (e) { toast(e.message); }

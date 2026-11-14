@@ -140,6 +140,7 @@ class Player extends ChangeNotifier {
     loading = false;
     notifyListeners();
     await _ap.play(DeviceFileSource(f.path));
+    if (shared) Api.call('POST', '/playlist/${full['id']}/play', auth: false, body: {}).catchError((_) => <String, dynamic>{});
   }
 
   Future<void> toggle() async {
