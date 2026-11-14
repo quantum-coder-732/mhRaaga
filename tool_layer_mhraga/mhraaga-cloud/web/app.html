@@ -22,15 +22,22 @@
         <button class="mic" id="mic-prompt" type="button" title="Speak your idea" aria-label="Speak your idea">🎙</button>
       </div>
     </label>
+    <div class="styles" id="styles" role="group" aria-label="Styles">
+      <span class="lab">Styles</span>
+      <button type="button" class="tag krishna" data-tag="krishna">🪈 Krishna flute <i>auto raga</i></button>
+      <button type="button" class="tag" data-tag="devotional">devotional</button><button type="button" class="tag" data-tag="dawn">dawn</button>
+      <button type="button" class="tag" data-tag="rain">rain</button><button type="button" class="tag" data-tag="night">night</button>
+      <button type="button" class="tag" data-tag="romantic">romantic</button><button type="button" class="tag" data-tag="meditative">meditative</button>
+      <button type="button" class="tag" data-tag="joyful">joyful</button><button type="button" class="tag" data-tag="bhajan">bhajan</button>
+      <button type="button" class="tag" data-lead="bansuri">bansuri</button><button type="button" class="tag" data-lead="veena">veena</button><button type="button" class="tag" data-lead="harmonium">harmonium</button>
+    </div>
     <div class="grid">
       <label class="field"><span>Raga</span>
-        <select id="raga"><option value="">Let the AI choose</option><optgroup id="og-classical" label="Classical"></optgroup><option value="gopi">Krishna's gopī raga (1–16000)</option><option value="mela">Melakarta (1–72)</option></select></label>
-      <label class="field" id="num-wrap" hidden><span id="num-label">Gopī number</span>
-        <div class="row"><input id="num" type="number" min="1" max="16000" value="1"><button type="button" id="dice" class="ghost" title="Random">🎲</button></div></label>
+        <select id="raga"><option value="">Let the AI choose</option><optgroup id="og-classical" label="Classical"></optgroup></select></label>
       <label class="field"><span>Tāla</span><select id="tala"><option value="">Raga's own</option></select></label>
       <label class="field"><span>Language</span><select id="language"><option value="">Auto</option><option>hindi</option><option>marathi</option><option>sanskrit</option><option>english</option><option>telugu</option><option>gujarati</option><option>kannada</option><option>tamil</option></select></label>
       <label class="field"><span>Lead</span><select id="lead"><option value="">Auto</option><option value="bansuri">Bansurī (flute)</option><option value="harmonium">Harmonium</option><option value="veena">Vīṇā</option></select></label>
-      <label class="field"><span>Sa (tonic)</span><select id="tonic"><option value="">Raga's own</option><option value="183">183 Hz · 732 ÷ 4</option><option value="233">233 Hz · 932 ÷ 4</option><option value="234">234 Hz · 936 ÷ 4</option></select></label>
+      <input id="tonic" type="hidden" value="">
       <label class="field"><span>Tempo <b id="tempo-v">auto</b></span><input id="tempo" type="range" min="40" max="160" value="40"></label>
       <label class="field"><span>Length <b id="dur-v">90 s</b></span><input id="dur" type="range" min="40" max="180" step="10" value="90"></label>
     </div>
@@ -69,7 +76,7 @@
 
   <section class="card library"><h2>Community playlist</h2><ul id="plist"></ul><p id="pempty" class="muted">Loading…</p></section>
 
-  <section class="card library"><h2>Your songs</h2><ul id="songs"></ul><p id="empty" class="muted">Nothing yet. Compose your first raga.</p></section>
+  <section class="card library" id="library"><h2>Your songs</h2><ul id="songs"></ul><p id="empty" class="muted">Nothing yet. Compose your first raga.</p></section>
 </main>
 
 <div id="toast" class="toast" role="status" hidden></div>

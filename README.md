@@ -73,6 +73,9 @@ Kalkee's Shapley module splits the reward across the agents so each one learns w
 Songs go to S3 `catalog/`, the 14 reference tunes to S3 `library/` (shown on the landing page), and the shared playlist is synced.
 First runs lifted the mean critic reward from 0.862 to 0.969. The critics are rule-based, not listeners. Details and limits: [docs/AGENTIC_ARCHITECTURE.md](docs/AGENTIC_ARCHITECTURE.md).
 
+### Look and Krishna flute style
+The site uses a Suno-style sidebar layout with song rows, thumbnails and style tags. “Krishna flute” is a tag on the Create page: it silently picks one of the 16,000 gopī ragas (the number and the Hz values are not shown) and sets the bansurī.
+
 ### Downloads, counters, media tools
 The site exports **MP3** (lamejs, vendored as `web/lame.min.js`) and **WAV** in the browser. Shared-playlist songs count plays and downloads
 (`POST /api/playlist/{id}/play|download`, stored in DynamoDB, shown in the list and the app). `tool_layer_mhraga/tools/mediakit.py` converts

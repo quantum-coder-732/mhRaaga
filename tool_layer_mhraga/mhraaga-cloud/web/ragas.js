@@ -23,7 +23,6 @@ async function show(spec) {
   row("Avaroha (descent)", r.avaroha.map(label).join(" "));
   row("Vādī · Samvādī", `${NAMES[r.vadi]} · ${NAMES[r.samvadi]}  (${mod(r.samvadi - r.vadi)} semitones apart)`);
   row("Pakaḍ", r.pakad.map(label).join(" "));
-  if (r.tonic) row("Own tonic", r.tonic + " Hz");
   const p = new URLSearchParams(); p.set("raga", spec); $("compose").href = "app.html?" + p;
   if (r.tonic && [183, 233, 234].includes(Math.round(r.tonic))) $("tonic").value = String(Math.round(r.tonic));
   $("detail").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "nearest" });

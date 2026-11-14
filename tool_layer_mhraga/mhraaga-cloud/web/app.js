@@ -16,6 +16,10 @@ async function api(path, { method = "GET", body } = {}) {
   return data;
 }
 function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => (t.hidden = true), 3500); }
+function thumb(s) { let h = 0; for (const c of s.title + s.raga) h = (h * 31 + c.codePointAt(0)) % 360; const d = document.createElement("div"); d.className = "th";
+  d.style.background = `linear-gradient(135deg,hsl(${h},70%,45%),hsl(${(h + 60) % 360},65%,22%))`; d.textContent = s.raga.startsWith("Gop") ? "🪈" : "♪"; return d; }
+function textBox(a, b) { const d = document.createElement("div"); d.className = "tx"; d.append(a, b); return d; }
+function counts(s) { const d = document.createElement("div"); d.className = "cn"; d.textContent = `▶ ${s.plays || 0}  ⬇ ${s.downloads || 0}`; return d; }
 const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 const chip = (txt, cls = "") => { const c = document.createElement("span"); c.className = "chip " + cls; c.textContent = txt; return c; };
 
@@ -38,17 +42,18 @@ async function loadCatalog() {
 }
 
 // ---------------------------------------------------------------- compose form
-function raga() {
-  const v = $("raga").value;
-  return v === "gopi" ? `gopi:${clampInt($("num").value, 1, 16000)}` : v === "mela" ? `mela:${clampInt($("num").value, 1, 72)}` : v;
-}
-const clampInt = (v, a, b) => Math.min(b, Math.max(a, parseInt(v, 10) || a));
-$("raga").onchange = () => {
-  const v = $("raga").value; $("num-wrap").hidden = !(v === "gopi" || v === "mela");
-  $("num").max = v === "mela" ? 72 : 16000; $("num-label").textContent = v === "mela" ? "Melakarta number" : "Gopī number";
-  if (v === "gopi" && !$("num").value) $("num").value = 1;
+// Styles: toggle tags. "Krishna flute" quietly picks one of the sixteen thousand gopī ragas and sets the bansurī.
+const tags = new Set(); let forced = "", leadTag = "";
+function paintTags() { document.querySelectorAll("#styles .tag").forEach((b) => { const on = b.dataset.lead ? leadTag === b.dataset.lead : tags.has(b.dataset.tag); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); }); }
+document.getElementById("styles").onclick = (e) => {
+  const b = e.target.closest(".tag"); if (!b) return;
+  if (b.dataset.lead) leadTag = leadTag === b.dataset.lead ? "" : b.dataset.lead;
+  else { const t = b.dataset.tag; tags.has(t) ? tags.delete(t) : tags.add(t); if (t === "krishna" && !tags.has(t)) forced = ""; }
+  paintTags();
 };
-$("dice").onclick = () => { $("num").value = 1 + Math.floor(Math.random() * ($("raga").value === "mela" ? 72 : 16000)); };
+const rnd = (n) => 1 + Math.floor(Math.random() * n);
+function raga() { return forced || (tags.has("krishna") ? `gopi:${rnd(16000)}` : $("raga").value); }
+function styleBits() { return [...tags].filter((t) => t !== "krishna"); }
 $("tempo").oninput = () => ($("tempo-v").textContent = +$("tempo").value === 40 ? "auto" : $("tempo").value + " bpm");
 $("dur").oninput = () => ($("dur-v").textContent = $("dur").value + " s");
 
@@ -57,7 +62,7 @@ async function compose(extra = {}) {
   if (prompt.length < 3) { $("status").className = "err"; $("status").textContent = "Describe the song first."; return; }
   $("go").disabled = true; $("surprise").disabled = true; $("status").className = ""; $("status").textContent = "Composing… the planner is choosing raga, tāla and words.";
   try {
-    const body = { prompt, raga: raga(), tala: $("tala").value, language: $("language").value, lead: $("lead").value, tonic: +$("tonic").value || undefined,
+    const bits = styleBits(), kr = tags.has("krishna"), body = { prompt: bits.length ? `${prompt}. Style: ${bits.join(", ")}` : prompt, raga: raga(), tala: $("tala").value, language: $("language").value, lead: leadTag || (kr ? "bansuri" : $("lead").value), tonic: +$("tonic").value || undefined,
       tempo: +$("tempo").value === 40 ? undefined : +$("tempo").value, duration: +$("dur").value, instrumental: $("instr").checked, lyrics: $("lyrics").value, ...extra };
     song = await api("/compose", { method: "POST", body });
     $("status").textContent = ""; await show(song); refreshLibrary(); me = await api("/me");
@@ -66,14 +71,14 @@ async function compose(extra = {}) {
   } catch (e) { $("status").className = "err"; $("status").textContent = e.message; } finally { $("go").disabled = false; $("surprise").disabled = false; }
 }
 $("go").onclick = () => compose();
-$("surprise").onclick = () => { $("raga").value = "gopi"; $("raga").onchange(); $("dice").click(); if ($("prompt").value.trim().length < 3) $("prompt").value = "Krishna's flute calling the gopis at dawn"; compose(); };
+$("surprise").onclick = () => { tags.add("krishna"); paintTags(); if ($("prompt").value.trim().length < 3) $("prompt").value = "Krishna's flute calling the gopis at dawn"; compose(); };
 
 // ---------------------------------------------------------------- library
 async function refreshPlaylist() {
   try {
     const { songs } = await api("/playlist"); const ul = $("plist"); ul.replaceChildren(); $("pempty").hidden = songs.length > 0; $("pempty").textContent = "No songs yet.";
     for (const s of songs) { const li = document.createElement("li"); const b = document.createElement("button"); b.type = "button";
-      const l = document.createElement("span"); l.textContent = s.title; const r = document.createElement("small"); r.textContent = `${s.raga} · ${s.tala} · ▶ ${s.plays || 0} · ⬇ ${s.downloads || 0}`; b.append(l, r);
+      b.className = "srow"; const l = document.createElement("span"); l.textContent = s.title; const r = document.createElement("small"); r.textContent = `${s.raga} · ${s.language || ""} · ${s.tala}`; b.append(thumb(s), textBox(l, r), counts(s));
       b.onclick = async () => { try { song = await api("/playlist/" + s.id); song._shared = true; await show(song); await play(); api(`/playlist/${s.id}/play`, { method: "POST" }).then(refreshPlaylist).catch(() => {}); } catch (e) { toast(e.message); } };
       li.append(b); ul.append(li); }
   } catch { $("pempty").textContent = "Playlist unavailable."; }
@@ -83,7 +88,7 @@ async function refreshLibrary() {
   for (const s of songs) {
     const li = document.createElement("li"); if (song && song.id === s.id) li.className = "on";
     const b = document.createElement("button"); const l = document.createElement("span"), r = document.createElement("small");
-    l.textContent = s.title; r.textContent = `${s.raga} · ${s.tala} · ${fmt(s.duration)}`; b.append(l, r);
+    b.className = "srow"; l.textContent = s.title; r.textContent = `${s.raga} · ${s.tala} · ${fmt(s.duration)}`; b.append(thumb(s), textBox(l, r));
     b.onclick = async () => { try { song = await api("/songs/" + s.id); await show(song); await play(); } catch (e) { toast(e.message); } };
     li.append(b); ul.append(li);
   }
@@ -93,8 +98,8 @@ async function refreshLibrary() {
 let ctx = null, bus = null, volNode = null, startAt = 0, offset = 0, playing = false, raf = 0, timers = [];
 async function show(s) {
   stop(); song = s; $("player").hidden = false; $("s-title").textContent = s.title;
-  const m = s.score.meta, chips = $("chips"); chips.replaceChildren(chip(m.raga, "gold"), chip(m.tala), chip(m.tempo + " bpm"), chip(`Sa ${m.sa} Hz`), chip(m.mood));
-  $("s-info").textContent = m.gopi ? `Gopī ${m.gopi} of 16,000 · ascent from Mela ${m.mela?.[0] ?? ""}, descent from ${m.mela?.[1] ?? ""} · vādī ${SVARA[m.vadi % 12]}, samvādī ${SVARA[m.samvadi % 12]} · ${m.time}`
+  const m = s.score.meta, chips = $("chips"); chips.replaceChildren(...(m.gopi ? [chip("🪈 Krishna flute", "gold")] : []), chip(m.gopi ? "mystery raga" : m.raga, "gold"), chip(m.tala), chip(m.tempo + " bpm"), chip(m.mood));
+  $("s-info").textContent = m.gopi ? `A Krishna flute raga, chosen for you from sixteen thousand · vādī ${SVARA[m.vadi % 12]}, samvādī ${SVARA[m.samvadi % 12]} · ${m.time}`
     : `vādī ${SVARA[m.vadi % 12]}, samvādī ${SVARA[m.samvadi % 12]} · best at ${m.time} · planned by ${s.source === "fallback" ? "built-in rules" : s.source}`;
   $("lyrics-out").textContent = (s.brief.lyrics || "(instrumental)"); $("lyric-now").textContent = ""; offset = 0; draw(0); $("clock").textContent = "0:00"; $("seek").value = 0;
   for (const li of $("songs").children) li.classList.remove("on");
@@ -232,7 +237,11 @@ $("mic-lyrics").onclick = () => dictate($("mic-lyrics"), $("lyrics"));
   token = store.get("mh_token");
   if (!token) { location.href = "login.html?next=app.html"; return; }
   try { await enter(); } catch { signOut(); return; }
-  const q = new URLSearchParams(location.search).get("raga");
+  const qs = new URLSearchParams(location.search), pid = qs.get("play");
+  if (qs.get("lead")) $("lead").value = qs.get("lead");
+  if (pid && /^[0-9a-f-]{10,40}$/.test(pid)) { try { song = await api("/playlist/" + pid); song._shared = true; await show(song); await play(); api(`/playlist/${pid}/play`, { method: "POST" }).catch(() => {}); } catch {} }
+  const q = qs.get("raga");
   if (q) { const known = [...$("raga").options].some((o) => o.value === q);
-    if (known) $("raga").value = q; else { const m = /^(gopi|mela):(\d+)$/.exec(q); if (m) { $("raga").value = m[1]; $("raga").onchange(); $("num").value = m[2]; } } }
+    if (known) $("raga").value = q; else if (/^(gopi|mela):\d+$/.test(q)) { forced = q; if (q.startsWith("gopi")) tags.add("krishna"); paintTags(); } }
+  if (qs.get("style") === "krishna") { tags.add("krishna"); paintTags(); }
 })();
