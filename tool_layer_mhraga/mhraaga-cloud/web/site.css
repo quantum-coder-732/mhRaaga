@@ -96,3 +96,15 @@ main,.wrap{max-width:1180px}
 #player.poem{background:radial-gradient(500px 300px at 70% 40%,#5a3a8f55,transparent),linear-gradient(160deg,#241046,#120f2e)}
 #player.poem .lyric-now{font-family:Georgia,"Noto Serif Devanagari",serif;font-style:italic;color:#e9c46a;font-size:clamp(1.3rem,3vw,2rem);min-height:3.2em;text-align:center;display:grid;place-items:center;transition:opacity .4s}
 #player.poem #roll{opacity:.35}
+
+/* studio pages */
+.pg{padding-top:26px;padding-bottom:40px;display:flex;flex-direction:column;gap:18px}.pg h1{margin:0}.pg .muted{color:var(--mute)}
+.hub{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}.tile{text-decoration:none;color:var(--ink)}.tile h3{margin:0 0 4px}.tile p{margin:0;color:var(--mute);font-size:.9rem}
+.bar{height:6px;border-radius:9px;background:#ffffff18;overflow:hidden;margin:10px 0}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--rose));transition:width .5s}
+.stage{border-radius:22px;background:radial-gradient(500px 300px at 70% 30%,#5a3a8f66,transparent),linear-gradient(160deg,#241046,#120f2e);border:1px solid var(--line);min-height:300px;display:grid;place-items:center;padding:28px}
+.stage-in{max-width:720px;text-align:center}.st-head{color:var(--mute);letter-spacing:.14em;text-transform:uppercase;font-size:.8rem;margin-bottom:14px}
+.st-text{font-family:Georgia,"Noto Serif Devanagari",serif;font-style:italic;color:#e9c46a;font-size:clamp(1.3rem,3vw,2rem);line-height:1.4;min-height:4em;transition:opacity .3s}
+.st-pts{list-style:none;padding:0;margin:16px 0 0;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.st-pts li{padding:5px 14px;border-radius:99px;background:#ffffff14;font-size:.85rem}
+#script h3{color:var(--gold);margin:14px 0 4px}#script p{margin:0;color:var(--ink);line-height:1.6}
+.plist{display:grid;gap:14px}.person h2 small{color:var(--mute);font-weight:400}.person h3{margin:14px 0 4px;font-size:1rem}.sprompt{padding:10px 14px;border-radius:12px;background:#ffffff10;font-style:italic;margin:8px 0}
+.rules{padding-left:1.1rem;line-height:1.6}.ltab{width:100%;border-collapse:collapse;margin-top:10px;font-size:.9rem}.ltab th,.ltab td{text-align:left;padding:5px 8px;border-bottom:1px solid #ffffff14}.curve svg{width:100%;max-width:340px}

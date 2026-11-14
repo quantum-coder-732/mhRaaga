@@ -47,6 +47,15 @@ for key in have - want:  # replaced songs leave S3, so at most CAP generated son
 put("catalog/index.json", (CATALOG / "index.json").read_bytes(), "application/json", "no-cache")
 put("catalog/report.json", (CATALOG / "report.json").read_bytes(), "application/json", "no-cache")
 put("catalog/policy.json", evolve.STATE.read_bytes(), "application/json", "no-cache")
+learned = {"updated": report["updated"], "runs": evolve.Policy().s["runs"], "curve": (stats or {}).get("curve", []),
+           "leaders": {l: evolve.Policy().leaders(l) for l in evolve.LANGS}}
+put("rules/learned.json", json.dumps(learned, ensure_ascii=False).encode(), "application/json", "no-cache")  # the live API reads this to default tala/lead/tempo per language
+sys.path.insert(0, str(ROOT / "tool_layer_mhraga/mhraaga-cloud/api"))
+try:
+    s3.head_object(Bucket=bucket, Key="rules/ethics.json")
+except Exception:
+    from studio import DEFAULT_RULES  # first run: seed the editable AI rules
+    put("rules/ethics.json", json.dumps(DEFAULT_RULES, ensure_ascii=False).encode(), "application/json", "no-cache")
 print(f"s3: {len(want)} songs live, {len(have - want)} replaced songs removed")
 
 lib = []

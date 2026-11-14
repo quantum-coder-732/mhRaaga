@@ -189,3 +189,23 @@ def translate(text: str, to: str, api_key: str, timeout: float = 25.0) -> str:
         except Exception as e:
             print(f"[translate] {model} failed: {type(e).__name__}: {str(e)[:100]}")
     raise RuntimeError("Translation is unavailable right now. Try again in a moment.")
+
+
+def chat(system: str, user: str, api_key: str, max_tokens: int = 1800, as_json: bool = False, timeout: float = 24.0) -> str:
+    """One LLM turn through the same OpenRouter models (fallback order). Raises RuntimeError when none answers."""
+    if not api_key:
+        raise RuntimeError("The language model is not configured.")
+    for model in MODELS:
+        try:
+            body = {"model": model, "temperature": 0.8, "max_tokens": max_tokens, "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]}
+            if as_json:
+                body["response_format"] = {"type": "json_object"}
+            req = urllib.request.Request("https://openrouter.ai/api/v1/chat/completions", data=json.dumps(body).encode(), method="POST",
+                                         headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json", "HTTP-Referer": "https://mhraaga.app", "X-Title": "mhRaaga"})
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                out = (json.load(r)["choices"][0]["message"]["content"] or "").strip()
+            if out:
+                return out
+        except Exception as e:
+            print(f"[chat] {model} failed: {type(e).__name__}: {str(e)[:100]}")
+    raise RuntimeError("The language model did not answer. Try again in a moment.")

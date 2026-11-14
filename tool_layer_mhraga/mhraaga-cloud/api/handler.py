@@ -27,8 +27,10 @@ import boto3
 from boto3.dynamodb.conditions import Key
 
 from mhraaga_engine import catalog, compose, get_raga, make_brief
-from mhraaga_engine.brief import TARGETS, translate
+from mhraaga_engine.brief import TARGETS, detect_language, translate
 from mhraaga_engine.tala import TALAS
+
+import studio
 
 USERS = os.environ.get("USERS_TABLE", "mhraaga-users")
 SONGS = os.environ.get("SONGS_TABLE", "mhraaga-songs")
@@ -117,11 +119,11 @@ def user_from(event: dict) -> dict:
     return item
 
 
-def body_of(event: dict) -> dict:
+def body_of(event: dict, limit: int = 20000) -> dict:
     raw = event.get("body") or "{}"
     if event.get("isBase64Encoded"):
         raw = base64.b64decode(raw).decode()
-    if len(raw) > 20000:
+    if len(raw) > limit:
         raise ApiError(413, "Request too large.")
     try:
         data = json.loads(raw)
@@ -175,7 +177,7 @@ def login(event):
 def me(event):
     u = user_from(event)
     used = int(u["qn"]) if u.get("qday") == today() else 0
-    return 200, {"name": u["name"], "email": u["email"], "composed_today": used, "daily_limit": DAILY_LIMIT}
+    return 200, {"name": u["name"], "email": u["email"], "composed_today": used, "daily_limit": DAILY_LIMIT, "admin": u["email"].lower() in studio.ADMINS}
 
 
 def take_quota(u: dict) -> None:
@@ -192,6 +194,7 @@ def make_song(event):
     prompt = text(b.get("prompt"), 800)
     if len(prompt) < 3:
         raise ApiError(400, "Describe the song in a few words.")
+    studio.check(prompt, text(b.get("lyrics"), 3000), text(b.get("title"), 60))
     take_quota(u)
     raga_in = text(b.get("raga"), 40)
     if raga_in:
@@ -203,6 +206,13 @@ def make_song(event):
     opts = {"raga": raga_in, "tala": tala_in if tala_in in TALAS else "", "language": text(b.get("language"), 12).lower(),
             "lead": text(b.get("lead"), 12), "lyrics": text(b.get("lyrics"), 3000), "instrumental": bool(b.get("instrumental")), "poem": bool(b.get("poem")),
             "tempo": int(b["tempo"]) if isinstance(b.get("tempo"), (int, float)) and 40 <= b["tempo"] <= 180 else 0}
+    for k, v in studio.learned_defaults(opts["language"] or detect_language(prompt)).items():  # what the self-learning loop found works best
+        if k == "tala" and not opts["tala"]:
+            opts["tala"] = v
+        elif k == "lead" and not opts["lead"]:
+            opts["lead"] = v
+        elif k == "tempo" and not opts["tempo"] and not opts["poem"]:
+            opts["tempo"] = v
     brief = make_brief(prompt, opts, secret("openrouter_key"))
     if text(b.get("title"), 60):
         brief["title"] = text(b.get("title"), 60)
@@ -316,10 +326,42 @@ def handler(event, context=None):
             src, to = text(b.get("text"), 2500), text(b.get("to"), 12).lower()
             if len(src) < 1 or to not in TARGETS:
                 raise ApiError(400, "Give some text and a target language.")
+            studio.check(src)
             try:
                 status, out = 200, {"text": translate(src, to, secret("openrouter_key")), "to": to}
             except RuntimeError as e:
                 raise ApiError(503, str(e))
+        elif (method, path) == ("GET", "/rules"):
+            status, out = 200, studio.rules_public()
+        elif (method, path) == ("GET", "/rules/full"):
+            u = user_from(event)
+            studio.need_admin(u)
+            status, out = 200, {k: v for k, v in studio.get_rules(force=True).items() if k != "learned"}
+        elif (method, path) == ("PUT", "/rules"):
+            status, out = 200, studio.put_rules(user_from(event), body_of(event, 30000))
+        elif (method, path) == ("GET", "/people"):
+            status, out = studio.people_list(user_from(event))
+        elif (method, path) == ("POST", "/people"):
+            status, out = studio.people_create(user_from(event), body_of(event))
+        elif path.startswith("/people/"):
+            parts = path.split("/")[2:]
+            u = user_from(event)
+            if len(parts) == 1 and method == "PUT":
+                status, out = studio.people_update(u, parts[0], body_of(event, 12000))
+            elif len(parts) == 1 and method == "DELETE":
+                status, out = studio.people_delete(u, parts[0])
+            elif len(parts) == 2 and parts[1] == "learn" and method == "POST":
+                status, out = studio.people_learn(u, parts[0], body_of(event, 14000))
+            elif len(parts) == 2 and parts[1] == "samples" and method == "POST":
+                status, out = studio.sample_add(u, parts[0], body_of(event, 3_800_000))
+            elif len(parts) == 3 and parts[1] == "samples" and method == "GET" and parts[2].isdigit():
+                status, out = studio.sample_get(u, parts[0], int(parts[2]))
+            else:
+                raise ApiError(404, "Not found.")
+        elif (method, path) == ("POST", "/story/outline"):
+            status, out = studio.story_outline(user_from(event), body_of(event))
+        elif (method, path) == ("POST", "/story/section"):
+            status, out = studio.story_section(user_from(event), body_of(event))
         elif (method, path) == ("POST", "/compose"):
             status, out = make_song(event)
         elif (method, path) == ("GET", "/songs"):

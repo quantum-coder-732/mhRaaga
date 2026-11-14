@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio · mhRaaga</title>
+<meta name="theme-color" content="#120f2e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231b1646'/%3E%3Cpath d='M9 21c4-10 10-10 14 0' stroke='%23f4b942' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css">
+</head><body>
+<nav class="nav" data-page="studio"></nav>
+<main class="wrap pg">
+  <h1>Raaga Studio</h1>
+  <p class="muted">Everything the studio does, in one place, plus the rules the AI follows and what it has learned.</p>
+  <section class="hub">
+    <a class="card tile" href="app.html"><h3>🎶 Songs</h3><p>Raga songs, 7 languages, Krishna flute tag.</p></a>
+    <a class="card tile" href="app.html?style=poem"><h3>📜 Spoken poems</h3><p>Rhymed poems over a soft raga, like poem videos.</p></a>
+    <a class="card tile" href="stories.html"><h3>🎬 Stories</h3><p>1 to 30 minute stories narrated scene by scene.</p></a>
+    <a class="card tile" href="stories.html#pravachan"><h3>🕉 Pravachan</h3><p>Long discourses in a speaker's manner you teach it.</p></a>
+    <a class="card tile" href="stories.html#explainer"><h3>💡 Explainers</h3><p>Step-by-step teaching scripts with on-screen points.</p></a>
+    <a class="card tile" href="app.html#speech"><h3>🎙 Speech</h3><p>Dictate, translate, speak with Indian and foreign voices.</p></a>
+    <a class="card tile" href="people.html"><h3>👤 People</h3><p>Voice samples and speaking styles, with consent.</p></a>
+  </section>
+  <section class="card"><h2>AI rules <small id="r-ver"></small></h2><ul id="r-list" class="rules"></ul>
+    <details id="r-admin" hidden><summary>Edit rules (administrator)</summary>
+      <label class="field"><span>Principles, one per line</span><textarea id="r-pr" rows="6"></textarea></label>
+      <label class="field"><span>Blocked phrases, one per line</span><textarea id="r-bl" rows="5"></textarea></label>
+      <label class="field"><span>Impersonation phrases, one per line</span><textarea id="r-im" rows="3"></textarea></label>
+      <div class="actions"><button id="r-save" class="primary" type="button">Save new version</button><span id="r-status" role="status"></span></div>
+      <p class="muted">Saving writes a new version to S3 (the old one is kept in rules/history). Every prompt, lyric, translation, story and profile text is checked against these rules within a minute.</p></details></section>
+  <section class="card"><h2>What the studio has learned</h2><p id="l-sum" class="muted">Loading…</p><div id="l-curve" class="curve"></div><div id="l-lead" class="leaders"></div>
+    <p class="muted">Producer agents pick tāla, tempo and instrument; critics score each song; Kalkee's Shapley credit assignment rewards the choices that helped. New songs use these learned defaults when you leave a choice on Auto. The critics check rules and similarity to the reference tunes, not taste.</p></section>
+</main>
+<div id="toast" class="toast" role="status" hidden></div>
+<script type="module" src="site.js"></script><script type="module" src="studio.js"></script>
+</body></html>

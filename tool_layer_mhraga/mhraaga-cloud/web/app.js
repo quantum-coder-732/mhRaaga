@@ -244,4 +244,5 @@ $("mic-lyrics").onclick = () => dictate($("mic-lyrics"), $("lyrics"));
   if (q) { const known = [...$("raga").options].some((o) => o.value === q);
     if (known) $("raga").value = q; else if (/^(gopi|mela):\d+$/.test(q)) { forced = q; if (q.startsWith("gopi")) tags.add("krishna"); paintTags(); } }
   if (qs.get("style") === "krishna") { tags.add("krishna"); paintTags(); }
+  if (qs.get("style") === "poem") { tags.add("poem"); paintTags(); }
 })();

@@ -100,3 +100,5 @@ $("sp-mic").onclick = () => {
   rec.onresult = (e) => { let t = ""; for (const r of e.results) t += r[0].transcript; $("sp-text").value = base + t; };
   rec.onend = () => { rec = null; $("sp-mic").classList.remove("rec"); }; rec.onerror = (e) => say("Mic: " + e.error); rec.start(); $("sp-mic").classList.add("rec");
 };
+
+if (location.hash === "#speech") document.querySelector('.tabs button[data-tab="speech"]').click();

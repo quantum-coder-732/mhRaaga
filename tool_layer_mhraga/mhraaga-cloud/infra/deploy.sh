@@ -15,7 +15,7 @@ ORIGIN=$(aws ssm get-parameter --name /mhraaga/origin_secret --with-decryption -
 
 # 2. Lambda package = API handler + the music engine layer
 rm -rf "$HERE/build"; mkdir -p "$HERE/build/lambda"
-cp "$HERE/api/handler.py" "$HERE/build/lambda/"
+cp "$HERE/api/handler.py" "$HERE/api/studio.py" "$HERE/build/lambda/"
 cp -r "$ROOT/music_engine_framework_layer/mhraaga_engine" "$HERE/build/lambda/"
 rm -rf "$HERE/build/lambda/mhraaga_engine/agentic/data" "$HERE/build/lambda/mhraaga_engine/agentic"   # offline tooling, not needed at runtime
 find "$HERE/build" -name __pycache__ -prune -exec rm -rf {} +
@@ -26,12 +26,12 @@ aws s3api head-bucket --bucket "$ART" 2>/dev/null || { aws s3api create-bucket -
   aws s3api put-public-access-block --bucket "$ART" --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true; }
 aws cloudformation package --template-file "$HERE/infra/template.yaml" --s3-bucket "$ART" --output-template-file "$HERE/build/packaged.yaml" >/dev/null
 aws cloudformation deploy --stack-name $STACK --template-file "$HERE/build/packaged.yaml" --capabilities CAPABILITY_IAM \
-  --parameter-overrides OriginSecret="$ORIGIN" --no-fail-on-empty-changeset
+  --parameter-overrides OriginSecret="$ORIGIN" DomainName="${DOMAIN_NAME:-}" CertificateArn="${CERT_ARN:-}" --no-fail-on-empty-changeset
 out() { aws cloudformation describe-stacks --stack-name $STACK --query "Stacks[0].Outputs[?OutputKey=='$1'].OutputValue" --output text; }
 SITE=$(out SiteUrl); BUCKET=$(out SiteBucketName); DIST=$(out DistributionId); DIRECT=$(out ApiDirectUrl)
 
 # 4. website
-aws s3 sync "$HERE/web" "s3://$BUCKET" --delete --cache-control "public,max-age=300" --exclude ".DS_Store" --exclude "catalog/*" --exclude "library/*" >/dev/null
+aws s3 sync "$HERE/web" "s3://$BUCKET" --delete --cache-control "public,max-age=300" --exclude ".DS_Store" --exclude "catalog/*" --exclude "library/*" --exclude "rules/*" --exclude "samples/*" >/dev/null
 aws s3 cp "$HERE/web/index.html" "s3://$BUCKET/index.html" --cache-control "no-cache" --content-type "text/html; charset=utf-8" >/dev/null
 aws cloudfront create-invalidation --distribution-id "$DIST" --paths "/*" >/dev/null
 

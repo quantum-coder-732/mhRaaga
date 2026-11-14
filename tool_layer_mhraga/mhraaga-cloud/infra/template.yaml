@@ -4,6 +4,10 @@ Parameters:
   OriginSecret: {Type: String, NoEcho: true, MinLength: 16, Description: Shared secret CloudFront sends so the API only answers through the site}
   DailyComposeLimit: {Type: Number, Default: 30}
   SignupOpen: {Type: String, Default: "true", AllowedValues: ["true", "false"]}
+  DomainName: {Type: String, Default: "", Description: "Custom domain such as mhraaga.in (leave empty to use the CloudFront address)"}
+  CertificateArn: {Type: String, Default: "", Description: "ACM certificate in us-east-1 covering DomainName and www.DomainName"}
+Conditions:
+  HasDomain: !And [!Not [!Equals [!Ref DomainName, ""]], !Not [!Equals [!Ref CertificateArn, ""]]]
 Resources:
   UsersTable:
     Type: AWS::DynamoDB::Table
@@ -44,6 +48,9 @@ Resources:
               - Effect: Allow
                 Action: ssm:GetParameter
                 Resource: !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/mhraaga/*
+              - Effect: Allow   # AI rules and voice samples live in the site bucket, only under these prefixes
+                Action: [s3:GetObject, s3:PutObject, s3:DeleteObject]
+                Resource: [!Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/rules/*", !Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/samples/*"]
   ApiLogs:
     Type: AWS::Logs::LogGroup
     Properties: {LogGroupName: /aws/lambda/mhraaga-api, RetentionInDays: 30}
@@ -67,6 +74,8 @@ Resources:
           DAILY_COMPOSE_LIMIT: !Ref DailyComposeLimit
           SIGNUP_OPEN: !Ref SignupOpen
           ORIGIN_SECRET: !Ref OriginSecret
+          SITE_BUCKET: !Sub mhraaga-site-${AWS::AccountId}-${AWS::Region}
+          ADMIN_EMAILS: keshav.velhal@gmail.com
 
   HttpApi:
     Type: AWS::ApiGatewayV2::Api
@@ -152,6 +161,8 @@ Resources:
     Properties:
       DistributionConfig:
         Enabled: true
+        Aliases: !If [HasDomain, [!Ref DomainName, !Sub "www.${DomainName}"], !Ref "AWS::NoValue"]
+        ViewerCertificate: !If [HasDomain, {AcmCertificateArn: !Ref CertificateArn, SslSupportMethod: sni-only, MinimumProtocolVersion: TLSv1.2_2021}, !Ref "AWS::NoValue"]
         Comment: mhRaaga
         HttpVersion: http2and3
         PriceClass: PriceClass_200
@@ -185,3 +196,4 @@ Outputs:
   ApiDirectUrl: {Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"}
   SiteBucketName: {Value: !Ref SiteBucket}
   DistributionId: {Value: !Ref Distribution}
+  CloudFrontDomain: {Value: !GetAtt Distribution.DomainName, Description: "Point DNS (CNAME/ALIAS) for the custom domain here"}

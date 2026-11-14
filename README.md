@@ -82,6 +82,10 @@ Create has Songs and Speech tabs (Simple / Advanced like Suno). Speech: type, di
 "Test the voices" plays a greeting in every voice the device has. It uses the browser's or phone's own speech engines, so the voices available differ per device.
 YouTube: there is no downloader. Paste a transcript (YouTube's “Show transcript”) or your own text and translate it.
 
+### Studio: poems, stories, pravachan, people, rules, domain
+Spoken poems (tag on Create), Stories / Pravachan / Explainer (1 to 30 min), People (voice samples with consent, style learned from pasted transcripts), and Studio (live AI rules in S3, learned defaults).
+What is built and what is deliberately not: [docs/STUDIO.md](docs/STUDIO.md). Using mhraaga.in: [docs/DOMAIN.md](docs/DOMAIN.md).
+
 ### Downloads, counters, media tools
 The site exports **MP3** (lamejs, vendored as `web/lame.min.js`) and **WAV** in the browser. Shared-playlist songs count plays and downloads
 (`POST /api/playlist/{id}/play|download`, stored in DynamoDB, shown in the list and the app). `tool_layer_mhraga/tools/mediakit.py` converts
