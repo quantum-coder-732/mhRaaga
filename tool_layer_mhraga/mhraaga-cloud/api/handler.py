@@ -32,6 +32,7 @@ from mhraaga_engine.tala import TALAS
 
 import studio
 import team
+import voice
 
 USERS = os.environ.get("USERS_TABLE", "mhraaga-users")
 SONGS = os.environ.get("SONGS_TABLE", "mhraaga-songs")
@@ -400,6 +401,10 @@ def handler(event, context=None):
         elif path.startswith("/films/") and method in ("GET", "PUT", "DELETE"):
             fid, u = path[7:], user_from(event)
             status, out = (studio.film_get(u, fid) if method == "GET" else studio.film_save(u, fid, body_of(event, 400000)) if method == "PUT" else studio.film_delete(u, fid))
+        elif (method, path) == ("GET", "/tts/info"):
+            status, out = voice.info()
+        elif (method, path) == ("POST", "/tts"):
+            status, out = voice.speak(user_from(event), body_of(event, 4000))
         elif path == "/teams" or path.startswith("/teams/"):
             status, out = team_route(method, path, event)
         elif (method, path) == ("POST", "/compose"):

@@ -3,6 +3,7 @@ import { $, api, toast, el } from "./api.js";
 import * as planck from "./planck.mjs";
 import { master, schedule, duckNow, releaseNow } from "./synth.js";
 import { bestVoice } from "./voice.js";
+import { neuralOn, loadLine, chunks } from "./neural.js";
 
 const FX = { glow: "Glow", vignette: "Vignette", grain: "Film grain", blur: "Soft focus", lightleak: "Light leak", particles: "Physics petals", kenburns: "Slow zoom", fade: "Fade in/out", bw: "Black & white", warm: "Warm", cool: "Cool" };
 const W = 960, H = 540, cv = $("cv"), cx = cv.getContext("2d", { willReadFrequently: true });
@@ -65,7 +66,30 @@ function tick(ts) {
   const l = locate(tNow); if (l.i !== lastScene) { lastScene = l.i; select(l.i, true); const s = proj.scenes[l.i]; newWorld(); if (s.effects.includes("particles")) spawn(36); if ($("o-tts").checked && s.narration) speakLine(s.narration); }
   if (world) world.step(dt, 8, 3); draw(); raf = requestAnimationFrame(tick);
 }
-function speakLine(t) { if (!("speechSynthesis" in window)) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t), v = bestVoice(speechSynthesis.getVoices(), ({ hindi: "hi-IN", marathi: "mr-IN", telugu: "te-IN", gujarati: "gu-IN", kannada: "kn-IN", tamil: "ta-IN" })[proj.language] || "en-IN", $("o-voice").value); u.onstart = () => bedM && actx && duckNow(actx, bedM, 0.5); u.onend = () => bedM && actx && releaseNow(actx, bedM); if (v) { u.voice = v; u.lang = v.lang; } speechSynthesis.speak(u); }
+function deviceSpeak(t) { if (!("speechSynthesis" in window)) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t), v = bestVoice(speechSynthesis.getVoices(), ({ hindi: "hi-IN", marathi: "mr-IN", telugu: "te-IN", gujarati: "gu-IN", kannada: "kn-IN", tamil: "ta-IN" })[proj.language] || "en-IN", $("o-voice").value); u.onstart = () => bedM && actx && duckNow(actx, bedM, 0.38); u.onend = () => bedM && actx && releaseNow(actx, bedM); if (v) { u.voice = v; u.lang = v.lang; } speechSynthesis.speak(u); }
+// AI narration: real speech audio, so it is mixed with the music, ducks it, and is recorded in the WebM export. Falls back to the device voice.
+let narRun = 0;
+const lname = () => proj.language || "english";
+async function preloadNarration() {
+  const sc = proj.scenes.filter((s) => s.narration); if (!sc.length) return; say("Preparing the AI voice…");
+  await Promise.all(chunks(sc[0].narration, 200).map((c) => loadLine(c, lname(), "narration")));        // the first scene is ready before the film starts
+  for (const s of sc.slice(1)) chunks(s.narration, 200).forEach((c) => loadLine(c, lname(), "narration"));   // the rest load while it plays
+  say("");
+}
+async function speakLine(t) {
+  if (actx && (await neuralOn())) {
+    const my = ++narRun;
+    for (const p of chunks(t, 200)) {
+      if (!playing || my !== narRun || !actx) return;
+      const b = await loadLine(p, lname(), "narration"); if (!b) { deviceSpeak(p); return; }
+      if (!playing || my !== narRun || !actx) return;
+      const g = actx.createGain(), src = actx.createBufferSource(); src.buffer = b; src.connect(g); g.connect(actx.destination); if (dest) g.connect(dest);
+      bedM && duckNow(actx, bedM, 0.38); src.start(); await new Promise((res) => (src.onended = res)); bedM && actx && releaseNow(actx, bedM);
+    }
+    return;
+  }
+  deviceSpeak(t);
+}
 async function startBed() {
   if (!$("o-music").checked) return;
   try { const { songs } = await api("/playlist", { auth: false }); if (!songs.length) return; const full = await api("/playlist/" + songs[Math.floor(Math.random() * songs.length)].id, { auth: false });
@@ -73,12 +97,12 @@ async function startBed() {
 }
 async function play(exporting = false) {
   if (!proj.scenes.length) return; stop(false); if (tNow >= total()) tNow = 0; playing = true; lastScene = -1; lastTs = performance.now(); $("t-play").textContent = "❚❚";
-  actx = new AudioContext(); await actx.resume(); dest = exporting ? actx.createMediaStreamDestination() : null; await startBed(); raf = requestAnimationFrame(tick);
+  actx = new AudioContext(); await actx.resume(); dest = exporting ? actx.createMediaStreamDestination() : null; if ($("o-tts").checked) { try { if (await neuralOn()) await preloadNarration(); } catch {} } await startBed(); raf = requestAnimationFrame(tick);
   if (exporting) { const stream = cv.captureStream(30); if (dest) dest.stream.getAudioTracks().forEach((t) => stream.addTrack(t)); const parts = [];
     rec = new MediaRecorder(stream, { mimeType: MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus") ? "video/webm;codecs=vp9,opus" : "video/webm" }); rec.ondataavailable = (e) => e.data.size && parts.push(e.data);
     rec.onstop = () => { const a = el("a", { href: URL.createObjectURL(new Blob(parts, { type: "video/webm" })), download: (proj.title || "film").replace(/[^\p{L}\p{N}]+/gu, "_") + ".webm" }); a.click(); $("x-status").textContent = "Exported."; rec = null; }; rec.start(1000); $("x-status").textContent = "Recording in real time…"; }
 }
-function stop(end = false) { playing = false; cancelAnimationFrame(raf); clearTimeout(bedTimer); try { speechSynthesis.cancel(); } catch {} try { actx && actx.close(); } catch {} actx = null; if (rec && rec.state !== "inactive") rec.stop(); $("t-play").textContent = "▶"; if (end) { tNow = 0; draw(); } }
+function stop(end = false) { narRun++; playing = false; cancelAnimationFrame(raf); clearTimeout(bedTimer); try { speechSynthesis.cancel(); } catch {} try { actx && actx.close(); } catch {} actx = null; if (rec && rec.state !== "inactive") rec.stop(); $("t-play").textContent = "▶"; if (end) { tNow = 0; draw(); } }
 $("t-play").onclick = () => (playing ? stop() : play()); $("t-stop").onclick = () => { stop(); tNow = 0; draw(); };
 $("t-seek").oninput = () => { tNow = ($("t-seek").value / 1000) * total(); const l = locate(tNow); if (l.i !== cur) select(l.i, true); newWorld(); draw(); };
 $("f-export").onclick = () => { if (!proj.scenes.length) return; tNow = 0; play(true); };

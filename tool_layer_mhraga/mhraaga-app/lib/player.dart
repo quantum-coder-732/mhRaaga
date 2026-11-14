@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'api.dart';
@@ -20,6 +21,10 @@ class Player extends ChangeNotifier {
   final AudioPlayer _ap = AudioPlayer();
   final AudioPlayer _pv = AudioPlayer();
   final FlutterTts _tts = FlutterTts();
+  final AudioPlayer _vp = AudioPlayer(); // the AI voice, mixed over the music
+  final Map<int, Uint8List> _vb = {}; // lyric index -> voice audio (WAV)
+  final List<Uint8List> _vq = [];
+  bool _vBusy = false;
   bool _ready = false;
 
   Map<String, dynamic>? song; // full song (with score)
@@ -49,10 +54,63 @@ class Player extends ChangeNotifier {
       notifyListeners();
     });
     _ap.onPlayerComplete.listen((_) => next());
+    _vp.onPlayerComplete.listen((_) => _nextVoice());
     _pv.onPlayerComplete.listen((_) {
       previewing = null;
       notifyListeners();
     });
+  }
+
+  void _stopVoice() {
+    _vq.clear();
+    _vBusy = false;
+    _vp.stop();
+    _ap.setVolume(1.0);
+  }
+
+  Future<void> _nextVoice() async {
+    if (_vq.isEmpty) {
+      _vBusy = false;
+      _ap.setVolume(1.0);
+      return;
+    }
+    _vBusy = true;
+    _ap.setVolume(0.38); // the music steps back under the voice
+    await _vp.play(BytesSource(_vq.removeAt(0)));
+  }
+
+  String get _voiceStyle {
+    final meta = (song?['score']?['meta'] as Map?) ?? const {};
+    if (meta['poem'] == true) return 'poem';
+    final hay = '${song?['mood'] ?? ''} ${song?['prompt'] ?? ''} ${song?['title'] ?? ''}'.toLowerCase();
+    return RegExp(r'devotion|krishna|bhajan|meditat|prayer').hasMatch(hay) ? 'bhajan' : 'song';
+  }
+
+  /// Fetch the AI voice for every sung line (shared server cache, so replays are instant). Lines that fail use the device voice.
+  Future<void> _prepareVoice(Map<String, dynamic> full) async {
+    _vb.clear();
+    final lines = (full['score']['lyrics'] as List);
+    final lang = (full['language'] ?? 'hindi').toString(), style = _voiceStyle;
+    final todo = [for (var k = 0; k < lines.length; k++) if ((lines[k]['dur'] as num) > 0 && (lines[k]['tag'] ?? '') == '') k];
+    final deadline = DateTime.now().add(const Duration(seconds: 75));
+    var next = 0;
+    Future<void> worker() async {
+      while (next < todo.length && DateTime.now().isBefore(deadline)) {
+        final k = todo[next++];
+        for (var attempt = 0; attempt < 4; attempt++) {
+          try {
+            final d = await Api.call('POST', '/tts', body: {'text': lines[k]['text'], 'lang': lang, 'style': style, 'voice': 'male'}) as Map;
+            final r = await http.get(Uri.parse('$kBase${d['url']}'));
+            if (r.statusCode == 200) _vb[k] = r.bodyBytes;
+            break;
+          } catch (e) {
+            if (!e.toString().contains('busy')) break; // only a busy service is worth another try
+            await Future.delayed(Duration(milliseconds: 1500 * (attempt + 1)));
+          }
+        }
+      }
+    }
+    await Future.wait([worker(), worker()]);
   }
 
   String get _lang => switch (song?['language']) { 'marathi' => 'mr-IN', 'english' => 'en-IN', 'telugu' => 'te-IN', 'gujarati' => 'gu-IN', 'kannada' => 'kn-IN', 'tamil' => 'ta-IN', _ => 'hi-IN' };
@@ -67,6 +125,12 @@ class Player extends ChangeNotifier {
         if (k != _lyricIdx) {
           _lyricIdx = k;
           final text = l['text'] as String;
+          final vb = _vb[k];
+          if (vb != null) {
+            _vq.add(vb);
+            if (!_vBusy) _nextVoice();
+            return;
+          }
           // characters a voice speaks per second at normal rate: Indic scripts vs Latin. Fit the line to its slot, never rush it.
           final cps = RegExp(r'[\u0900-\u0D7F]').hasMatch(text) ? 11.0 : 14.0;
           final rate = (text.length / (m.max(1.0, d) * cps)).clamp(0.7, 1.1);
@@ -107,6 +171,7 @@ class Player extends ChangeNotifier {
     try {
       await _ap.stop();
       _tts.stop();
+      _stopVoice();
       final full = summary.containsKey('score')
           ? summary
           : await Api.call('GET', (shared ? '/playlist/' : '/songs/') + summary['id'], auth: !shared) as Map<String, dynamic>;
@@ -148,6 +213,7 @@ class Player extends ChangeNotifier {
       final bytes = await compute(renderScore, Map<String, dynamic>.from(full['score'] as Map));
       await f.writeAsBytes(bytes, flush: true);
     }
+    if (voice) await _prepareVoice(full);
     loading = false;
     notifyListeners();
     await _ap.play(DeviceFileSource(f.path));
@@ -159,6 +225,7 @@ class Player extends ChangeNotifier {
     if (playing) {
       await _ap.pause();
       _tts.stop();
+      _stopVoice();
     } else {
       await _ap.resume();
     }
@@ -167,6 +234,7 @@ class Player extends ChangeNotifier {
   Future<void> seek(double seconds) async {
     _lyricIdx = -1;
     _tts.stop();
+      _stopVoice();
     await _ap.seek(Duration(milliseconds: (seconds * 1000).round()));
   }
 
@@ -189,12 +257,14 @@ class Player extends ChangeNotifier {
   void toggleVoice() {
     voice = !voice;
     if (!voice) _tts.stop();
+      _stopVoice();
     notifyListeners();
   }
 
   Future<void> stop() async {
     await _ap.stop();
     _tts.stop();
+      _stopVoice();
     song = null;
     notifyListeners();
   }

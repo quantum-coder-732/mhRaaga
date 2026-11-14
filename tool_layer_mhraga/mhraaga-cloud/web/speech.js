@@ -1,6 +1,8 @@
 // Speech tab: type/dictate -> translate -> speak with an Indian or foreign voice over an optional raga bed. Browser speech services only.
 import { startBed as bedStart, duckNow } from "./synth.js";
 import { bestVoice } from "./voice.js";
+import { neuralOn, loadLine, chunks, playBuffer, voiceMode, setVoiceMode } from "./neural.js";
+import { master } from "./synth.js";
 const $ = (id) => document.getElementById(id);
 const api = async (path, opt = {}) => { let t = null; try { t = localStorage.getItem("mh_token"); } catch {}
   const r = await fetch("/api" + path, { method: opt.method || "GET", headers: { "Content-Type": "application/json", ...(t ? { Authorization: "Bearer " + t } : {}) }, body: opt.body ? JSON.stringify(opt.body) : undefined });
@@ -58,6 +60,7 @@ function loadVoices() {
     r.append(n, b); box.append(r); }
 }
 $("sp-gender").onchange = loadVoices;
+if ($("sp-vg")) { $("sp-vg").value = voiceMode(); $("sp-vg").onchange = () => { setVoiceMode($("sp-vg").value); if ($("vg")) $("vg").value = $("sp-vg").value; }; }
 if ("speechSynthesis" in window) loadVoices(); else say("This browser has no speech synthesis.");
 
 // ---- speak (sentence by sentence; a raga bed plays underneath if on)
@@ -76,6 +79,16 @@ $("sp-go").onclick = async () => {
   const [rate, pitch] = TONES[tone];
   if ($("sp-bg").value === "1") { try { await bed(); } catch (e) { say("Background music unavailable: " + e.message); } }
   const parts = text.match(/[^.!?।\n]+[.!?।]?/g) || [text]; say("Speaking…");
+  const lname = TO[lang], nstyle = { devotional: "bhajan", calm: "pravachan", dramatic: "story", energetic: "story", bright: "story" }[tone] || "speech";
+  const neural = !!lname && ["hindi", "marathi", "telugu", "tamil", "gujarati", "kannada", "english"].includes(lname) && (await neuralOn());
+  if (neural) {                                                      // real voice, mixed with the bed; falls back to the device voice per chunk
+    const cs = chunks(text, 200); if (!ctx) { ctx = new AudioContext(); await ctx.resume(); } const vm = spBed ? spBed.m : master(ctx, 0.9);
+    for (let k = 0; k < cs.length; k++) { if (my !== run) return; cs.slice(k + 1, k + 3).forEach((n) => loadLine(n, lname, nstyle)); say(`Speaking ${k + 1}/${cs.length}…`);
+      const b = await loadLine(cs[k], lname, nstyle);
+      if (b && my === run) { duckNow(ctx, vm, 0.38); const r = playBuffer(ctx, vm.voice, b, ctx.currentTime + 0.05); await new Promise((res) => setTimeout(res, Math.max(0, (r.end - ctx.currentTime) * 1000) + 300)); }
+      else await new Promise((res) => { const u = new SpeechSynthesisUtterance(cs[k]); if (best) u.voice = best; u.lang = best ? best.lang : lang; u.onend = u.onerror = res; speechSynthesis.speak(u); }); }
+    if (my === run) { say("Done."); try { ctx && ctx.close(); } catch {} ctx = null; } return;
+  }
   for (const p of parts) { if (my !== run) return; if (!p.trim()) continue;
     await new Promise((res) => { const u = new SpeechSynthesisUtterance(p.trim()); if (best) u.voice = best; u.lang = best ? best.lang : lang; u.rate = rate; u.pitch = pitch; u.onstart = () => spBed && ctx && duckNow(ctx, spBed.m, 0.55); u.onend = u.onerror = () => setTimeout(res, 300); speechSynthesis.speak(u); }); }
   if (my === run) { say("Done."); try { ctx && ctx.close(); } catch {} ctx = null; }

@@ -26,9 +26,12 @@ export function master(ctx, volume = 0.8) {
   const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3;
   const dry = ctx.createGain(), wet = ctx.createGain(), conv = ctx.createConvolver();
   dry.gain.value = 0.78; wet.gain.value = 0.3; conv.buffer = reverbIR(ctx);
-  const bus = ctx.createGain(), duck = ctx.createGain();   // `duck` lets the music step back while someone speaks
-  bus.connect(duck); duck.connect(dry); duck.connect(conv); conv.connect(wet); dry.connect(comp); wet.connect(comp); comp.connect(out); out.connect(ctx.destination);
-  return { bus, out, duck };
+  const bus = ctx.createGain(), duck = ctx.createGain(), voice = ctx.createGain();   // `duck` lets the music step back while someone speaks
+  bus.connect(duck); duck.connect(dry); duck.connect(conv); conv.connect(wet); dry.connect(comp); wet.connect(comp); comp.connect(out);
+  const lim = ctx.createDynamicsCompressor(); lim.threshold.value = -3; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = 0.002; lim.release.value = 0.12;   // limiter: peaks never clip
+  out.connect(lim); lim.connect(ctx.destination);
+  voice.gain.value = 1.4; voice.connect(dry); voice.connect(conv);   // the voice joins after the duck, so it is never turned down, and shares the room reverb
+  return { bus, out, duck, voice };
 }
 
 // Dip the music to `level` for `dur` seconds starting at ctx time `t`, then release slowly (sidechain-style ducking).

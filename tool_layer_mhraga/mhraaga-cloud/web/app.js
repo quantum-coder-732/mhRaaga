@@ -1,5 +1,6 @@
 import { master, schedule, duckAt } from "./synth.js";
 import { bestVoice } from "./voice.js";
+import { neuralOn, loadLine, scheduleVoice, voiceMode, setVoiceMode, styleFor, neuralError, DUCK } from "./neural.js";
 
 const $ = (id) => document.getElementById(id);
 const API = "/api";
@@ -121,6 +122,7 @@ function pickVoice() {
 }
 if ("speechSynthesis" in window) speechSynthesis.onvoiceschanged = () => { $("voice").replaceChildren(); pickVoice(); };
 $("voice").onchange = () => ($("voice").dataset.user = "1");
+$("vg").value = voiceMode(); $("voice").hidden = $("vg").value !== "device"; $("vg").onchange = () => { setVoiceMode($("vg").value); $("voice").hidden = $("vg").value !== "device"; };
 
 function speakLine(text, durSec) {
   if (!("speechSynthesis" in window) || !$("sing").checked) return;
@@ -131,19 +133,39 @@ function speakLine(text, durSec) {
   speechSynthesis.speak(u);
 }
 
+// ---- neural voice: real speech audio mixed into the track (falls back to the device voice, line by line)
+let vbufs = new Map(), playRun = 0;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+async function prepareVoice(from, label = true) {
+  vbufs = new Map(); if (!$("sing").checked || !(await neuralOn())) return;
+  const lang = song.brief.language || "hindi", style = styleFor(song), end = Date.now() + 80000;
+  const L = song.score.lyrics.map((l, i) => [l, i]).filter(([l]) => !l.tag && l.dur > 0 && l.t + l.dur > from); let done = 0;
+  await Promise.all(L.map(async ([l, i]) => {
+    const b = await Promise.race([loadLine(l.text, lang, style), sleep(Math.max(0, end - Date.now())).then(() => null)]);
+    if (b) vbufs.set(i, b); if (label) $("lyric-now").textContent = `Preparing the voice… ${++done}/${L.length}`;
+  }));
+  if (label) $("lyric-now").textContent = !vbufs.size && L.length && neuralError ? `Using the device voice (${neuralError})` : "";
+}
+function mixVoice(c, m, startCtxTime, from) {   // schedule the prepared voice on c (live or offline): no overlaps, music ducks under each line
+  return scheduleVoice(c, m, [...vbufs].map(([i, buf]) => ({ t: song.score.lyrics[i].t, dur: song.score.lyrics[i].dur, buf })), startCtxTime, from);
+}
+
 async function play() {
-  if (!song) return; stop(false);
+  if (!song) return; stop(false); const my = ++playRun;
   ctx = new (window.AudioContext || window.webkitAudioContext)(); await ctx.resume();
+  $("play").textContent = "…"; await prepareVoice(offset);
+  if (my !== playRun || !ctx) return;
   const m = master(ctx, $("vol").value / 100); bus = m.bus; volNode = m.out;
-  startAt = ctx.currentTime + 0.12 - offset; schedule(ctx, bus, song.score, ctx.currentTime + 0.12, offset);
-  if ($("sing").checked) for (const l of song.score.lyrics) if (!l.tag && l.t + l.dur > offset) duckAt(m, ctx.currentTime + 0.12 + Math.max(0, l.t - offset), l.dur, 0.5);   // the music steps back under every sung line
+  startAt = ctx.currentTime + 0.12 - offset; schedule(ctx, bus, song.score, ctx.currentTime + 0.12, offset); mixVoice(ctx, m, ctx.currentTime + 0.12, offset);
+  const spoken = song.score.lyrics.map((l, i) => [l, i]).filter(([l, i]) => $("sing").checked && !l.tag && l.t + l.dur > offset && !vbufs.has(i));   // lines the device voice must sing
+  for (const [l] of spoken) duckAt(m, ctx.currentTime + 0.12 + Math.max(0, l.t - offset), l.dur, DUCK);
   playing = true; $("play").textContent = "❚❚"; $("play").setAttribute("aria-label", "Pause");
-  timers = song.score.lyrics.filter((l) => !l.tag && l.t + l.dur > offset).map((l) => setTimeout(() => speakLine(l.text, l.dur), Math.max(0, (l.t - offset) * 1000)));
+  timers = spoken.map(([l]) => setTimeout(() => speakLine(l.text, l.dur), Math.max(0, (l.t - offset) * 1000)));
   loop();
 }
 function pause() { if (!playing) return; offset = ctx.currentTime - startAt; stop(false, true); }
 function stop(reset = true, keep = false) {
-  playing = false; cancelAnimationFrame(raf); timers.forEach(clearTimeout); timers = [];
+  playRun++; playing = false; cancelAnimationFrame(raf); timers.forEach(clearTimeout); timers = [];
   if ("speechSynthesis" in window) speechSynthesis.cancel();
   if (ctx) { ctx.close().catch(() => {}); ctx = null; }
   $("play").textContent = "▶"; $("play").setAttribute("aria-label", "Play");
@@ -187,7 +209,7 @@ function draw(t) {
 // ---------------------------------------------------------------- audio export (WAV, MP3) + download counter
 async function renderStereo() {
   const sr = 44100, D = song.score.duration + 2, oc = new OfflineAudioContext(2, Math.ceil(sr * D), sr), m = master(oc, 0.9);
-  schedule(oc, m.bus, song.score, 0.05, 0); const buf = await oc.startRendering();
+  schedule(oc, m.bus, song.score, 0.05, 0); mixVoice(oc, m, 0.05, 0); const buf = await oc.startRendering();
   return { sr, L: buf.getChannelData(0), R: buf.getChannelData(1) };
 }
 const pcm16 = (f) => { const o = new Int16Array(f.length); for (let i = 0; i < f.length; i++) o[i] = Math.max(-1, Math.min(1, f[i])) * 32767; return o; };
@@ -197,8 +219,9 @@ function save(blob, ext) {
   if (song._shared) api(`/playlist/${song.id}/download`, { method: "POST" }).then(refreshPlaylist).catch(() => {});
 }
 async function exportAudio(kind) {
-  if (!song) return; const btn = $(kind); btn.disabled = true; toast(`Rendering ${kind.toUpperCase()} (instruments only; the browser can't capture the speech voice)…`);
+  if (!song) return; const btn = $(kind); btn.disabled = true; const withVoice = $("sing").checked && (await neuralOn()); toast(`Rendering ${kind.toUpperCase()} (${withVoice ? "music and AI voice; this can take a minute" : "instruments only; turn on the AI voice to include singing"})…`);
   try {
+    await prepareVoice(0, false);
     const { sr, L, R } = await renderStereo(), l = pcm16(L), r = pcm16(R);
     if (kind === "mp3") {
       const enc = new lamejs.Mp3Encoder(2, sr, 160), parts = [];

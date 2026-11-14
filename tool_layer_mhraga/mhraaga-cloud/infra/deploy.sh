@@ -15,7 +15,7 @@ ORIGIN=$(aws ssm get-parameter --name /mhraaga/origin_secret --with-decryption -
 
 # 2. Lambda package = API handler + the music engine layer
 rm -rf "$HERE/build"; mkdir -p "$HERE/build/lambda"
-cp "$HERE/api/handler.py" "$HERE/api/studio.py" "$HERE/api/team.py" "$HERE/build/lambda/"
+cp "$HERE/api/handler.py" "$HERE/api/studio.py" "$HERE/api/team.py" "$HERE/api/voice.py" "$HERE/build/lambda/"
 cp -r "$ROOT/music_engine_framework_layer/mhraaga_engine" "$HERE/build/lambda/"
 rm -rf "$HERE/build/lambda/mhraaga_engine/agentic/data" "$HERE/build/lambda/mhraaga_engine/agentic"   # offline tooling, not needed at runtime
 # real Box2D (pybox2d 2.3.10) for the Lambda runtime: python3.12 on x86_64. Without it the engine falls back to its pure-Python solver.
@@ -34,7 +34,7 @@ out() { aws cloudformation describe-stacks --stack-name $STACK --query "Stacks[0
 SITE=$(out SiteUrl); BUCKET=$(out SiteBucketName); DIST=$(out DistributionId); DIRECT=$(out ApiDirectUrl)
 
 # 4. website
-aws s3 sync "$HERE/web" "s3://$BUCKET" --delete --cache-control "public,max-age=300" --exclude ".DS_Store" --exclude "catalog/*" --exclude "library/*" --exclude "rules/*" --exclude "samples/*" >/dev/null
+aws s3 sync "$HERE/web" "s3://$BUCKET" --delete --cache-control "public,max-age=300" --exclude ".DS_Store" --exclude "catalog/*" --exclude "library/*" --exclude "rules/*" --exclude "samples/*" --exclude "tts/*" >/dev/null
 aws s3 cp "$HERE/web/index.html" "s3://$BUCKET/index.html" --cache-control "no-cache" --content-type "text/html; charset=utf-8" >/dev/null
 aws cloudfront create-invalidation --distribution-id "$DIST" --paths "/*" >/dev/null
 

@@ -48,9 +48,9 @@ Resources:
               - Effect: Allow
                 Action: ssm:GetParameter
                 Resource: !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/mhraaga/*
-              - Effect: Allow   # AI rules and voice samples live in the site bucket, only under these prefixes
+              - Effect: Allow   # AI rules, voice samples and cached neural-voice audio live in the site bucket, only under these prefixes
                 Action: [s3:GetObject, s3:PutObject, s3:DeleteObject]
-                Resource: [!Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/rules/*", !Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/samples/*"]
+                Resource: [!Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/rules/*", !Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/samples/*", !Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/tts/*"]
   ApiLogs:
     Type: AWS::Logs::LogGroup
     Properties: {LogGroupName: /aws/lambda/mhraaga-api, RetentionInDays: 30}

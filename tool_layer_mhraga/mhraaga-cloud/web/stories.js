@@ -1,6 +1,7 @@
 // Stories, pravachan and explainers: outline -> sections (each written by the model) -> scene-by-scene narration with a soft raga bed.
 import { $, api, toast, el } from "./api.js";
-import { startBed as bedStart, duckNow, releaseNow } from "./synth.js";
+import { startBed as bedStart, duckNow, releaseNow, master } from "./synth.js";
+import { neuralOn, loadLine, chunks, playBuffer, voiceMode, setVoiceMode } from "./neural.js";
 import { bestVoice } from "./voice.js";
 
 let kind = (location.hash.slice(1) || "story"); if (!["story", "pravachan", "explainer"].includes(kind)) kind = "story";
@@ -58,6 +59,24 @@ const speak = (txt, lang) => new Promise((res) => {
   u.onstart = () => bed && ctx && duckNow(ctx, bed.m, 0.55);   // the bed steps back while the voice speaks
   u.onend = u.onerror = () => setTimeout(res, kind === "pravachan" ? 420 : 280);   // a breath between sentences
   speechSynthesis.speak(u); });
+const LANG_NAME = { english: "english", hindi: "hindi", marathi: "marathi", telugu: "telugu", gujarati: "gujarati", kannada: "kannada", tamil: "tamil" };
+// Neural voice: the next chunks are fetched while the current one plays; any failure drops to the device voice for that chunk.
+async function sayChunk(text, lang, ahead, my) {
+  if (my !== run) return;
+  if (await neuralOn() && LANG_NAME[piece.language]) {
+    for (const n of ahead) loadLine(n, piece.language, kind);                      // warm the cache, don't wait
+    const buf = await loadLine(text, piece.language, kind);
+    if (buf && my === run) {
+      if (!ctx) { ctx = new AudioContext(); await ctx.resume(); }
+      if (!bed) bed = { m: master(ctx, 0.9) };                                      // no music bed: still route the voice through the room reverb
+      duckNow(ctx, bed.m, 0.38); const r = playBuffer(ctx, bed.m.voice, buf, ctx.currentTime + 0.05);
+      await new Promise((res) => setTimeout(res, Math.max(0, (r.end - ctx.currentTime) * 1000) + (kind === "pravachan" ? 450 : 300)));
+      return;
+    }
+  }
+  await speak(text, BCP[piece.language] || "en-IN");
+}
+$("vg").value = voiceMode(); $("voice").closest("label").hidden = $("vg").value !== "device"; $("vg").onchange = () => { setVoiceMode($("vg").value); $("voice").closest("label").hidden = $("vg").value !== "device"; };
 $("play").onclick = async () => {
   if (!piece) return; stop(); const my = run; $("stage").hidden = false; $("play").textContent = "❚❚ Playing"; await startBed();
   const lang = BCP[piece.language] || "en-IN";
@@ -65,7 +84,8 @@ $("play").onclick = async () => {
     while (piece.ready <= i && my === run) await new Promise((r) => setTimeout(r, 700));   // wait while the next section is still being written
     if (my !== run) return; const s = piece.sections[i];
     $("st-head").textContent = s.heading; $("st-pts").replaceChildren(...(s.points || []).map((p) => el("li", {}, p))); setBar(((i) / piece.sections.length) * 100);
-    for (const line of s.text.match(/[^.!?।\n]+[.!?।]?/g) || [s.text]) { if (my !== run) return; if (!line.trim()) continue; $("st-text").textContent = line.trim(); await speak(line.trim(), lang); }
+    const parts = chunks(s.text, 200);
+    for (let k = 0; k < parts.length; k++) { if (my !== run) return; $("st-text").textContent = parts[k]; await sayChunk(parts[k], lang, parts.slice(k + 1, k + 3), my); }
   }
   if (my === run) { stop(); setBar(100); $("st-text").textContent = "The end."; }
 };
