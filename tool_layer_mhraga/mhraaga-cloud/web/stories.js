@@ -1,6 +1,7 @@
 // Stories, pravachan and explainers: outline -> sections (each written by the model) -> scene-by-scene narration with a soft raga bed.
 import { $, api, toast, el } from "./api.js";
-import { master, schedule } from "./synth.js";
+import { startBed as bedStart, duckNow, releaseNow } from "./synth.js";
+import { bestVoice } from "./voice.js";
 
 let kind = (location.hash.slice(1) || "story"); if (!["story", "pravachan", "explainer"].includes(kind)) kind = "story";
 let piece = null, run = 0, ctx = null, bedTimer = 0, voices = [];
@@ -41,21 +42,22 @@ $("make").onclick = async () => {
 const setBar = (p) => ($("bar").style.width = p + "%");
 
 // ---- narration
+let bed = null;
 async function startBed() {
   if (!$("bg").checked) return;
   try {
-    const { songs } = await api("/playlist", { auth: false }); if (!songs.length) return;
-    const pick = songs[Math.floor(Math.random() * songs.length)], full = await api("/playlist/" + pick.id, { auth: false });
     ctx = ctx || new AudioContext(); await ctx.resume();
-    const bus = master(ctx, 0.22).bus; schedule(ctx, bus, { ...full.score, lyrics: [] }, ctx.currentTime + 0.1, 0);
-    bedTimer = setTimeout(() => ctx && startBed(), Math.max(30, full.score.duration - 3) * 1000);
+    bed = bedStart(ctx, 0.9);   // tanpura and a soft pad only: no melody or tabla to compete with the speaker
   } catch {}
 }
-function stop() { run++; clearTimeout(bedTimer); try { speechSynthesis.cancel(); } catch {} try { ctx && ctx.close(); } catch {} ctx = null; $("play").textContent = "▶ Play"; }
+function stop() { bed = null; run++; clearTimeout(bedTimer); try { speechSynthesis.cancel(); } catch {} try { ctx && ctx.close(); } catch {} ctx = null; $("play").textContent = "▶ Play"; }
 $("stop").onclick = stop;
 const speak = (txt, lang) => new Promise((res) => {
-  const u = new SpeechSynthesisUtterance(txt), want = voices.find((v) => v.voiceURI === $("voice").value) || voices.find((v) => v.lang.replace("_", "-") === lang) || voices.find((v) => v.lang.startsWith(lang.slice(0, 2)));
-  if (want) u.voice = want; u.lang = want ? want.lang : lang; u.rate = kind === "pravachan" ? 0.9 : 0.95; u.onend = u.onerror = res; speechSynthesis.speak(u); });
+  const u = new SpeechSynthesisUtterance(txt), want = bestVoice(voices, lang, $("voice").value);
+  if (want) u.voice = want; u.lang = want ? want.lang : lang; u.rate = kind === "pravachan" ? 0.88 : 0.95; u.pitch = kind === "pravachan" ? 0.95 : 1;
+  u.onstart = () => bed && ctx && duckNow(ctx, bed.m, 0.55);   // the bed steps back while the voice speaks
+  u.onend = u.onerror = () => setTimeout(res, kind === "pravachan" ? 420 : 280);   // a breath between sentences
+  speechSynthesis.speak(u); });
 $("play").onclick = async () => {
   if (!piece) return; stop(); const my = run; $("stage").hidden = false; $("play").textContent = "❚❚ Playing"; await startBed();
   const lang = BCP[piece.language] || "en-IN";

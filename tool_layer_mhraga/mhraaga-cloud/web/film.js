@@ -1,7 +1,8 @@
 // Film studio: storyboard timeline, canvas effects, Box2D (planck.js) particles, colour grade + scope, WebM export.
 import { $, api, toast, el } from "./api.js";
 import * as planck from "./planck.mjs";
-import { master, schedule } from "./synth.js";
+import { master, schedule, duckNow, releaseNow } from "./synth.js";
+import { bestVoice } from "./voice.js";
 
 const FX = { glow: "Glow", vignette: "Vignette", grain: "Film grain", blur: "Soft focus", lightleak: "Light leak", particles: "Physics petals", kenburns: "Slow zoom", fade: "Fade in/out", bw: "Black & white", warm: "Warm", cool: "Cool" };
 const W = 960, H = 540, cv = $("cv"), cx = cv.getContext("2d", { willReadFrequently: true });
@@ -58,17 +59,17 @@ function draw() { if (!proj.scenes.length) { cx.fillStyle = "#120f2e"; cx.fillRe
   const l = locate(tNow), s = proj.scenes[l.i]; frame(s, l.local, s.duration); scope(); $("t-clock").textContent = `${fmt(tNow)} / ${fmt(total())}`; $("t-seek").value = total() ? (tNow / total()) * 1000 : 0; }
 
 // ---- playback (+ optional export)
-let lastScene = -1, lastTs = 0;
+let lastScene = -1, lastTs = 0, bedM = null;
 function tick(ts) {
   if (!playing) return; const dt = Math.min(0.1, (ts - lastTs) / 1000); lastTs = ts; tNow += dt; if (tNow >= total()) return stop(true);
   const l = locate(tNow); if (l.i !== lastScene) { lastScene = l.i; select(l.i, true); const s = proj.scenes[l.i]; newWorld(); if (s.effects.includes("particles")) spawn(36); if ($("o-tts").checked && s.narration) speakLine(s.narration); }
   if (world) world.step(dt, 8, 3); draw(); raf = requestAnimationFrame(tick);
 }
-function speakLine(t) { if (!("speechSynthesis" in window)) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t), v = speechSynthesis.getVoices().find((x) => x.voiceURI === $("o-voice").value) || speechSynthesis.getVoices().find((x) => x.lang.startsWith(({ hindi: "hi", marathi: "mr", telugu: "te", gujarati: "gu", kannada: "kn", tamil: "ta" })[proj.language] || "en")); if (v) { u.voice = v; u.lang = v.lang; } speechSynthesis.speak(u); }
+function speakLine(t) { if (!("speechSynthesis" in window)) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t), v = bestVoice(speechSynthesis.getVoices(), ({ hindi: "hi-IN", marathi: "mr-IN", telugu: "te-IN", gujarati: "gu-IN", kannada: "kn-IN", tamil: "ta-IN" })[proj.language] || "en-IN", $("o-voice").value); u.onstart = () => bedM && actx && duckNow(actx, bedM, 0.5); u.onend = () => bedM && actx && releaseNow(actx, bedM); if (v) { u.voice = v; u.lang = v.lang; } speechSynthesis.speak(u); }
 async function startBed() {
   if (!$("o-music").checked) return;
   try { const { songs } = await api("/playlist", { auth: false }); if (!songs.length) return; const full = await api("/playlist/" + songs[Math.floor(Math.random() * songs.length)].id, { auth: false });
-    const m = master(actx, 0.25); if (dest) m.out.connect(dest); schedule(actx, m.bus, { ...full.score, lyrics: [] }, actx.currentTime + 0.1, 0); bedTimer = setTimeout(() => playing && startBed(), Math.max(20, full.score.duration - 2) * 1000); } catch {}
+    const m = bedM = master(actx, 0.25); if (dest) m.out.connect(dest); schedule(actx, m.bus, { ...full.score, lyrics: [] }, actx.currentTime + 0.1, 0); bedTimer = setTimeout(() => playing && startBed(), Math.max(20, full.score.duration - 2) * 1000); } catch {}
 }
 async function play(exporting = false) {
   if (!proj.scenes.length) return; stop(false); if (tNow >= total()) tNow = 0; playing = true; lastScene = -1; lastTs = performance.now(); $("t-play").textContent = "❚❚";

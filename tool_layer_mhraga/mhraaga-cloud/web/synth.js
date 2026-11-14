@@ -26,9 +26,35 @@ export function master(ctx, volume = 0.8) {
   const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3;
   const dry = ctx.createGain(), wet = ctx.createGain(), conv = ctx.createConvolver();
   dry.gain.value = 0.78; wet.gain.value = 0.3; conv.buffer = reverbIR(ctx);
-  const bus = ctx.createGain();
-  bus.connect(dry); bus.connect(conv); conv.connect(wet); dry.connect(comp); wet.connect(comp); comp.connect(out); out.connect(ctx.destination);
-  return { bus, out };
+  const bus = ctx.createGain(), duck = ctx.createGain();   // `duck` lets the music step back while someone speaks
+  bus.connect(duck); duck.connect(dry); duck.connect(conv); conv.connect(wet); dry.connect(comp); wet.connect(comp); comp.connect(out); out.connect(ctx.destination);
+  return { bus, out, duck };
+}
+
+// Dip the music to `level` for `dur` seconds starting at ctx time `t`, then release slowly (sidechain-style ducking).
+export function duckAt(m, t, dur, level = 0.45) {
+  const g = m.duck.gain; g.setTargetAtTime(level, t, 0.1); g.setTargetAtTime(1, t + dur, 0.45);
+}
+export const duckNow = (ctx, m, level = 0.4) => m.duck.gain.setTargetAtTime(level, ctx.currentTime, 0.1);
+export const releaseNow = (ctx, m) => m.duck.gain.setTargetAtTime(1, ctx.currentTime, 0.5);
+
+// A soft sustained pad: Sa, Pa and the octave as slow detuned sines, so speech has a warm floor without a melody competing with it.
+function pad(ctx, dest, sa, t, dur, vol) {
+  const g = ctx.createGain(), lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 900;
+  g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + dur * 0.35); g.gain.linearRampToValueAtTime(0.0001, t + dur);
+  for (const [m, det] of [[1, -4], [1, 5], [1.5, 0], [2, 3], [0.5, 0]]) {
+    const o = ctx.createOscillator(); o.type = m === 0.5 ? "sine" : "triangle"; o.frequency.value = sa * m; o.detune.value = det; o.connect(g); o.start(t); o.stop(t + dur + 0.1);
+  }
+  g.connect(lp); lp.connect(dest);
+}
+
+// Background for speech (stories, pravachan, bhajan recitation, film narration): tanpura and pad only. No lead, no tabla.
+// Returns { m, stop } ; call stop() or close the context to end it.
+export function startBed(ctx, level = 0.5, sa = 233) {
+  const m = master(ctx, level), t0 = ctx.currentTime + 0.1, tp = 1.5, strings = [sa * 1.5, sa, sa, sa / 2], total = 600;
+  for (let k = 0, t = 0; t < total; k++, t += tp) tanpura(ctx, m.bus, strings[k % 4], t0 + t, k % 4 === 3 ? 0.13 : 0.1, 4.2);
+  for (let t = 0; t < total; t += 9) pad(ctx, m.bus, sa, t0 + t, 14, 0.05);
+  return { m, stop: () => { try { m.out.gain.setTargetAtTime(0, ctx.currentTime, 0.4); } catch {} } };
 }
 
 function tanpura(ctx, dest, f, t, vol, life) {

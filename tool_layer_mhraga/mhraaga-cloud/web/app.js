@@ -1,4 +1,5 @@
-import { master, schedule } from "./synth.js";
+import { master, schedule, duckAt } from "./synth.js";
+import { bestVoice } from "./voice.js";
 
 const $ = (id) => document.getElementById(id);
 const API = "/api";
@@ -114,7 +115,7 @@ function pickVoice() {
   const sel = $("voice"), want = SPEECH_LANG[song?.brief?.language || ""] || "en-IN";
   const voices = speechSynthesis.getVoices(); if (!voices.length) return null;
   if (!sel.options.length) { for (const v of voices) { const o = document.createElement("option"); o.value = v.name; o.textContent = `${v.name} (${v.lang})`; sel.append(o); } }
-  const match = voices.find((v) => v.lang.replace("_", "-") === want) || voices.find((v) => v.lang.startsWith(want.slice(0, 2)));
+  const match = bestVoice(voices, want);
   if (match && !sel.dataset.user) sel.value = match.name;
   return voices.find((v) => v.name === sel.value) || null;
 }
@@ -125,7 +126,8 @@ function speakLine(text, durSec) {
   if (!("speechSynthesis" in window) || !$("sing").checked) return;
   const u = new SpeechSynthesisUtterance(text.replace(/\[.*?\]/g, ""));
   const v = pickVoice(); if (v) { u.voice = v; u.lang = v.lang; } else u.lang = SPEECH_LANG[song.brief.language || ""] || "en-IN";
-  u.rate = Math.min(1.25, Math.max(0.55, text.length / (Math.max(1, durSec) * 6.5))); u.pitch = 1.05; u.volume = 0.9;
+  const cps = /[\u0900-\u0D7F]/.test(text) ? 11 : 14;   // characters a voice speaks per second at normal rate: Indic scripts vs Latin
+  u.rate = Math.min(1.1, Math.max(0.7, text.length / (Math.max(1, durSec) * cps))); u.pitch = 1.0; u.volume = 0.95;   // unhurried: fit the line, never rush it
   speechSynthesis.speak(u);
 }
 
@@ -134,6 +136,7 @@ async function play() {
   ctx = new (window.AudioContext || window.webkitAudioContext)(); await ctx.resume();
   const m = master(ctx, $("vol").value / 100); bus = m.bus; volNode = m.out;
   startAt = ctx.currentTime + 0.12 - offset; schedule(ctx, bus, song.score, ctx.currentTime + 0.12, offset);
+  if ($("sing").checked) for (const l of song.score.lyrics) if (!l.tag && l.t + l.dur > offset) duckAt(m, ctx.currentTime + 0.12 + Math.max(0, l.t - offset), l.dur, 0.5);   // the music steps back under every sung line
   playing = true; $("play").textContent = "❚❚"; $("play").setAttribute("aria-label", "Pause");
   timers = song.score.lyrics.filter((l) => !l.tag && l.t + l.dur > offset).map((l) => setTimeout(() => speakLine(l.text, l.dur), Math.max(0, (l.t - offset) * 1000)));
   loop();

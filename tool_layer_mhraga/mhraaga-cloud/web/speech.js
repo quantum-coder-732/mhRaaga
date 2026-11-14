@@ -1,5 +1,6 @@
 // Speech tab: type/dictate -> translate -> speak with an Indian or foreign voice over an optional raga bed. Browser speech services only.
-import { master, schedule } from "./synth.js";
+import { startBed as bedStart, duckNow } from "./synth.js";
+import { bestVoice } from "./voice.js";
 const $ = (id) => document.getElementById(id);
 const api = async (path, opt = {}) => { let t = null; try { t = localStorage.getItem("mh_token"); } catch {}
   const r = await fetch("/api" + path, { method: opt.method || "GET", headers: { "Content-Type": "application/json", ...(t ? { Authorization: "Bearer " + t } : {}) }, body: opt.body ? JSON.stringify(opt.body) : undefined });
@@ -64,21 +65,19 @@ let ctx = null, run = 0;
 function stopAll() { run++; try { speechSynthesis.cancel(); } catch {} try { ctx && ctx.close(); } catch {} ctx = null; say(""); }
 $("sp-stop").onclick = stopAll;
 $("sp-var").oninput = () => ($("sp-var-v").textContent = $("sp-var").value);
+let spBed = null;
 async function bed() {
-  const { songs } = await api("/playlist"); if (!songs.length) return;
-  const pick = songs[Math.min(songs.length - 1, Math.floor(((+$("sp-var").value - 1) / 6) * (songs.length - 1)))];
-  const full = await api("/playlist/" + pick.id); ctx = new AudioContext(); await ctx.resume();
-  schedule(ctx, master(ctx, 0.3).bus, { ...full.score, lyrics: [] }, ctx.currentTime + 0.1, 0);
+  ctx = new AudioContext(); await ctx.resume(); spBed = bedStart(ctx, 0.9);   // tanpura and a soft pad only
 }
 $("sp-go").onclick = async () => {
   const text = $("sp-text").value.trim(); if (!text) return say("Write or paste a script first."); stopAll(); const my = run;
   const lang = $("sp-to").dataset.spoken || $("sp-stt").value; const want = voices.find((v) => v.voiceURI === $("sp-voice").value);
-  const best = want || voices.find((v) => v.lang.replace("_", "-") === lang) || voices.find((v) => v.lang.startsWith(lang.slice(0, 2)));
+  const best = want || bestVoice(voices, lang);
   const [rate, pitch] = TONES[tone];
   if ($("sp-bg").value === "1") { try { await bed(); } catch (e) { say("Background music unavailable: " + e.message); } }
   const parts = text.match(/[^.!?।\n]+[.!?।]?/g) || [text]; say("Speaking…");
   for (const p of parts) { if (my !== run) return; if (!p.trim()) continue;
-    await new Promise((res) => { const u = new SpeechSynthesisUtterance(p.trim()); if (best) u.voice = best; u.lang = best ? best.lang : lang; u.rate = rate; u.pitch = pitch; u.onend = u.onerror = res; speechSynthesis.speak(u); }); }
+    await new Promise((res) => { const u = new SpeechSynthesisUtterance(p.trim()); if (best) u.voice = best; u.lang = best ? best.lang : lang; u.rate = rate; u.pitch = pitch; u.onstart = () => spBed && ctx && duckNow(ctx, spBed.m, 0.55); u.onend = u.onerror = () => setTimeout(res, 300); speechSynthesis.speak(u); }); }
   if (my === run) { say("Done."); try { ctx && ctx.close(); } catch {} ctx = null; }
 };
 
