@@ -37,6 +37,7 @@ def gopi_for(text: str) -> int:
     return int(hashlib.sha256(text.strip().lower().encode()).hexdigest(), 16) % N_GOPI + 1
 
 
+from . import poems as _poems
 from .lyrics_bank import MOOD_THEME as MOOD_THEME_, make_lyrics as _make_lyrics
 
 
@@ -63,6 +64,11 @@ def fallback(prompt: str, opts: dict) -> dict:
     if not raga:
         raga = f"gopi:{gopi_for(prompt)}" if krishna else MOOD_RAGA[mood]
     lang = opts.get("language") or detect_language(prompt)
+    if opts.get("poem"):
+        got = _poems.pick(lang, prompt)
+        if got:
+            return {"title": got[0], "raga": "Yaman" if "krish" not in low else f"gopi:{gopi_for(prompt)}", "tala": "dadra", "tempo_bpm": 58, "mood": "tender", "language": lang,
+                    "lead": "bansuri", "lyrics": got[1], "poem": True}
     return {"title": prompt.strip()[:44].title() or "Untitled", "raga": raga, "tala": "", "tempo_bpm": MOOD_TEMPO.get(mood, 72),
             "mood": mood, "language": lang, "lead": "bansuri" if krishna else "harmonium",
             "lyrics": (LYRICS if krishna else PLAIN)[lang] if lang in LYRICS else _make_lyrics(lang, "krishna" if krishna else MOOD_THEME_.get(mood, ""))[0]}
@@ -125,6 +131,7 @@ def make_brief(prompt: str, opts: dict | None = None, api_key: str = "", timeout
         for model in MODELS:
             try:
                 raw = _call(model, prompt + (f"\n(language: {opts['language']})" if opts.get("language") else "") +
+                            ("\n(spoken poem: write 14-18 short rhymed lines of 4-9 words, plain intimate words, gentle imagery like flute, moon, river, hands; tag [Verse]/[Chorus] every 4 lines)" if opts.get("poem") else "") +
                             ("\n(instrumental: no lyrics)" if opts.get("instrumental") else ""), api_key, timeout)
                 brief, source, usage = _clean(raw, prompt, opts), model, {"model": model, **raw.get("_usage", {})}
                 break
@@ -147,6 +154,11 @@ def make_brief(prompt: str, opts: dict | None = None, api_key: str = "", timeout
         brief["lyrics"] = opts["lyrics"]
     if opts.get("instrumental"):
         brief["lyrics"] = ""
+    if opts.get("poem"):
+        brief["poem"], brief["tempo_bpm"] = True, min(brief.get("tempo_bpm", 58), 66)
+        if source == "fallback" and not brief.get("lyrics"):
+            got = _poems.pick(brief["language"], prompt)
+            brief["lyrics"] = got[1] if got else brief.get("lyrics", "")
     brief["source"], brief["usage"] = source, usage
     return brief
 

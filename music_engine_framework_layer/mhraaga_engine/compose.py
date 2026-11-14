@@ -62,7 +62,7 @@ def _orn(prev: int | None, n: int, rng: random.Random, stress: set[int]) -> int:
 
 
 def compose(raga: dict, tala: str = "", tempo: int = 72, duration: int = 90, lyrics: str = "", seed: int | None = None,
-            sa: float | None = None, lead: str = "bansuri", instrumental: bool = False) -> dict:
+            sa: float | None = None, lead: str = "bansuri", instrumental: bool = False, poem: bool = False) -> dict:
     tala = tala if tala in TALAS else raga.get("tala", "teental")
     T = TALAS[tala]
     sa = float(sa or raga.get("tonic") or 233.0)
@@ -75,7 +75,8 @@ def compose(raga: dict, tala: str = "", tempo: int = 72, duration: int = 90, lyr
     duration = max(30, min(240, int(duration)))
     P = _Phrases(raga, rng)
 
-    alap_end = min(duration * 0.2, 36.0)
+    alap_end = duration - 6 * cyc if poem else min(duration * 0.2, 36.0)
+    alap_end = max(alap_end, duration * 0.2) if poem else alap_end
     gat_start = max(cyc, math.ceil(alap_end / cyc) * cyc)
     n_av = max(2, int((duration - gat_start - 5 * beat) // cyc))
     end_gat = gat_start + n_av * cyc
@@ -149,10 +150,10 @@ def compose(raga: dict, tala: str = "", tempo: int = 72, duration: int = 90, lyr
 
     # ---- tabla
     tabla = []
-    bols = T["bols"]
+    bols = T["bols"] if not poem else []
     khali = set(T.get("khali", []))
     i = 0
-    while gat_start + i * beat <= end_gat + 1e-6:
+    while not poem and gat_start + i * beat <= end_gat + 1e-6:
         bi = i % cb
         bol = bols[bi]
         tabla.append([round(gat_start + i * beat, 3), bol, bol_class(bol), 1.0 if bi == 0 else 0.7 if bi in khali else 0.82])
@@ -167,9 +168,9 @@ def compose(raga: dict, tala: str = "", tempo: int = 72, duration: int = 90, lyr
     sung = [(x, x[1:-1] if x.startswith("[") and x.endswith("]") else "") for x in lines]
     n_sung = len([s for s in sung if not s[1]])
     if n_sung:
-        span = max(cyc, (end_gat - cyc * 0.5) - gat_start)
+        span = max(cyc, (end_gat - cyc * 0.5) - gat_start) if not poem else max(20.0, total - 14.0)
         step = span / n_sung
-        tt = gat_start
+        tt = gat_start if not poem else 5.0
         for text, tag in sung:
             if tag:
                 ly.append({"t": round(tt, 3), "dur": 0.0, "text": text, "tag": tag})
@@ -179,7 +180,7 @@ def compose(raga: dict, tala: str = "", tempo: int = 72, duration: int = 90, lyr
 
     second = 7 if any(n % 12 == 7 for n in raga["aroha"]) else 5  # no Pa (Marwa, Puriya): tune the drone to Ma
     return {
-        "meta": {"raga": raga["name"], "tala": tala, "tempo": tempo, "sa": sa, "mood": raga["mood"], "time": raga["time"],
+        "meta": {"poem": poem, "raga": raga["name"], "tala": tala, "tempo": tempo, "sa": sa, "mood": raga["mood"], "time": raga["time"],
                  "seed": seed, "vadi": raga["vadi"], "samvadi": raga["samvadi"], "kind": raga.get("kind", "classical"),
                  "scale": sorted(set(n % 12 for n in raga["aroha"] + raga["avaroha"])),
                  "gopi": raga.get("gopi"), "mela": raga.get("melakarta_names"), "aroha": raga["aroha"], "avaroha": raga["avaroha"]},

@@ -133,13 +133,36 @@ def library_affinity(score: dict, brief: dict) -> tuple[float, dict]:
     return 0.85 * max(0.0, min(1.0, (c - 0.35) / 0.5)) + 0.15 * close, {"nearest": best["file"][:40], "cosine": round(c, 3)}
 
 
+def poem_form(score: dict, brief: dict) -> tuple[float, dict]:
+    """Does it read and pace like the reference poem videos: 10-24 short rhymed lines, 2-4 minutes, soft music without tabla, ends on Sa."""
+    lines = [l["text"] for l in score["lyrics"] if not l["tag"]]
+    if not lines:
+        return 0.0, {"lines": 0}
+    words = [len(l.split()) for l in lines]
+    avg = sum(words) / len(words)
+    n_ok = 1.0 if 10 <= len(lines) <= 24 else max(0.0, 1 - min(abs(len(lines) - 10), abs(len(lines) - 24)) / 10)
+    w_ok = 1.0 if 3 <= avg <= 9 else max(0.0, 1 - min(abs(avg - 3), abs(avg - 9)) / 5)
+    end = lambda t: re.sub(r"[^\w]", "", t)[-2:]
+    pairs = [(lines[i], lines[i + 1]) for i in range(0, len(lines) - 1, 2)]
+    rhyme = sum(1 for a, b in pairs if end(a) and end(a) == end(b)) / max(1, len(pairs))
+    dur = score["duration"]
+    d_ok = 1.0 if 120 <= dur <= 240 else max(0.0, 1 - min(abs(dur - 120), abs(dur - 240)) / 90)
+    first, last = score["lyrics"][0]["t"], max(l["t"] for l in score["lyrics"])
+    pace = 1.0 if first >= 3 and last <= dur - 8 and not score["tabla"] else 0.4
+    sa_end = round(12 * math.log2(max(score["lead"], key=lambda e: e[0])[1] / score["sa"])) % 12 == 0
+    return 0.35 * rhyme + 0.15 * n_ok + 0.15 * w_ok + 0.15 * d_ok + 0.15 * pace + 0.05 * sa_end, {"rhyme": round(rhyme, 2), "lines": len(lines), "avg_words": round(avg, 1), "seconds": dur, "no_tabla": not score["tabla"]}
+
+
 CRITICS = {"raga_fidelity": raga_fidelity, "cadence": cadence, "phrase_variety": phrase_variety, "contour": contour,
-           "rhythm": rhythm, "lyrics_fit": lyrics_fit, "library_affinity": library_affinity}
-WEIGHT = {"raga_fidelity": 0.28, "cadence": 0.05, "phrase_variety": 0.14, "contour": 0.14, "rhythm": 0.12, "lyrics_fit": 0.12, "library_affinity": 0.15}
+           "rhythm": rhythm, "lyrics_fit": lyrics_fit, "library_affinity": library_affinity, "poem_form": poem_form}
+WEIGHT = {"raga_fidelity": 0.28, "cadence": 0.05, "phrase_variety": 0.14, "contour": 0.14, "rhythm": 0.12, "lyrics_fit": 0.12, "library_affinity": 0.15, "poem_form": 0.0}
 
 
 def review(score: dict, brief: dict) -> dict:
     res = {k: f(score, brief) for k, f in CRITICS.items()}
     scores = {k: round(v[0], 4) for k, v in res.items()}
-    total = sum(WEIGHT[k] * scores[k] for k in scores)
+    w = dict(WEIGHT)
+    if brief.get("poem"):  # a poem is judged on its form instead of tabla rhythm
+        w["rhythm"], w["poem_form"], w["phrase_variety"] = 0.0, 0.2, 0.06
+    total = sum(w[k] * scores[k] for k in scores)
     return {"scores": scores, "detail": {k: v[1] for k, v in res.items()}, "reward": round(total, 4)}

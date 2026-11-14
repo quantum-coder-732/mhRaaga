@@ -53,7 +53,7 @@ document.getElementById("styles").onclick = (e) => {
 };
 const rnd = (n) => 1 + Math.floor(Math.random() * n);
 function raga() { return forced || (tags.has("krishna") ? `gopi:${rnd(16000)}` : $("raga").value); }
-function styleBits() { return [...tags].filter((t) => t !== "krishna"); }
+function styleBits() { return [...tags].filter((t) => t !== "krishna" && t !== "poem"); }
 $("tempo").oninput = () => ($("tempo-v").textContent = +$("tempo").value === 40 ? "auto" : $("tempo").value + " bpm");
 $("dur").oninput = () => ($("dur-v").textContent = $("dur").value + " s");
 
@@ -63,7 +63,7 @@ async function compose(extra = {}) {
   $("go").disabled = true; $("surprise").disabled = true; $("status").className = ""; $("status").textContent = "Composing… the planner is choosing raga, tāla and words.";
   try {
     const bits = styleBits(), kr = tags.has("krishna"), body = { prompt: bits.length ? `${prompt}. Style: ${bits.join(", ")}` : prompt, raga: raga(), title: $("title").value.trim() || undefined, tala: $("tala").value, language: $("language").value, lead: leadTag || (kr ? "bansuri" : $("lead").value), tonic: +$("tonic").value || undefined,
-      tempo: +$("tempo").value === 40 ? undefined : +$("tempo").value, duration: +$("dur").value, instrumental: $("instr").checked, lyrics: $("lyrics").value, ...extra };
+      tempo: +$("tempo").value === 40 ? undefined : +$("tempo").value, duration: tags.has("poem") ? Math.max(120, +$("dur").value) : +$("dur").value, poem: tags.has("poem") || undefined, instrumental: $("instr").checked, lyrics: $("lyrics").value, ...extra };
     song = await api("/compose", { method: "POST", body });
     $("status").textContent = ""; await show(song); refreshLibrary(); me = await api("/me");
     const w = document.getElementById("whoami"); if (w) w.textContent = `${me.name} · ${me.composed_today}/${me.daily_limit} today`;
@@ -97,7 +97,7 @@ async function refreshLibrary() {
 // ---------------------------------------------------------------- player
 let ctx = null, bus = null, volNode = null, startAt = 0, offset = 0, playing = false, raf = 0, timers = [];
 async function show(s) {
-  stop(); song = s; $("player").hidden = false; $("s-title").textContent = s.title;
+  stop(); song = s; $("player").hidden = false; $("s-title").textContent = s.title; $("player").classList.toggle("poem", !!s.score.meta.poem);
   const m = s.score.meta, chips = $("chips"); chips.replaceChildren(...(m.gopi ? [chip("🪈 Krishna flute", "gold")] : []), chip(m.gopi ? "mystery raga" : m.raga, "gold"), chip(m.tala), chip(m.tempo + " bpm"), chip(m.mood));
   $("s-info").textContent = m.gopi ? `A Krishna flute raga, chosen for you from sixteen thousand · vādī ${SVARA[m.vadi % 12]}, samvādī ${SVARA[m.samvadi % 12]} · ${m.time}`
     : `vādī ${SVARA[m.vadi % 12]}, samvādī ${SVARA[m.samvadi % 12]} · best at ${m.time} · planned by ${s.source === "fallback" ? "built-in rules" : s.source}`;

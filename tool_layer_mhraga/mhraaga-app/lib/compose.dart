@@ -92,7 +92,7 @@ class _ComposeScreenState extends State<ComposeScreen> {
     try {
       final body = {
         'prompt': _promptWithStyle, 'raga': _ragaSpec, 'tala': tala, 'language': language, 'lead': _lead, 'instrumental': instrumental,
-        'duration': duration.round(), if (title.text.trim().isNotEmpty) 'title': title.text.trim(), if (lyrics.text.trim().isNotEmpty) 'lyrics': lyrics.text.trim(),
+        'duration': tags.contains('poem') ? max(120, duration.round()) : duration.round(), if (tags.contains('poem')) 'poem': true, if (title.text.trim().isNotEmpty) 'title': title.text.trim(), if (lyrics.text.trim().isNotEmpty) 'lyrics': lyrics.text.trim(),
       };
       final song = Map<String, dynamic>.from(await Api.call('POST', '/compose', body: body));
       if (!mounted) return;
@@ -112,7 +112,7 @@ class _ComposeScreenState extends State<ComposeScreen> {
       );
 
   String get _promptWithStyle {
-    final bits = tags.where((t) => t != 'krishna' && !_leads.contains(t)).toList();
+    final bits = tags.where((t) => t != 'krishna' && t != 'poem' && !_leads.contains(t)).toList();
     return bits.isEmpty ? prompt.text.trim() : '${prompt.text.trim()}. Style: ${bits.join(", ")}';
   }
 
@@ -122,7 +122,7 @@ class _ComposeScreenState extends State<ComposeScreen> {
   }
 
   static const _leads = ['bansuri', 'veena', 'harmonium'];
-  static const _styles = ['krishna', 'devotional', 'dawn', 'rain', 'night', 'romantic', 'meditative', 'joyful', 'bhajan', 'bansuri', 'veena', 'harmonium'];
+  static const _styles = ['poem', 'krishna', 'devotional', 'dawn', 'rain', 'night', 'romantic', 'meditative', 'joyful', 'bhajan', 'bansuri', 'veena', 'harmonium'];
 
   Widget _tabs() => Container(
         decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: kLine))),
@@ -144,7 +144,7 @@ class _ComposeScreenState extends State<ComposeScreen> {
   Widget _styleChips() => Wrap(spacing: 8, runSpacing: 4, children: [
         for (final t in _styles)
           FilterChip(
-            label: Text(t == 'krishna' ? '🪈 Krishna flute' : t),
+            label: Text(t == 'krishna' ? '🪈 Krishna flute' : t == 'poem' ? '📜 Spoken poem' : t),
             selected: tags.contains(t),
             selectedColor: kGold,
             showCheckmark: false,

@@ -54,6 +54,14 @@ Everything is standard-library Python and runs offline; an LLM is optional.
 - **lyrics_fit**: lyrics written in the right script for the language, singable letters per second, lines paced across avartans.
 - **library_affinity**: cosine similarity of the song's pitch profile to the closest recorded raga in the library, plus tempo closeness.
 
+## Spoken poems (like the reference poem videos)
+The reference files in `~/library` (`Sometimes two people`, `What if the one you`, `When messages disappear`, `The Truth of Radha's Love`,
+`Loving From Within`, `बिना प्रेम धीरज`) are 2 to 9 minute rhymed spiritual-love poems with soft music, gold italic lines on a purple stage.
+A song with `poem: true` (the “Spoken poem” tag) is composed to match: 14 to 18 short rhymed lines, about 150 seconds, a long soft alap with the bansurī
+and drone, no tabla, lines spaced evenly across the whole piece, ending on Sa. The `poem_form` critic scores rhyme, line count and length, duration, pacing and the
+Sa ending; for poems it replaces the tabla-rhythm critic. `agentic/make_poems.py` writes the poems with the language model (rhyme-gated), `poems.py` serves them offline.
+`tests/test_poems.py` checks every language against these rules.
+
 ## Result of the first runs
 2 runs, 1,224 candidates scored, 136 replacements. Mean critic reward of the catalog rose from 0.862 to 0.969 across 12 rounds.
 The learned leaders per language are in `agentic/data/policy.json` and `/catalog/report.json`.

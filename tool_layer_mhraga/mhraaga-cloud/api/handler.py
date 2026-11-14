@@ -201,7 +201,7 @@ def make_song(event):
             raise ApiError(400, f"Unknown raga '{raga_in}'.")
     tala_in = text(b.get("tala"), 20)
     opts = {"raga": raga_in, "tala": tala_in if tala_in in TALAS else "", "language": text(b.get("language"), 12).lower(),
-            "lead": text(b.get("lead"), 12), "lyrics": text(b.get("lyrics"), 3000), "instrumental": bool(b.get("instrumental")),
+            "lead": text(b.get("lead"), 12), "lyrics": text(b.get("lyrics"), 3000), "instrumental": bool(b.get("instrumental")), "poem": bool(b.get("poem")),
             "tempo": int(b["tempo"]) if isinstance(b.get("tempo"), (int, float)) and 40 <= b["tempo"] <= 180 else 0}
     brief = make_brief(prompt, opts, secret("openrouter_key"))
     if text(b.get("title"), 60):
@@ -211,9 +211,9 @@ def make_song(event):
         raga = get_raga(brief["raga"], tonic)
     except Exception:
         raga, brief["raga"] = get_raga("yaman"), "Yaman"
-    dur = b.get("duration") if isinstance(b.get("duration"), (int, float)) else 90
+    dur = b.get("duration") if isinstance(b.get("duration"), (int, float)) else (150 if opts["poem"] else 90)
     score = compose(raga, brief.get("tala", ""), brief.get("tempo_bpm", 72), int(dur), brief.get("lyrics", ""),
-                    sa=tonic, lead=brief.get("lead", "bansuri"), instrumental=bool(opts["instrumental"]))
+                    sa=tonic, lead=brief.get("lead", "bansuri"), instrumental=bool(opts["instrumental"]), poem=bool(opts["poem"]))
     sid = f"{int(time.time() * 1000):013d}-{uuid.uuid4().hex[:6]}"
     summary = {"id": sid, "title": text(brief.get("title"), 60) or "Untitled", "raga": raga["name"], "tala": score["meta"]["tala"],
                "tempo": score["meta"]["tempo"], "mood": brief.get("mood", ""), "language": brief.get("language", ""),

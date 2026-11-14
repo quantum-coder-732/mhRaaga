@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from ..compose import compose
+from .. import poems
 from ..lyrics_bank import BANK, MOOD_THEME, THEMES, make_lyrics
 from ..ragas import _CLASS, get_raga
 from ..tala import TALAS
@@ -36,10 +37,11 @@ ARMS = {
     "lead": ["bansuri", "harmonium", "veena"],
     "theme": list(THEMES),
     "tonic": [183.0, 233.0, 234.0],
+    "form": ["song", "poem"],
 }
 # which critics judge which agent's work
 JUDGES = {"raga": ["raga_fidelity", "library_affinity"], "tala": ["cadence", "rhythm"], "tempo": ["rhythm", "library_affinity"],
-          "lead": ["contour", "phrase_variety"], "theme": ["lyrics_fit"], "tonic": ["library_affinity", "raga_fidelity"]}
+          "lead": ["contour", "phrase_variety"], "theme": ["lyrics_fit"], "tonic": ["library_affinity", "raga_fidelity"], "form": ["lyrics_fit", "poem_form"]}
 THEME_WORD = {
     "hindi": {"dawn": "भोर", "krishna": "मुरली", "rain": "बरखा", "night": "रात"}, "marathi": {"dawn": "पहाट", "krishna": "बासरी", "rain": "श्रावण", "night": "रात्र"},
     "english": {"dawn": "Dawn", "krishna": "Flute", "rain": "Rain", "night": "Night"}, "telugu": {"dawn": "ఉదయం", "krishna": "వేణువు", "rain": "వర్షం", "night": "రాత్రి"},
@@ -106,11 +108,17 @@ def render(lang: str, genes: dict, seed: int, duration: int = 96) -> dict:
     kind = genes["raga"]
     spec = rng.choice(CLASSICAL) if kind == "classical" else f"gopi:{rng.randint(1, 16000)}" if kind == "gopi" else f"mela:{rng.randint(1, 72)}"
     raga = get_raga(spec, genes["tonic"])
-    lyrics, theme = make_lyrics(lang, genes["theme"], rng)
-    score = compose(raga, genes["tala"], genes["tempo"], duration, lyrics, seed=seed, sa=genes["tonic"], lead=genes["lead"])
-    title = f"{THEME_WORD[lang][theme]} · {raga['name']}"
+    poem = genes.get("form") == "poem" and poems.pick(lang) is not None
+    if poem:
+        title, lyrics = poems.pick(lang, {"dawn": "flute", "krishna": "radha krishna flute", "rain": "river water", "night": "silence moon"}.get(genes["theme"], ""), rng)
+        theme, duration = genes["theme"], 150
+    else:
+        lyrics, theme = make_lyrics(lang, genes["theme"], rng)
+        title = f"{THEME_WORD[lang][theme]} · {raga['name']}"
+    score = compose(raga, "dadra" if poem else genes["tala"], min(genes["tempo"], 66) if poem else genes["tempo"], duration, lyrics, seed=seed, sa=genes["tonic"],
+                    lead=genes["lead"], poem=poem)
     brief = {"title": title, "raga": spec, "tala": genes["tala"], "tempo_bpm": genes["tempo"], "mood": theme, "language": lang,
-             "lead": genes["lead"], "lyrics": lyrics, "source": "agentic"}
+             "lead": genes["lead"], "lyrics": lyrics, "source": "agentic", "poem": poem}
     return {"title": title, "raga": raga["name"], "spec": spec, "brief": brief, "score": score}
 
 
@@ -158,6 +166,15 @@ class Catalog:
             return have[-1]["id"]
         return None
 
+    def force(self, song: dict, lang_cap: int | None = None) -> None:
+        """Insert a song, displacing the weakest non-poem song of its language when that language is full."""
+        have = self.of(song["language"])
+        if len(have) >= (lang_cap or QUOTA[song["language"]]):
+            victim = next((s for s in reversed(have) if not s["brief"].get("poem")), None)
+            if victim:
+                self._drop(victim["id"])
+        self._put(song)
+
     def _put(self, s):
         self.songs[s["id"]] = s
         (self.dir / f"{s['id']}.json").write_text(json.dumps(s, ensure_ascii=False, separators=(",", ":")))
@@ -171,6 +188,28 @@ class Catalog:
                 for s in sorted(self.songs.values(), key=lambda s: (s["language"], -s["reward"]))]
         (self.dir / "index.json").write_text(json.dumps({"updated": datetime.now(timezone.utc).isoformat(), "cap": CAP, "songs": rows}, ensure_ascii=False))
         return rows
+
+
+def ensure_poems(cat: Catalog, per_lang: int = 3, seed: int = 11) -> int:
+    """Keep at least `per_lang` spoken poems per language in the catalog (best-scoring candidates)."""
+    rng, added = random.Random(seed), 0
+    for lang in LANGS:
+        if poems.pick(lang) is None:
+            continue
+        have = [s for s in cat.of(lang) if s["brief"].get("poem")]
+        cands = []
+        for _ in range(40):
+            g = {a: rng.choice(ARMS[a]) for a in ARMS}
+            g.update(form="poem", lead="bansuri", raga="classical")
+            cands.append(make_song(lang, g, rng.randrange(1 << 30), gen=999))
+        for s in sorted(cands, key=lambda s: -s["reward"]):
+            if len(have) >= per_lang:
+                break
+            if all(s["title"] != h["title"] for h in have):
+                cat.force(s)
+                have.append(s)
+                added += 1
+    return added
 
 
 def run(catalog_dir: Path, rounds: int = 4, explore: int = 6, improve: int = 3, seed: int | None = None, log=print) -> dict:
@@ -189,7 +228,7 @@ def run(catalog_dir: Path, rounds: int = 4, explore: int = 6, improve: int = 3, 
                     stats["accepted"] += 1
             for old in cat.of(lang)[-improve:]:  # improve the weakest: new seed, one gene re-sampled from the posterior
                 for _ in range(2):
-                    genes = dict(old["genes"])
+                    genes = {"form": "song", **old["genes"]}
                     a = rng.choice(list(ARMS))
                     genes[a] = pol.pick(lang, a, rng)
                     song = make_song(lang, genes, rng.randrange(1 << 30), parent=old, gen=gen + 1)
@@ -201,6 +240,7 @@ def run(catalog_dir: Path, rounds: int = 4, explore: int = 6, improve: int = 3, 
         mean = sum(s["reward"] for s in cat.songs.values()) / max(1, len(cat.songs))
         log(f"round {rd + 1}/{rounds}: catalog {len(cat.songs)}/{CAP}, mean reward {mean:.4f}")
         stats.setdefault("curve", []).append(round(mean, 4))
+    stats["poems_added"] = ensure_poems(cat)
     pol.s["runs"] += 1
     pol.save()
     cat.index()
