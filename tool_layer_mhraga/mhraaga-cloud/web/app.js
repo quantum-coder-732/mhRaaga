@@ -238,6 +238,7 @@ $("mic-lyrics").onclick = () => dictate($("mic-lyrics"), $("lyrics"));
   if (!token) { location.href = "login.html?next=app.html"; return; }
   try { await enter(); } catch { signOut(); return; }
   const qs = new URLSearchParams(location.search), pid = qs.get("play");
+  if (qs.get("prompt")) $("prompt").value = qs.get("prompt").slice(0, 800);
   if (qs.get("lead")) $("lead").value = qs.get("lead");
   if (pid && /^[0-9a-f-]{10,40}$/.test(pid)) { try { song = await api("/playlist/" + pid); song._shared = true; await show(song); await play(); api(`/playlist/${pid}/play`, { method: "POST" }).catch(() => {}); } catch {} }
   const q = qs.get("raga");

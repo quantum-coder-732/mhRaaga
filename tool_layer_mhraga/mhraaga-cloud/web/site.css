@@ -108,3 +108,15 @@ main,.wrap{max-width:1180px}
 #script h3{color:var(--gold);margin:14px 0 4px}#script p{margin:0;color:var(--ink);line-height:1.6}
 .plist{display:grid;gap:14px}.person h2 small{color:var(--mute);font-weight:400}.person h3{margin:14px 0 4px;font-size:1rem}.sprompt{padding:10px 14px;border-radius:12px;background:#ffffff10;font-style:italic;margin:8px 0}
 .rules{padding-left:1.1rem;line-height:1.6}.ltab{width:100%;border-collapse:collapse;margin-top:10px;font-size:.9rem}.ltab th,.ltab td{text-align:left;padding:5px 8px;border-bottom:1px solid #ffffff14}.curve svg{width:100%;max-width:340px}
+
+/* signed-in home */
+.dash{padding-top:30px;padding-bottom:40px}.dhero{text-align:center;padding:40px 0 20px;border-radius:26px;background:radial-gradient(700px 320px at 50% 0%,#4b3aa899,transparent)}
+.dhero h1{font-size:clamp(2rem,5vw,3.4rem);margin:.15em 0 .5em}.dhero h1 em{font-style:normal;color:var(--gold)}.hello{color:var(--gold);margin:0;letter-spacing:.06em}
+.dprompt{max-width:760px;margin:0 auto;background:#1b164699;border:1px solid var(--line);border-radius:20px;padding:14px;text-align:left;box-shadow:0 20px 60px #0006;backdrop-filter:blur(8px)}
+.dprompt textarea{background:transparent;border:0;resize:none;font-size:1.1rem;min-height:56px}.dprompt textarea:focus-visible{outline:none}
+.drow{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.dchips{display:flex;gap:8px;flex-wrap:wrap}
+.dsec{margin-top:30px}.dsec h2{margin:0 0 12px}.dhead{display:flex;justify-content:space-between;align-items:baseline}.dhead a{color:var(--mute);font-size:.9rem}
+.shelf{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
+.scard{flex:none;width:168px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:4px;scroll-snap-align:start}
+.scard .th{width:168px;height:168px;border-radius:16px;display:grid;place-items:center;font-size:2.6rem;box-shadow:0 8px 24px #0007;transition:transform .2s}.scard:hover .th{transform:scale(1.03)}
+.scard strong{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.scard small{color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

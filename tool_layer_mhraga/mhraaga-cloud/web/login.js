@@ -17,6 +17,6 @@ $("authform").onsubmit = async (e) => {
     if (!r.ok) throw new Error(d.error || `Error ${r.status}`);
     store.set("mh_token", d.token);
     const next = new URLSearchParams(location.search).get("next");
-    location.href = next && /^[a-z]+\.html$/.test(next) ? next : "app.html";
+    location.href = next && /^[a-z]+\.html$/.test(next) ? next : "dashboard.html";
   } catch (err) { $("a-err").textContent = err.message; } finally { $("a-go").disabled = false; }
 };

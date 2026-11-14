@@ -1,3 +1,4 @@
+try { if (localStorage.getItem("mh_token") && !location.hash && !location.search) location.replace("dashboard.html"); } catch {}
 // Landing page: animated wave + featured ragas.
 const c = document.getElementById("wave"), g = c.getContext("2d");
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
