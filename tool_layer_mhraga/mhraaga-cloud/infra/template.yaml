@@ -1,0 +1,187 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: mhRaaga - raga music studio (S3 + CloudFront site, API Gateway + Lambda API, DynamoDB users and songs)
+Parameters:
+  OriginSecret: {Type: String, NoEcho: true, MinLength: 16, Description: Shared secret CloudFront sends so the API only answers through the site}
+  DailyComposeLimit: {Type: Number, Default: 30}
+  SignupOpen: {Type: String, Default: "true", AllowedValues: ["true", "false"]}
+Resources:
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: mhraaga-users
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions: [{AttributeName: email, AttributeType: S}]
+      KeySchema: [{AttributeName: email, KeyType: HASH}]
+      PointInTimeRecoverySpecification: {PointInTimeRecoveryEnabled: true}
+      SSESpecification: {SSEEnabled: true}
+  SongsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: mhraaga-songs
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions: [{AttributeName: owner, AttributeType: S}, {AttributeName: id, AttributeType: S}]
+      KeySchema: [{AttributeName: owner, KeyType: HASH}, {AttributeName: id, KeyType: RANGE}]
+      PointInTimeRecoverySpecification: {PointInTimeRecoveryEnabled: true}
+      SSESpecification: {SSEEnabled: true}
+
+  ApiRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement: [{Effect: Allow, Principal: {Service: lambda.amazonaws.com}, Action: "sts:AssumeRole"}]
+      ManagedPolicyArns: ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
+      Policies:
+        - PolicyName: mhraaga-least-privilege
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: [dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:DeleteItem, dynamodb:Query]
+                Resource: [!GetAtt UsersTable.Arn, !GetAtt SongsTable.Arn]
+              - Effect: Allow
+                Action: ssm:GetParameter
+                Resource: !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/mhraaga/*
+  ApiLogs:
+    Type: AWS::Logs::LogGroup
+    Properties: {LogGroupName: /aws/lambda/mhraaga-api, RetentionInDays: 30}
+  ApiFunction:
+    Type: AWS::Lambda::Function
+    DependsOn: ApiLogs
+    Properties:
+      FunctionName: mhraaga-api
+      Runtime: python3.12
+      Architectures: [arm64]
+      Handler: handler.handler
+      MemorySize: 512
+      Timeout: 28
+      Role: !GetAtt ApiRole.Arn
+      Code: ../build/lambda
+      Environment:
+        Variables:
+          USERS_TABLE: !Ref UsersTable
+          SONGS_TABLE: !Ref SongsTable
+          PARAM_PREFIX: /mhraaga
+          DAILY_COMPOSE_LIMIT: !Ref DailyComposeLimit
+          SIGNUP_OPEN: !Ref SignupOpen
+          ORIGIN_SECRET: !Ref OriginSecret
+
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties: {Name: mhraaga, ProtocolType: HTTP}
+  Integration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt ApiFunction.Arn
+      PayloadFormatVersion: "2.0"
+  RouteAll:
+    Type: AWS::ApiGatewayV2::Route
+    Properties: {ApiId: !Ref HttpApi, RouteKey: "ANY /api/{proxy+}", Target: !Sub "integrations/${Integration}"}
+  RouteLogin:
+    Type: AWS::ApiGatewayV2::Route
+    Properties: {ApiId: !Ref HttpApi, RouteKey: "POST /api/auth/login", Target: !Sub "integrations/${Integration}"}
+  RouteSignup:
+    Type: AWS::ApiGatewayV2::Route
+    Properties: {ApiId: !Ref HttpApi, RouteKey: "POST /api/auth/signup", Target: !Sub "integrations/${Integration}"}
+  RouteCompose:
+    Type: AWS::ApiGatewayV2::Route
+    Properties: {ApiId: !Ref HttpApi, RouteKey: "POST /api/compose", Target: !Sub "integrations/${Integration}"}
+  Stage:
+    Type: AWS::ApiGatewayV2::Stage
+    DependsOn: [RouteAll, RouteLogin, RouteSignup, RouteCompose]
+    Properties:
+      ApiId: !Ref HttpApi
+      StageName: $default
+      AutoDeploy: true
+      DefaultRouteSettings: {ThrottlingBurstLimit: 40, ThrottlingRateLimit: 20}
+      RouteSettings:
+        "POST /api/auth/login": {ThrottlingBurstLimit: 5, ThrottlingRateLimit: 2}
+        "POST /api/auth/signup": {ThrottlingBurstLimit: 5, ThrottlingRateLimit: 2}
+        "POST /api/compose": {ThrottlingBurstLimit: 6, ThrottlingRateLimit: 3}
+  InvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ApiFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*
+
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub mhraaga-site-${AWS::AccountId}-${AWS::Region}
+      PublicAccessBlockConfiguration: {BlockPublicAcls: true, BlockPublicPolicy: true, IgnorePublicAcls: true, RestrictPublicBuckets: true}
+      BucketEncryption: {ServerSideEncryptionConfiguration: [{ServerSideEncryptionByDefault: {SSEAlgorithm: AES256}}]}
+  OAC:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig: {Name: !Sub "mhraaga-${AWS::StackName}", OriginAccessControlOriginType: s3, SigningBehavior: always, SigningProtocol: sigv4}
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: {Service: cloudfront.amazonaws.com}
+            Action: s3:GetObject
+            Resource: !Sub ${SiteBucket.Arn}/*
+            Condition: {StringEquals: {"AWS:SourceArn": !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${Distribution}"}}
+  Headers:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub mhraaga-${AWS::StackName}-security
+        SecurityHeadersConfig:
+          StrictTransportSecurity: {AccessControlMaxAgeSec: 63072000, IncludeSubdomains: true, Preload: true, Override: true}
+          ContentTypeOptions: {Override: true}
+          FrameOptions: {FrameOption: DENY, Override: true}
+          ReferrerPolicy: {ReferrerPolicy: strict-origin-when-cross-origin, Override: true}
+          ContentSecurityPolicy:
+            Override: true
+            ContentSecurityPolicy: "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'; object-src 'none'"
+        CustomHeadersConfig:
+          Items: [{Header: Permissions-Policy, Value: "microphone=(self), camera=(), geolocation=()", Override: true}]
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: mhRaaga
+        HttpVersion: http2and3
+        PriceClass: PriceClass_200
+        DefaultRootObject: index.html
+        Origins:
+          - Id: site
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt OAC.Id
+            S3OriginConfig: {OriginAccessIdentity: ""}
+          - Id: api
+            DomainName: !Sub ${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
+            CustomOriginConfig: {OriginProtocolPolicy: https-only, OriginSSLProtocols: [TLSv1.2]}
+            OriginCustomHeaders: [{HeaderName: X-Origin-Verify, HeaderValue: !Ref OriginSecret}]
+        DefaultCacheBehavior:
+          TargetOriginId: site
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          ResponseHeadersPolicyId: !Ref Headers
+        CacheBehaviors:
+          - PathPattern: /api/*
+            TargetOriginId: api
+            ViewerProtocolPolicy: https-only
+            AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
+            ResponseHeadersPolicyId: !Ref Headers
+Outputs:
+  SiteUrl: {Value: !Sub "https://${Distribution.DomainName}"}
+  ApiDirectUrl: {Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"}
+  SiteBucketName: {Value: !Ref SiteBucket}
+  DistributionId: {Value: !Ref Distribution}

@@ -1,0 +1,11 @@
+.env
+*.zip
+build/
+__pycache__/
+.venv/
+node_modules/
+.aws-sam/
+*.apk
+*.jks
+key.properties
+music_engine_framework_layer/mhraaga_engine/agentic/data/catalog/

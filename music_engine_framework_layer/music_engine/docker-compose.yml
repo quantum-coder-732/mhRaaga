@@ -1,0 +1,28 @@
+# Pecova as its own, separately deployable stack — runs alongside Akanade's
+# existing containers (same Docker network as ak-backend/ak-chatbot when
+# deployed on the same host; see ../../deploy/ec2/README_PECOVA.md), but
+# is never exposed on a public port itself — only Akanade's own gateway
+# talks to it, over this internal network.
+services:
+  pecova-router:
+    build: ./backend
+    container_name: pecova-router
+    restart: unless-stopped
+    environment:
+      STORAGE_BACKEND: ${STORAGE_BACKEND:-local}
+      DATA_DIR: /data
+      DYNAMO_ENDPOINT: ${DYNAMO_ENDPOINT:-}
+      AWS_REGION: ${AWS_REGION:-ap-south-1}
+    volumes:
+      - pecova-data:/data
+    expose:
+      - "8200"
+    networks:
+      - pecova-net
+
+volumes:
+  pecova-data:
+
+networks:
+  pecova-net:
+    name: ${PECOVA_NETWORK:-pecova-net}

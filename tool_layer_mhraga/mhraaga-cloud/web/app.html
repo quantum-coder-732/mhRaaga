@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compose · mhRaaga</title>
+<meta name="description" content="Compose raga music from a sentence. Krishna's sixteen thousand ragas, tanpura, bansuri and tabla in your browser.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231b1646'/%3E%3Cpath d='M9 21c4-10 10-10 14 0' stroke='%23f4b942' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<nav class="nav" data-page="app"></nav>
+
+<main id="app" hidden>
+  <section class="card compose">
+    <h2>Compose</h2>
+    <label class="field">
+      <span>Describe the song <em>(type or speak)</em></span>
+      <div class="withmic">
+        <textarea id="prompt" rows="3" maxlength="800" placeholder="A Krishna bansuri bhajan for the dawn, gentle and flowing…"></textarea>
+        <button class="mic" id="mic-prompt" type="button" title="Speak your idea" aria-label="Speak your idea">🎙</button>
+      </div>
+    </label>
+    <div class="grid">
+      <label class="field"><span>Raga</span>
+        <select id="raga"><option value="">Let the AI choose</option><optgroup id="og-classical" label="Classical"></optgroup><option value="gopi">Krishna's gopī raga (1–16000)</option><option value="mela">Melakarta (1–72)</option></select></label>
+      <label class="field" id="num-wrap" hidden><span id="num-label">Gopī number</span>
+        <div class="row"><input id="num" type="number" min="1" max="16000" value="1"><button type="button" id="dice" class="ghost" title="Random">🎲</button></div></label>
+      <label class="field"><span>Tāla</span><select id="tala"><option value="">Raga's own</option></select></label>
+      <label class="field"><span>Language</span><select id="language"><option value="">Auto</option><option>hindi</option><option>marathi</option><option>sanskrit</option><option>english</option><option>telugu</option><option>gujarati</option><option>kannada</option><option>tamil</option></select></label>
+      <label class="field"><span>Lead</span><select id="lead"><option value="">Auto</option><option value="bansuri">Bansurī (flute)</option><option value="harmonium">Harmonium</option><option value="veena">Vīṇā</option></select></label>
+      <label class="field"><span>Sa (tonic)</span><select id="tonic"><option value="">Raga's own</option><option value="183">183 Hz · 732 ÷ 4</option><option value="233">233 Hz · 932 ÷ 4</option><option value="234">234 Hz · 936 ÷ 4</option></select></label>
+      <label class="field"><span>Tempo <b id="tempo-v">auto</b></span><input id="tempo" type="range" min="40" max="160" value="40"></label>
+      <label class="field"><span>Length <b id="dur-v">90 s</b></span><input id="dur" type="range" min="40" max="180" step="10" value="90"></label>
+    </div>
+    <label class="check"><input id="instr" type="checkbox"> Instrumental (no lyrics)</label>
+    <details>
+      <summary>Write my own lyrics</summary>
+      <div class="withmic"><textarea id="lyrics" rows="4" maxlength="3000" placeholder="[Mukhda]&#10;…&#10;[Antara]&#10;…"></textarea><button class="mic" id="mic-lyrics" type="button" aria-label="Speak lyrics">🎙</button></div>
+    </details>
+    <div class="actions">
+      <button id="go" class="primary">Compose</button>
+      <button id="surprise" class="ghost" type="button">Surprise me</button>
+      <span id="status" role="status" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section class="card player" id="player" hidden>
+    <div class="title-row"><h2 id="s-title"></h2><div class="chips" id="chips"></div></div>
+    <p id="s-info" class="muted"></p>
+    <canvas id="roll" width="900" height="240" aria-label="Notes of the raga as they play"></canvas>
+    <div id="lyric-now" class="lyric-now" aria-live="polite"></div>
+    <div class="transport">
+      <button id="play" class="primary round" aria-label="Play">▶</button>
+      <button id="stop" class="ghost round" aria-label="Stop">■</button>
+      <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Position"><span id="clock">0:00</span>
+      <input id="vol" type="range" min="0" max="100" value="80" aria-label="Volume" class="vol">
+    </div>
+    <div class="actions">
+      <label class="check"><input id="sing" type="checkbox" checked> Voice: sing the lyrics aloud</label>
+      <select id="voice" aria-label="Voice"></select>
+      <button id="wav" class="ghost" type="button">Download WAV</button>
+      <button id="del" class="ghost danger" type="button">Delete</button>
+    </div>
+    <details><summary>Lyrics</summary><pre id="lyrics-out"></pre></details>
+  </section>
+
+  <section class="card library"><h2>Community playlist</h2><ul id="plist"></ul><p id="pempty" class="muted">Loading…</p></section>
+
+  <section class="card library"><h2>Your songs</h2><ul id="songs"></ul><p id="empty" class="muted">Nothing yet. Compose your first raga.</p></section>
+</main>
+
+<div id="toast" class="toast" role="status" hidden></div>
+<script type="module" src="site.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>

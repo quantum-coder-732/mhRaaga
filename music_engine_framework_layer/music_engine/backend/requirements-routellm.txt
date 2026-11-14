@@ -1,0 +1,4 @@
+# GENERIC ARCHITECTURE arm only (see generic_architecture.py): torch/transformers/scikit-learn come with routellm (~2-3 GB).
+# Installed when the image is built with the default --build-arg WITH_ROUTELLM=1; skipped for the slim build (the EC2 stack), where /route
+# (the deterministic default) works and /generic-architecture/* answers 5xx until the image is rebuilt with WITH_ROUTELLM=1.
+routellm>=0.1

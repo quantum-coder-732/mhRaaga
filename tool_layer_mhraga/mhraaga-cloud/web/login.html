@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in · mhRaaga</title><meta name="theme-color" content="#120f2e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231b1646'/%3E%3Cpath d='M9 21c4-10 10-10 14 0' stroke='%23f4b942' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css">
+</head><body>
+<nav class="nav" data-page="login"></nav>
+<main class="authpage">
+  <form class="card" id="authform" autocomplete="on">
+    <h1 id="h">Welcome back</h1><p class="sub" id="sub">Sign in to compose and keep your songs.</p>
+    <div class="tabs"><button type="button" id="tab-in" class="on">Sign in</button><button type="button" id="tab-up">Create account</button></div>
+    <label class="field" id="f-name" hidden><span>Name</span><input id="a-name" autocomplete="name" maxlength="60"></label>
+    <label class="field"><span>Email</span><input id="a-email" type="email" autocomplete="email" required></label>
+    <label class="field"><span>Password <em>(8+ characters)</em></span><input id="a-pass" type="password" autocomplete="current-password" minlength="8" required></label>
+    <button class="primary" id="a-go">Sign in</button>
+    <p id="a-err" class="error" role="alert"></p>
+  </form>
+</main>
+<script type="module" src="site.js"></script><script type="module" src="login.js"></script>
+</body></html>
