@@ -8,6 +8,7 @@ Start with the [root README](../README.md), then:
 | Doc | For |
 |---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | The detailed architecture, step by step, and how Kalkee is (and is not) used |
+| [SINGER.md](SINGER.md) | The singer layer: make the raga song SING with YuE2, free on Colab |
 | [FILES.md](FILES.md) | **Every music file and what it holds** |
 | [THIRD_PARTY.md](THIRD_PARTY.md) | Vendored upstream repos (YuE2, Bark, setup-ffmpeg and more), licences, how to update them |
 | [kalkee/README.md](kalkee/README.md) | Kalkee in mhRaaga: the music agents, how they learn |

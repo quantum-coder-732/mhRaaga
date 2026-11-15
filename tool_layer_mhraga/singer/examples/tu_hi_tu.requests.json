@@ -1,0 +1,22 @@
+[
+ {
+  "id": "tu_hi_tu_devanagari",
+  "style": "Hindi, sufi qawwali, harmonium, tabla, dholak, handclaps, building crescendo, deep male lead vocal, soulful and expressive, 96 BPM",
+  "lyrics": "[Verse]\nतू ही तू है, तू ही तू है, मेरे हर सजदे में\nदिल की दरगाह पे जलता है दीप तेरे नाम का\nतू ही तू है, तू ही तू है, मेरे हर सजदे में\nसाँसों की तस्बीह पे बस इक पैग़ाम तेरा\n\n[Verse]\nमिट्टी के इस दिये में तूने रौशनी भरी\nमैं बुझता रहा, तूने हर बार लौ दी\nकह दे इक बार तू \"हो जा\", और मैं हो जाऊँ\nतेरी इक नज़र से मेरी रात सहर हो जाए\n\n[Chorus]\nकुन फ़यकून, कुन फ़यकून\nये सदा तेरी, हर ज़र्रे में गूँजे\n\n[Verse]\nअना की चादर उतार के आया हूँ दर पे\nख़ाली हाथ हूँ पर दिल भरा है शुक्र से\nजो तू दे वो तेरा, जो ले ले वो भी तेरा\nमैं तो बस इक साया हूँ, तू ही तू है",
+  "abc": "X:1\nT:\nM:4/4\nL:1/16\nQ:1/4=96\nV: Vocal clef=treble name=\"Vocal Melody\" snm=\"Vocal\"\nV: Ins clef=treble name=\"Ins Melody\" snm=\"Inst.\"\nK:C\n% verse\nV: Vocal\n_A,4_B,4C8|z8_A,4_B,4|G,8_B,4z4|_A,4_B,4F4_E4|\nV: Ins\nZ4|\n% verse\nV: Vocal\nD4z4_A,4_B,4|C8_B,4z4|_A,4_B,4G,8|_A,4z4_A,4_B,4|\nV: Ins\nZ4|\n% chorus\nV: Vocal\nC8z8|_A,4_B,4C8|z8_A,4_B,4|D4C8z4|\nV: Ins\nZ4|\n% chorus\nV: Vocal\n_A,4_B,4C8|_B,4z4_A,4_B,4|C8_A,2_B,2z4|_A,4_B,4G,8|\nV: Ins\nZ4|\n% verse\nV: Vocal\nF2_E4z2_A,4_B,4|_A,2G,8z6|_A,4_B,4C8|G4z4_A,4_B,4|\nV: Ins\nZ4|\n% chorus\nV: Vocal\n_A,4G,8z4|_A,4_B,4C8|_B,4z4_A,4_B,4|C8G,4z4|\nV: Ins\nZ4|\n% chorus\nV: Vocal\n_A,4_B,4G8|F4z4_A,4_B,4|_A2F4D4_B,4z2|_A,4_B,4C8|\nV: Ins\nZ4|\n",
+  "cot": "melody",
+  "seed": 2026,
+  "lines": 14,
+  "bars": 28
+ },
+ {
+  "id": "tu_hi_tu_roman",
+  "style": "Hindi Urdu, sufi qawwali, harmonium, tabla, dholak, handclaps, building crescendo, deep male lead vocal, soulful and expressive, 96 BPM",
+  "lyrics": "[Verse]\nTu hi tu hai, tu hi tu hai, mere har sajde mein\nDil ki dargah pe jalta hai deep tere naam ka\nTu hi tu hai, tu hi tu hai, mere har sajde mein\nSaanson ki tasbeeh pe bas ik paigaam tera\n\n[Verse]\nMitti ke is diye mein tune roshni bhari\nMain bujhta raha, tune har baar lau di\nKeh de ik baar tu ho ja, aur main ho jaaun\nTeri ik nazar se meri raat sahar ho jaaye\n\n[Chorus]\nKun faya kun, kun faya kun\nYe sada teri, har zarre mein goonje\n\n[Verse]\nAna ki chaadar utaar ke aaya hoon dar pe\nKhaali haath hoon par dil bhara hai shukr se\nJo tu de woh tera, jo le le woh bhi tera\nMain to bas ik saaya hoon, tu hi tu hai",
+  "abc": "X:1\nT:\nM:4/4\nL:1/16\nQ:1/4=96\nV: Vocal clef=treble name=\"Vocal Melody\" snm=\"Vocal\"\nV: Ins clef=treble name=\"Ins Melody\" snm=\"Inst.\"\nK:C\n% verse\nV: Vocal\n_A,4_B,4C8|z8_A,4_B,4|G,8_B,4z4|_A,4_B,4F4_E4|\nV: Ins\nZ4|\n% verse\nV: Vocal\nD4z4_A,4_B,4|C8_B,4z4|_A,4_B,4G,8|_A,4z4_A,4_B,4|\nV: Ins\nZ4|\n% chorus\nV: Vocal\nC8z8|_A,4_B,4C8|z8_A,4_B,4|D4C8z4|\nV: Ins\nZ4|\n% chorus\nV: Vocal\n_A,4_B,4C8|_B,4z4_A,4_B,4|C8_A,2_B,2z4|_A,4_B,4G,8|\nV: Ins\nZ4|\n% verse\nV: Vocal\nF2_E4z2_A,4_B,4|_A,2G,8z6|_A,4_B,4C8|G4z4_A,4_B,4|\nV: Ins\nZ4|\n% chorus\nV: Vocal\n_A,4G,8z4|_A,4_B,4C8|_B,4z4_A,4_B,4|C8G,4z4|\nV: Ins\nZ4|\n% chorus\nV: Vocal\n_A,4_B,4G8|F4z4_A,4_B,4|_A2F4D4_B,4z2|_A,4_B,4C8|\nV: Ins\nZ4|\n",
+  "cot": "melody",
+  "seed": 2026,
+  "lines": 14,
+  "bars": 28
+ }
+]

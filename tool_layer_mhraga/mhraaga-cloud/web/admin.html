@@ -38,6 +38,7 @@
     <section id="t-singer" hidden>
       <div class="card"><h3>AI singer (YuE2)</h3>
         <p class="muted">Real sung songs from lyrics and a style, made by the open YuE2 model on a GPU machine. Jobs wait in a queue until a worker picks them up. <span id="sg-state"></span></p>
+        <label class="field"><span>Sing one of my songs on its own raga melody (optional)</span><select id="sg-song"><option value="">No, I will write the lyrics</option></select></label>
         <div class="fields"><label class="field"><span>Style (genre, mood, instruments, voice)</span><input id="sg-style" maxlength="200" placeholder="Hindi, sufi qawwali, male lead vocal, harmonium, tabla, dholak, handclaps"></label>
           <label class="field"><span>Title</span><input id="sg-title" maxlength="60"></label></div>
         <label class="field"><span>Lyrics (tag parts like [verse] and [chorus])</span><textarea id="sg-lyrics" rows="8" maxlength="3000" placeholder="[verse]&#10;..."></textarea></label>

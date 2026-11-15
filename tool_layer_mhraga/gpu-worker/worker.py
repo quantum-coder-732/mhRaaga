@@ -29,6 +29,7 @@ REGION = os.environ.get("AWS_REGION", "ap-south-1")
 OWNER = "job#yue"
 MODEL = os.environ.get("YUE_MODEL", "m-a-p/YuE2-3B")
 NAME = os.environ.get("WORKER_NAME", os.uname().nodename)
+IDLE_STOP = int(os.environ.get("IDLE_STOP_SECONDS", "900"))   # shut the machine down after this long with no jobs (0 = never)
 
 _db = boto3.resource("dynamodb", region_name=REGION)
 songs = _db.Table(TABLE)
@@ -65,11 +66,25 @@ def fake_audio(path: Path, seconds: float = 3.0) -> float:
     return seconds
 
 
-def run_yue(style: str, lyrics: str, out: Path, seed: int | None) -> float:
-    from yue2 import YuE2Pipeline  # noqa: PLC0415  (installed on the GPU machine only)
-    with YuE2Pipeline.from_pretrained(MODEL, device="cuda") as pipe:
-        song = pipe(style=style, lyrics=lyrics, cot="full", seed=seed or 42)
-        song.save_artifacts(str(out))
+_PIPE = None
+
+
+def pipeline():
+    """Load the model once and keep it: loading takes minutes, a song takes less, so every job after the first starts at once."""
+    global _PIPE
+    if _PIPE is None:
+        from yue2 import YuE2Pipeline  # noqa: PLC0415  (installed on the GPU machine only)
+        _PIPE = YuE2Pipeline.from_pretrained(MODEL, device="cuda", low_vram=os.environ.get("YUE_LOW_VRAM", "0") == "1")
+    return _PIPE
+
+
+def run_yue(job: dict, out: Path) -> float:
+    kw = {"style": job["style"], "lyrics": job["lyrics"], "seed": int(job["id"]) % 100000}
+    if job.get("abc"):                                 # the raga melody from the singer layer: the model sings OUR tune
+        kw.update(abc=job["abc"], cot=job.get("cot", "melody"))
+    else:
+        kw["cot"] = "full"
+    pipeline()(**kw).save_artifacts(str(out))
     flac = next(out.glob("audio.*"))
     return float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(flac)], capture_output=True, text=True).stdout.strip() or 0)
 
@@ -80,7 +95,7 @@ def do(job: dict, fake: bool) -> None:
         if fake:
             src, secs = td / "audio.wav", fake_audio(td / "audio.wav")
         else:
-            secs = run_yue(job["style"], job["lyrics"], td / "out", int(job["id"]) % 100000)
+            secs = run_yue(job, td / "out")
             src = next((td / "out").glob("audio.*"))
         mp3 = td / "song.mp3"
         subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", str(src), "-codec:a", "libmp3lame", "-b:a", "192k", str(mp3)], check=True)
@@ -96,6 +111,7 @@ def main() -> None:
     a = ap.parse_args()
     if not BUCKET:
         raise SystemExit("Set SITE_BUCKET to the site bucket name.")
+    idle = 0
     while True:
         heartbeat()
         job = claim()
@@ -111,7 +127,12 @@ def main() -> None:
         if a.once:
             return
         if not job:
+            idle += 15
+            if IDLE_STOP and idle >= IDLE_STOP:            # a GPU machine that is not working costs money: stop it
+                print("idle, shutting down"); subprocess.run(["sudo", "shutdown", "-h", "now"]); return
             time.sleep(15)
+        else:
+            idle = 0
 
 
 if __name__ == "__main__":

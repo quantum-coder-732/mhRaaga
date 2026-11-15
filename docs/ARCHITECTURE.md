@@ -36,6 +36,7 @@ Every file and what it holds: [FILES.md](FILES.md). Vendored upstream repos (YuE
 | Music engine | `music_engine_framework_layer/mhraaga_engine/` | Raga grammar, composer, tala, physics, GAN, auto-tune, lyric banks. Pure Python, no web code. |
 | Cloud | `tool_layer_mhraga/mhraaga-cloud/` (`api/`, `web/`, `infra/`, `tests/`) | The Lambda API, the site, CloudFormation and `deploy.sh`. |
 | App | `tool_layer_mhraga/mhraaga-app/` | Flutter Android app with a Dart port of the synth. |
+| Singer layer | `tool_layer_mhraga/singer/`, `gpu-worker/` | Makes the raga song SING with the open YuE2 model, on a GPU. See [SINGER.md](SINGER.md). Not run yet. |
 | Song factory | `mhraaga_engine/agentic/` | Offline agents that fill the catalogue and learn which choices work. Uses one Kalkee file (see section 6). |
 
 ## 2. How a song is made, step by step

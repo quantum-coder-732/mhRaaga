@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The singer layer (YuE2) · mhRaaga docs</title><meta name="description" content="The singer layer (YuE2)">
+<link rel="stylesheet" href="docs.css"></head>
+<body data-root="">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="overview.html">Overview</a></li><li><a href="system.html">How the system works</a></li><li><a href="agents.html">All the agents</a></li></ul></details><details open><summary>mhRaaga</summary><ul><li><a href="ARCHITECTURE.html">Architecture</a></li><li><a href="ENGINE.html">Engine, module by module</a></li><li><a href="BACKEND.html">Backend, file by file</a></li><li><a href="ADMIN.html">Admin dashboard</a></li><li><a href="API.html">API for developers</a></li><li><a href="SOUND.html">Sound</a></li><li><a href="VOICE.html">AI voice</a></li><li><a href="TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="STUDIO.html">Stories, people, rules</a></li><li><a href="AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="DOMAIN.html">Domain and HTTPS</a></li><li><a href="SINGER.html" class=cur aria-current=page>The singer layer (YuE2)</a></li><li><a href="FILES.html">Every music file</a></li><li><a href="THIRD_PARTY.html">Vendored upstream repos</a></li><li><a href="components/android-app.html">Android app</a></li></ul></details><details><summary>Kalkee, the agents</summary><ul><li><a href="kalkee/index.html">Kalkee in mhRaaga</a></li><li><a href="kalkee/AGENTS.html">The music agents</a></li><li><a href="kalkee/LEARNING.html">How the agents learn</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="the-singer-layer-yue2">The singer layer (YuE2)</h1>
+<p>mhRaaga's own voice <strong>speaks</strong> the words. A real <strong>sung</strong> vocal needs a singing model. The open <strong>YuE2</strong> model (vendored in <code>third_party/YuE</code>) can sing lyrics in a style over a band. The singer layer connects it to mhRaaga so the model sings <strong>our raga melody</strong> instead of inventing a tune.</p>
+<p><strong>Status, plainly:</strong> the layer is built and tested, and its output passes YuE2's own score check. <strong>No song has been sung yet</strong>, because the model needs a GPU and this project has none. Nothing paid has been started.</p>
+<h2 id="how-it-fits">How it fits</h2>
+<figure class="diagram"><a href="diagrams/6d85578173a5.svg" target="_blank" rel="noopener" title="Open the diagram full size"><img src="diagrams/6d85578173a5.svg" alt="Diagram" loading="lazy"></a></figure>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool_layer_mhraga/singer/abc.py</code></td>
+<td>Writes the song's gat melody as ABC: two voices (Vocal and Ins), 4/4, sixteenth grid, Sa on G3 so the range suits a male voice, komal and tivra svaras as flats and sharps, ties across bar lines, groups of at most 4 bars as YuE2 requires.</td>
+</tr>
+<tr>
+<td><code>tool_layer_mhraga/singer/request.py</code></td>
+<td>Turns lyric tags (Mukhda, Antara, Chorus) into <code>[Verse]</code> and <code>[Chorus]</code>, builds the style line (language, your style words, voice, BPM) and attaches the score.</td>
+</tr>
+<tr>
+<td><code>tool_layer_mhraga/singer/colab_singer.ipynb</code></td>
+<td>A notebook that runs the request on <strong>Google Colab's free GPU</strong>. Also at https://www.mhraaga.in/singer/colab_singer.ipynb</td>
+</tr>
+<tr>
+<td><code>tool_layer_mhraga/singer/examples/tu_hi_tu.requests.json</code></td>
+<td>The two requests for the original Qawwali-style song (Devanagari and romanised lyrics).</td>
+</tr>
+<tr>
+<td><code>tool_layer_mhraga/gpu-worker/worker.py</code></td>
+<td>Optional queue worker for a GPU machine. Loads the model once, reuses it for every job, shuts the machine down after 15 idle minutes.</td>
+</tr>
+<tr>
+<td><code>api/jobs.py</code></td>
+<td>The queue: Admin &gt; AI singer, or <code>POST /api/jobs {song_id, style}</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Checks that pass: the score of the Qawwali song is accepted by YuE2's own <code>abc_tools.py inspect</code> (28 bars, 77 notes, 70 s); every note in a generated score belongs to its raga (tested for Bhairavi and Yaman); <code>tests/test_singer.py</code>.</p>
+<h2 id="how-to-hear-it-for-free">How to hear it for free</h2>
+<ol>
+<li>Open https://www.mhraaga.in/singer/colab_singer.ipynb (download it, then in Google Colab choose File &gt; Upload notebook).</li>
+<li>Runtime &gt; Change runtime type &gt; <strong>GPU</strong>.</li>
+<li>Run all cells. It makes two versions and downloads two MP3s.</li>
+</ol>
+<p><strong>Free-tier limits:</strong> the free GPU (a T4, 16 GB) is below the model's preferred 24 GB, so the notebook uses the model's low-memory mode and it may run out of memory. If it does, use a larger Colab runtime (paid) or ask for fewer lyric lines. YuE2 does not list Hindi among its trained languages, so Devanagari or romanised Hindi may be sung poorly; the notebook makes both spellings so you can compare.</p>
+<h2 id="the-paid-options-not-started">The paid options (not started)</h2>
+<p>A GPU machine such as an AWS <code>g5.xlarge</code> (24 GB) costs about <strong>$1.21 an hour</strong> in Mumbai. Use the worker (<code>tool_layer_mhraga/gpu-worker/README.md</code>). It is not needed for anything else on the site, and it shuts itself down when idle.</p>
+<h2 id="licence">Licence</h2>
+<p>YuE2 code: Apache-2.0. <strong>Weights: free for personal use, creators and musicians (including monetising what you make) and for non-commercial work; companies need a licence from the authors.</strong> See <a href="THIRD_PARTY.html">THIRD_PARTY.md</a>.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#how-it-fits">How it fits</a><a class="l2" href="#how-to-hear-it-for-free">How to hear it for free</a><a class="l2" href="#the-paid-options-not-started">The paid options (not started)</a><a class="l2" href="#licence">Licence</a></aside></div>
+<script src="docs.js"></script></body></html>

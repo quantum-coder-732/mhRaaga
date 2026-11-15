@@ -6,7 +6,7 @@
 <header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="index.html">mhRaaga <span>docs</span></a>
 <div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
 <a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
-<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="overview.html">Overview</a></li><li><a href="system.html">How the system works</a></li><li><a href="agents.html">All the agents</a></li></ul></details><details open><summary>mhRaaga</summary><ul><li><a href="ARCHITECTURE.html" class=cur aria-current=page>Architecture</a></li><li><a href="ENGINE.html">Engine, module by module</a></li><li><a href="BACKEND.html">Backend, file by file</a></li><li><a href="ADMIN.html">Admin dashboard</a></li><li><a href="API.html">API for developers</a></li><li><a href="SOUND.html">Sound</a></li><li><a href="VOICE.html">AI voice</a></li><li><a href="TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="STUDIO.html">Stories, people, rules</a></li><li><a href="AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="DOMAIN.html">Domain and HTTPS</a></li><li><a href="FILES.html">Every music file</a></li><li><a href="THIRD_PARTY.html">Vendored upstream repos</a></li><li><a href="components/android-app.html">Android app</a></li></ul></details><details><summary>Kalkee, the agents</summary><ul><li><a href="kalkee/index.html">Kalkee in mhRaaga</a></li><li><a href="kalkee/AGENTS.html">The music agents</a></li><li><a href="kalkee/LEARNING.html">How the agents learn</a></li></ul></details></nav>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="overview.html">Overview</a></li><li><a href="system.html">How the system works</a></li><li><a href="agents.html">All the agents</a></li></ul></details><details open><summary>mhRaaga</summary><ul><li><a href="ARCHITECTURE.html" class=cur aria-current=page>Architecture</a></li><li><a href="ENGINE.html">Engine, module by module</a></li><li><a href="BACKEND.html">Backend, file by file</a></li><li><a href="ADMIN.html">Admin dashboard</a></li><li><a href="API.html">API for developers</a></li><li><a href="SOUND.html">Sound</a></li><li><a href="VOICE.html">AI voice</a></li><li><a href="TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="STUDIO.html">Stories, people, rules</a></li><li><a href="AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="DOMAIN.html">Domain and HTTPS</a></li><li><a href="SINGER.html">The singer layer (YuE2)</a></li><li><a href="FILES.html">Every music file</a></li><li><a href="THIRD_PARTY.html">Vendored upstream repos</a></li><li><a href="components/android-app.html">Android app</a></li></ul></details><details><summary>Kalkee, the agents</summary><ul><li><a href="kalkee/index.html">Kalkee in mhRaaga</a></li><li><a href="kalkee/AGENTS.html">The music agents</a></li><li><a href="kalkee/LEARNING.html">How the agents learn</a></li></ul></details></nav>
 <main class="doc"><article><h1 id="mhraaga-architecture">mhRaaga architecture</h1>
 <p>Live at https://www.mhraaga.in (AWS account 877157050453, region ap-south-1, stack <code>mhraaga</code>). A developer-friendly version with a diagram:
 https://www.mhraaga.in/developers.html. How to call the API from outside: <a href="API.html">API.md</a>.</p>
@@ -58,6 +58,11 @@ https://www.mhraaga.in/developers.html. How to call the API from outside: <a hre
 <td>App</td>
 <td><code>tool_layer_mhraga/mhraaga-app/</code></td>
 <td>Flutter Android app with a Dart port of the synth.</td>
+</tr>
+<tr>
+<td>Singer layer</td>
+<td><code>tool_layer_mhraga/singer/</code>, <code>gpu-worker/</code></td>
+<td>Makes the raga song SING with the open YuE2 model, on a GPU. See <a href="SINGER.html">SINGER.md</a>. Not run yet.</td>
 </tr>
 <tr>
 <td>Song factory</td>

@@ -133,12 +133,13 @@ async function costs(refresh = false) {
 // ---------------------------------------------------------------- AI singer
 async function singer() {
   const i = await api("/jobs/info"); $("sg-state").textContent = !i.enabled ? "The queue is switched off (deploy with GpuEngine=on)." : i.worker_alive ? `A GPU worker is alive (${i.worker}).` : "No GPU worker is running, so jobs will wait.";
+  if ($("sg-song").options.length < 2) { try { const { songs } = await api("/songs"); songs.forEach((x) => $("sg-song").append(new Option(`${x.title} · ${x.raga} · ${x.language || ""}`, x.id))); } catch {} }
   const d = await api("/jobs"), box = $("sg-jobs"); box.replaceChildren();
   if (!d.jobs.length) box.append(el("span", { className: "muted", textContent: "No jobs yet." }));
   d.jobs.forEach((j) => { const row = el("div", {}, el("b", { textContent: j.title }), el("span", { className: "badge " + (j.status === "failed" ? "off" : j.status === "done" ? "admin" : ""), textContent: j.status }), el("span", { textContent: j.style }), el("span", { className: "muted", textContent: when(j.created) }));
     if (j.audio) { const a = el("audio", { controls: true, preload: "none" }); a.src = j.audio; row.append(a); } if (j.error) row.append(el("span", { className: "muted", textContent: j.error })); box.append(row); });
 }
-$("sg-go").onclick = async () => { try { $("sg-status").textContent = "Queuing…"; await api("/jobs", { method: "POST", body: { style: $("sg-style").value, lyrics: $("sg-lyrics").value, title: $("sg-title").value } }); $("sg-status").textContent = "Queued."; await singer(); } catch (e) { $("sg-status").textContent = e.message; } };
+$("sg-go").onclick = async () => { try { $("sg-status").textContent = "Queuing…"; await api("/jobs", { method: "POST", body: { style: $("sg-style").value, lyrics: $("sg-lyrics").value, title: $("sg-title").value, song_id: $("sg-song").value || undefined } }); $("sg-status").textContent = "Queued."; await singer(); } catch (e) { $("sg-status").textContent = e.message; } };
 
 // ---------------------------------------------------------------- tabs and start
 async function show(t) {

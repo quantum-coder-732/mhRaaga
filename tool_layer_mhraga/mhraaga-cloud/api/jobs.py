@@ -7,12 +7,13 @@ runs YuE2, uploads an MP3 to S3 under yue/, and marks the row done. With no work
 Routes (all under /api, administrators only, because a GPU machine costs money and the model's weights are free for personal and
 non-commercial use but need a licence for company use):
   GET  /jobs/info        is the engine switched on, is a worker alive, the daily limit
-  POST /jobs             {style, lyrics, title}  -> queued job
+  POST /jobs             {style, lyrics, title} or {song_id, style} (sing one of your songs on its own raga melody) -> queued job
   GET  /jobs             the latest jobs
   GET  /jobs/{id}        one job
 Rows: songs table, owner "job#yue", id = millisecond timestamp; the worker's heartbeat is owner "job#yue", id "0worker"."""
 from __future__ import annotations
 
+import json
 import os
 import re
 import time
@@ -23,6 +24,11 @@ from boto3.dynamodb.conditions import Key
 
 import admin
 import studio
+
+try:
+    from singer import build_request   # the singer layer: raga melody as a score for YuE2
+except ImportError:                       # not packaged (for example in a bare test run)
+    build_request = None
 
 ENABLED = os.environ.get("GPU_ENGINE", "off").lower() == "on"
 DAILY = int(os.environ.get("GPU_DAILY_JOBS", "5"))
@@ -61,8 +67,18 @@ def create(u: dict, b: dict):
     if not ENABLED:
         raise h.ApiError(503, "The AI singer is switched off. Set GPU_ENGINE=on on the stack and start a GPU worker.")
     style, lyrics, title = h.text(b.get("style"), 200), h.text(b.get("lyrics"), 3000), h.text(b.get("title"), 60)
+    abc, sid = "", h.text(b.get("song_id"), 40)
+    if sid:                                                  # sing one of your own songs: the layer writes its raga melody as the score
+        it = h._songs.get_item(Key={"owner": u["email"], "id": sid}).get("Item")
+        if not it:
+            raise h.ApiError(404, "No such song in your library.")
+        if build_request is None:
+            raise h.ApiError(503, "The singer layer is not installed here.")
+        song = {**it, "score": json.loads(it["score"])}
+        req = build_request(song, style_words=style, language=h.text(b.get("language"), 20) or "Hindi", lyrics_override=lyrics or None, rid=sid)
+        style, lyrics, abc, title = req["style"][:200], req["lyrics"], req["abc"], title or it.get("title", "")
     if len(style) < 3 or len(lyrics) < 8:
-        raise h.ApiError(400, "Give a style (genre, mood, instruments) and some lyrics.")
+        raise h.ApiError(400, "Give a style (genre, mood, instruments) and some lyrics, or pick a song.")
     studio.check(style, lyrics, title)
     day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     n = int(u["jn"]) if u.get("jday") == day else 0
@@ -72,6 +88,8 @@ def create(u: dict, b: dict):
     jid = f"{int(time.time() * 1000):013d}"
     item = {"owner": OWNER, "id": jid, "status": "queued", "title": title or "Untitled", "style": style, "lyrics": lyrics, "who": u["email"],
             "created": datetime.now(timezone.utc).isoformat(), "lines": len([x for x in lyrics.splitlines() if x.strip()]), "ttl": int(time.time()) + 90 * 86400}
+    if abc:
+        item["abc"], item["cot"], item["song_id"] = abc, "melody", sid
     h._songs.put_item(Item=item)
     admin.audit(u, "job.create", jid, style[:80])
     return 201, {"job": _view(item)}

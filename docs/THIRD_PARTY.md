@@ -4,7 +4,7 @@ Five public repositories are vendored as **git submodules**: each folder points 
 
 | Repo | Licence | Used? | How |
 |---|---|---|---|
-| [multimodal-art-projection/YuE](https://github.com/multimodal-art-projection/YuE) (YuE2) | Code Apache-2.0. **Weights: CC BY-NC 4.0 plus creator permission** | **Yes, optional** | The AI singer: `tool_layer_mhraga/gpu-worker/worker.py` runs `YuE2Pipeline` on a GPU machine for jobs queued from Admin > AI singer. See [the worker guide](../tool_layer_mhraga/gpu-worker/README.md). |
+| [multimodal-art-projection/YuE](https://github.com/multimodal-art-projection/YuE) (YuE2) | Code Apache-2.0. **Weights: CC BY-NC 4.0 plus creator permission** | **Yes, optional** | The singer layer ([SINGER.md](SINGER.md)): the raga melody becomes a score the model sings. Free on a Colab GPU with `singer/colab_singer.ipynb`; or a paid GPU machine with `gpu-worker/worker.py`. |
 | [suno-ai/setup-ffmpeg](https://github.com/suno-ai/setup-ffmpeg) | MIT | **Yes** | `.github/workflows/ci.yml` runs it as a local action (`uses: ./third_party/setup-ffmpeg`) to install ffmpeg in CI. |
 | [suno-ai/bark](https://github.com/suno-ai/bark) | MIT | Reference only | A text-to-audio model. Not wired in: the AI voice already uses a hosted model that handles the Indian languages, and Bark needs a GPU and several GB of weights. Kept so it can be tried on the GPU machine. |
 | [suno-ai/CreateAPI](https://github.com/suno-ai/CreateAPI) | MIT | Reference only | Generates Swift API clients from OpenAPI. mhRaaga has no iOS app and no OpenAPI file yet. |

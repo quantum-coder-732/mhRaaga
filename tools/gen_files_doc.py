@@ -7,7 +7,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 SECTIONS = [("Music engine (`music_engine_framework_layer/mhraaga_engine/`)", "music_engine_framework_layer/mhraaga_engine"), ("Backend API (`tool_layer_mhraga/mhraaga-cloud/api/`)", "tool_layer_mhraga/mhraaga-cloud/api"),
             ("Website (`tool_layer_mhraga/mhraaga-cloud/web/`)", "tool_layer_mhraga/mhraaga-cloud/web"), ("Android app (`tool_layer_mhraga/mhraaga-app/lib/`)", "tool_layer_mhraga/mhraaga-app/lib"),
-            ("AI singer worker (`tool_layer_mhraga/gpu-worker/`)", "tool_layer_mhraga/gpu-worker")]
+            ("AI singer worker (`tool_layer_mhraga/gpu-worker/`)", "tool_layer_mhraga/gpu-worker"), ("Singer layer (`tool_layer_mhraga/singer/`)", "tool_layer_mhraga/singer")]
 OV = {
  "gan_weights.json": "The trained phrase-GAN weights (generator and discriminator matrices). Loaded by gan.py.",
  "poems_bank.json": "The bank of short rhymed spiritual-love poems per language, used by poems.py.",
@@ -29,7 +29,7 @@ OV = {
  "app.js": "The Create page and player: compose form, Styles box, song list, playback with instruments and voice, MP3 and WAV export.", "admin.css": "Styles for the admin dashboard.",
  "styles.css": "Base styles for the app pages.", "site.css": "Site-wide look: the Suno-style shell, sidebar, cards and motion.", "api.js": "Shared fetch helper: adds the token and sends you to sign in when the session ends.",
  "README.md": "How to set up and run the GPU worker.", "update_third_party.sh": "Checks the vendored upstream repos for new commits and can pull them.", "build_docs.py": "Builds the documentation site from the Markdown.",
- "gen_files_doc.py": "Regenerates this file.", "render_mermaid.mjs": "Pre-renders the Mermaid diagrams to SVG.", "publish_catalog.py": "Runs the song factory and publishes songs and reference tunes to S3 and the shared playlist.",
+ "gen_files_doc.py": "Regenerates this file.", "colab_singer.ipynb": "Notebook that runs the singer on Google Colab's free GPU (two versions of the Qawwali song).", "tu_hi_tu.requests.json": "The two YuE2 requests (Devanagari and romanised lyrics) for the original Qawwali-style song.", "test_singer.py": "The singer layer: ABC score, request, validator, queue path.", "render_mermaid.mjs": "Pre-renders the Mermaid diagrams to SVG.", "publish_catalog.py": "Runs the song factory and publishes songs and reference tunes to S3 and the shared playlist.",
  "seed_playlist.py": "Composes the starter songs through the live API and publishes them to the shared playlist.", "mediakit.py": "Local media converter around ffmpeg.",
 }
 def sentence(t):

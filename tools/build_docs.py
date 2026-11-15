@@ -37,7 +37,7 @@ GROUPS = [
         ("docs/ARCHITECTURE.md", None, "Architecture"), ("docs/ENGINE.md", None, "Engine, module by module"), ("docs/BACKEND.md", None, "Backend, file by file"), ("docs/ADMIN.md", None, "Admin dashboard"), ("docs/API.md", None, "API for developers"), ("docs/SOUND.md", None, "Sound"),
         ("docs/VOICE.md", None, "AI voice"), ("docs/TEAM_AND_PHYSICS.md", None, "Shared studio and physics"), ("docs/STUDIO.md", None, "Stories, people, rules"),
         ("docs/AGENTIC_ARCHITECTURE.md", None, "Song factory agents"), ("docs/DOMAIN.md", None, "Domain and HTTPS"),
-        ("docs/FILES.md", None, "Every music file"), ("docs/THIRD_PARTY.md", None, "Vendored upstream repos"), ("docs/components/android-app.md", None, "Android app")]),
+        ("docs/SINGER.md", None, "The singer layer (YuE2)"), ("docs/FILES.md", None, "Every music file"), ("docs/THIRD_PARTY.md", None, "Vendored upstream repos"), ("docs/components/android-app.md", None, "Android app")]),
     ("Kalkee, the agents", [("docs/kalkee/README.md", "kalkee/index.html", "Kalkee in mhRaaga"), ("docs/kalkee/AGENTS.md", None, "The music agents"), ("docs/kalkee/LEARNING.md", None, "How the agents learn")]),
 ]
 KALKEE_GROUPS = []
