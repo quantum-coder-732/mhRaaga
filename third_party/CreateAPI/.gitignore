@@ -1,0 +1,13 @@
+# Default ignores (run `swift package init` to compare)
+.DS_Store
+.build
+/Packages
+/*.xcodeproj
+xcuserdata/
+DerivedData/
+.swiftpm/config/registries.json
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.netrc
+
+# Custom ignores
+/Tests/Support/Snapshots/**/Package.resolved

@@ -10,7 +10,7 @@ A Linux machine with an NVIDIA GPU that supports BF16 and has **24 GB of memory*
 
 ## Set up
 ```bash
-git clone --recurse-submodules https://github.com/quantum-coder-732/mhRaaga.git && cd mhRaaga
+git clone https://github.com/quantum-coder-732/mhRaaga.git && cd mhRaaga
 python3.12 -m venv .venv && . .venv/bin/activate
 pip install ./third_party/YuE boto3          # the first song downloads the model from Hugging Face
 export SITE_BUCKET=mhraaga-site-877157050453-ap-south-1 AWS_REGION=ap-south-1

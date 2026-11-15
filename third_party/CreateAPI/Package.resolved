@@ -1,0 +1,61 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "FileWatcher",
+        "repositoryURL": "https://github.com/eonist/FileWatcher",
+        "state": {
+          "branch": null,
+          "revision": "e67c2a99502eade343fecabeca8c57e749a55b59",
+          "version": "0.2.3"
+        }
+      },
+      {
+        "package": "GrammaticalNumber",
+        "repositoryURL": "https://github.com/Cosmo/GrammaticalNumber",
+        "state": {
+          "branch": null,
+          "revision": "3827665bd38a0fd5f215220b26c92df876539af0",
+          "version": "0.0.3"
+        }
+      },
+      {
+        "package": "OpenAPIKit",
+        "repositoryURL": "https://github.com/CreateAPI/OpenAPIKit",
+        "state": {
+          "branch": "create-api",
+          "revision": "6eb4baa0abbece9746f6f01837381e5c9999b373",
+          "version": null
+        }
+      },
+      {
+        "package": "swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser",
+        "state": {
+          "branch": null,
+          "revision": "df9ee6676cd5b3bf5b330ec7568a5644f547201b",
+          "version": "1.1.3"
+        }
+      },
+      {
+        "package": "swift-configuration-parser",
+        "repositoryURL": "https://github.com/liamnichols/swift-configuration-parser",
+        "state": {
+          "branch": null,
+          "revision": "73ce739739c4a9d9881d5b41c54e7c98a6127d74",
+          "version": "0.0.4"
+        }
+      },
+      {
+        "package": "Yams",
+        "repositoryURL": "https://github.com/CreateAPI/Yams",
+        "state": {
+          "branch": null,
+          "revision": "d2ebc53afeb2001474dacf81c4480fef114045a1",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

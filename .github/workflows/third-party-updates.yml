@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { submodules: true }
       - run: tools/update_third_party.sh --apply
       - name: Open a pull request when upstream moved
         env: { GH_TOKEN: "${{ github.token }}" }

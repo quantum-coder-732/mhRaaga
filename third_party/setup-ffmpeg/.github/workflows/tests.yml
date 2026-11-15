@@ -1,0 +1,48 @@
+name: Tests
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  # Suno fork: Linux builds are served from this repo's GitHub Releases. These
+  # tests exercise that path (latest + a pinned version) and must run after at
+  # least one `ffmpeg-*` release has been published.
+  test-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install latest release
+        uses: ./
+        with:
+          ffmpeg-version: release
+      - run: ffmpeg -version
+      - run: ffprobe -version
+      - name: Re-run is served from tool cache
+        uses: ./
+        with:
+          ffmpeg-version: release
+      - name: Install pinned version
+        uses: ./
+        with:
+          ffmpeg-version: '7.0.2'
+      - run: ffmpeg -version
+
+  # Windows/macOS paths are unchanged from upstream (gyan.dev / evermeet.cx).
+  test-other-os:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+      - run: ffmpeg -version
+      - run: ffprobe -version

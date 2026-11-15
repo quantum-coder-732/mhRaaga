@@ -1,6 +1,6 @@
 # Vendored upstream repos (`third_party/`)
 
-Five public repositories are vendored as **git submodules**: each folder points at an exact upstream commit, so the code is the authors' own and can be updated with one command. Nothing was copied by hand.
+Five public repositories are vendored: their code is copied into `third_party/` and committed in this repo, unchanged, so a plain `git clone` has everything. `third_party/UPSTREAM` records each upstream URL and the exact commit we have; `tools/update_third_party.sh` compares it with upstream and, with `--apply`, copies the newer code in.
 
 | Repo | Licence | Used? | How |
 |---|---|---|---|
@@ -18,7 +18,7 @@ The code is Apache-2.0. The **model weights** are free for personal users, creat
 tools/update_third_party.sh            # shows which repos have new commits upstream
 tools/update_third_party.sh --apply    # moves the pointers to the newest commits, then review, test, commit
 ```
-A weekly GitHub Action (`.github/workflows/third-party-updates.yml`) does the check and opens a pull request when something moved. Clone with `git clone --recurse-submodules`, or run `git submodule update --init` after a plain clone.
+A weekly GitHub Action (`.github/workflows/third-party-updates.yml`) does the check and opens a pull request when something moved.
 
 ## Forks
-These are submodules of the **upstream** repositories. To keep your own forks (for example to patch Bark), fork each on GitHub, then point the submodule at your fork: `git config -f .gitmodules submodule.third_party/bark.url <your fork URL>`. Forking needs your GitHub account; it was not done from here.
+These are copies of the **upstream** repositories. To track your own fork (for example to patch Bark), fork it on GitHub and change its URL in `third_party/UPSTREAM`.
