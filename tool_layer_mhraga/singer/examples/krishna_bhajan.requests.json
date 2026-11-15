@@ -1,0 +1,30 @@
+[
+ {
+  "id": "bhajan_devanagari_s7",
+  "style": "Hindi, devotional bhajan, Krishna bhakti, warm male lead vocal, harmonium, bansuri flute, tabla, dholak, manjira, kirtan, gentle, 84 BPM, acoustic, no electronic, no EDM",
+  "lyrics": "[Verse]\nहे मेरे मन के मोहन, हे मेरे घनश्याम\nतेरे चरणों में बीते मेरी हर एक शाम\nन चाहूँ मैं धन-दौलत, न चाहूँ कोई नाम\nबस हृदय में बस जाना, मेरे प्यारे घनश्याम\n\n[Verse]\nजब राहों में अँधेरा हो, तुम दीपक बन जाना\nजब मन मेरा विचलित हो, तुम मुझको समझाना\nन मैं कुछ हूँ, न मेरा कुछ, सब तेरा ही धाम\nमेरा जीवन तुझको अर्पित, मेरे राधे-श्याम\n\n[Chorus]\nजय श्री राधे कृष्ण, जय श्री राधे कृष्ण\nमेरे मन के मोहन, मेरे श्याम",
+  "cot": "full",
+  "seed": 7
+ },
+ {
+  "id": "bhajan_devanagari_s42",
+  "style": "Hindi, devotional bhajan, Krishna bhakti, warm male lead vocal, harmonium, bansuri flute, tabla, dholak, manjira, kirtan, gentle, 84 BPM, acoustic, no electronic, no EDM",
+  "lyrics": "[Verse]\nहे मेरे मन के मोहन, हे मेरे घनश्याम\nतेरे चरणों में बीते मेरी हर एक शाम\nन चाहूँ मैं धन-दौलत, न चाहूँ कोई नाम\nबस हृदय में बस जाना, मेरे प्यारे घनश्याम\n\n[Verse]\nजब राहों में अँधेरा हो, तुम दीपक बन जाना\nजब मन मेरा विचलित हो, तुम मुझको समझाना\nन मैं कुछ हूँ, न मेरा कुछ, सब तेरा ही धाम\nमेरा जीवन तुझको अर्पित, मेरे राधे-श्याम\n\n[Chorus]\nजय श्री राधे कृष्ण, जय श्री राधे कृष्ण\nमेरे मन के मोहन, मेरे श्याम",
+  "cot": "full",
+  "seed": 42
+ },
+ {
+  "id": "bhajan_roman_s7",
+  "style": "Hindi, devotional bhajan, Krishna bhakti, warm male lead vocal, harmonium, bansuri flute, tabla, dholak, manjira, kirtan, gentle, 84 BPM, acoustic, no electronic, no EDM",
+  "lyrics": "[Verse]\nhe mere man ke mohan, he mere ghanshyam\ntere charno mein beete meri har ek shaam\nna chahun main dhan-daulat, na chahun koi naam\nbas hriday mein bas jaana, mere pyare ghanshyam\n\n[Verse]\njab raahon mein andhera ho, tum deepak ban jaana\njab man mera vichalit ho, tum mujhko samjhaana\nna main kuchh hun, na mera kuchh, sab tera hi dhaam\nmera jeevan tujhko arpit, mere radhe-shyam\n\n[Chorus]\njai shri radhe krishna, jai shri radhe krishna\nmere man ke mohan, mere shyam",
+  "cot": "full",
+  "seed": 7
+ },
+ {
+  "id": "bhajan_roman_s42",
+  "style": "Hindi, devotional bhajan, Krishna bhakti, warm male lead vocal, harmonium, bansuri flute, tabla, dholak, manjira, kirtan, gentle, 84 BPM, acoustic, no electronic, no EDM",
+  "lyrics": "[Verse]\nhe mere man ke mohan, he mere ghanshyam\ntere charno mein beete meri har ek shaam\nna chahun main dhan-daulat, na chahun koi naam\nbas hriday mein bas jaana, mere pyare ghanshyam\n\n[Verse]\njab raahon mein andhera ho, tum deepak ban jaana\njab man mera vichalit ho, tum mujhko samjhaana\nna main kuchh hun, na mera kuchh, sab tera hi dhaam\nmera jeevan tujhko arpit, mere radhe-shyam\n\n[Chorus]\njai shri radhe krishna, jai shri radhe krishna\nmere man ke mohan, mere shyam",
+  "cot": "full",
+  "seed": 42
+ }
+]
