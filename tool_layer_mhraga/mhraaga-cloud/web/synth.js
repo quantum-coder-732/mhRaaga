@@ -108,7 +108,7 @@ function tanpura(ctx, dest, f, t, vol, life) {
   const src = ctx.createBufferSource(), g = ctx.createGain();
   src.buffer = pluckBuf(ctx, f, 5, 0.9992, 0.5, 2.6, Math.round(f * 3));
   src.playbackRate.value = 1 + (Math.random() - 0.5) * 0.0006;
-  g.gain.setValueAtTime(vol * 2.2, t); g.gain.exponentialRampToValueAtTime(0.0002, t + life + 0.8);
+  g.gain.setValueAtTime(vol * 7, t); g.gain.exponentialRampToValueAtTime(0.0002, t + life + 0.8);
   src.connect(g); g.connect(dest); src.start(t); src.stop(t + life + 0.9);
 }
 

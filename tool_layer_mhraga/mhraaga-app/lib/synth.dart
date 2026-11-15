@@ -131,7 +131,7 @@ class _Synth {
   }
 
   void tanpura(double f, double t, double vol, double life) {
-    _play(_pluck(f, 5, 0.9992, 0.5, 2.6, (f * 3).round()), t, vol * 2.2, life + 0.8, rate: 1 + rng.next() * 0.0003);
+    _play(_pluck(f, 5, 0.9992, 0.5, 2.6, (f * 3).round()), t, vol * 7, life + 0.8, rate: 1 + rng.next() * 0.0003);
   }
 
   // vibrato + glide shared by the sustained voices

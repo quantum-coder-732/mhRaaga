@@ -24,7 +24,7 @@
 </svg>
 <div class="card"><b>Tiers.</b> <span class="pill">music engine</span> raga grammar, composer, physics, GAN, auto-tune (<code>music_engine_framework_layer/mhraaga_engine</code>) ·
 <span class="pill">cloud</span> <code>api/</code> Lambda, <code>web/</code> site, <code>infra/</code> CloudFormation ·
-<span class="pill">app</span> <code>mhraaga-app</code> Flutter · <span class="pill">factory</span> Kalkee agents that fill the catalog.</div>
+<span class="pill">app</span> <code>mhraaga-app</code> Flutter · <span class="pill">factory</span> offline agents that fill the catalogue; they use one function (Shapley credit split) from the separate Kalkee orchestrator. The live site does not run Kalkee.</div>
 <p>Everything is served from one domain. The browser never talks to another origin (a strict CSP: no inline scripts or styles, <code>connect-src 'self'</code>).
 The Lambda is reachable only through CloudFront, which adds a secret header; the raw API Gateway address returns 403.</p>
 

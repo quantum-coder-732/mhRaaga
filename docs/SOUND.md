@@ -23,6 +23,10 @@ Each instrument is now a small physical model (web `web/synth.js`, Android `lib/
 
 These are numbers about timbre and dynamics. The reference recordings were only measured, never copied or sampled.
 
+## Mix balance (measured, 80 s of the bhajan, alap and gat)
+Rendering each part alone showed the tanpura 20 dB under the flute, so the drone was almost inaudible. I raised it 10 dB. Now:
+the tanpura is about 11 dB under the flute, the tabla about 3 dB under it, and the overall level is unchanged. The flute leads, the drone gives the floor, the tabla keeps time.
+
 ## Limits
 - These are models, not recordings. They sound far less electronic than before, but a recording of a real player is still better.
   The way to go further is a library of properly licensed instrument samples, or a hosted music model (a GPU service). Neither is included.

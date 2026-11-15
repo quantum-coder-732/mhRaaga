@@ -95,4 +95,4 @@ Not built, on purpose: a YouTube downloader or converter. It breaks YouTube's te
 `.env` and `build/` are gitignored. The keys used during development were pasted into a chat: rotate the AWS key, OpenRouter key and GitHub token.
 
 ## Documentation
-All docs are in [docs/](docs/README.md). For developers: [docs/API.md](docs/API.md) and the architecture page at https://www.mhraaga.in/developers.html.
+All docs are in [docs/](docs/README.md), including the detailed [architecture](docs/ARCHITECTURE.md) and the Kalkee documents. For developers: [docs/API.md](docs/API.md) and the architecture page at https://www.mhraaga.in/developers.html.
