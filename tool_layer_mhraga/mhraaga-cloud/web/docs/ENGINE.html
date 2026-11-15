@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The music engine, module by module · mhRaaga docs</title><meta name="description" content="The music engine, module by module">
+<link rel="stylesheet" href="docs.css"></head>
+<body data-root="">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="overview.html">Overview</a></li><li><a href="system.html">How the system works</a></li><li><a href="agents.html">All the agents</a></li></ul></details><details open><summary>mhRaaga</summary><ul><li><a href="ARCHITECTURE.html">Architecture</a></li><li><a href="ENGINE.html" class=cur aria-current=page>Engine, module by module</a></li><li><a href="BACKEND.html">Backend, file by file</a></li><li><a href="ADMIN.html">Admin dashboard</a></li><li><a href="API.html">API for developers</a></li><li><a href="SOUND.html">Sound</a></li><li><a href="VOICE.html">AI voice</a></li><li><a href="TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="STUDIO.html">Stories, people, rules</a></li><li><a href="AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="DOMAIN.html">Domain and HTTPS</a></li><li><a href="components/music-engine.html">Music engine</a></li><li><a href="components/android-app.html">Android app</a></li><li><a href="components/music-backend.html">Backend prototype</a></li><li><a href="components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="kalkee/index.html">About these documents</a></li></ul></details><details><summary>Kalkee</summary><ul><li><a href="kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="the-music-engine-module-by-module">The music engine, module by module</h1>
+<p>Package: <code>music_engine_framework_layer/mhraaga_engine/</code>. Pure Python, no web code. The Lambda imports it; the song factory and the tests use it directly.
+Data flows in this order: <strong>brief</strong> (what to make) -&gt; <strong>ragas</strong> and <strong>tala</strong> (the grammar) -&gt; <strong>compose</strong> (the score) -&gt; <strong>physics</strong>, <strong>gan</strong> and <strong>autotune</strong> (how it feels).</p>
+<div class="hl"><pre><span></span><code> prompt ─► brief.py ─► {raga, tala, tempo, mood, language, lead, lyrics}
+                          │
+          ragas.py ◄──────┤ get_raga()            tala.py ◄── TALAS
+                          ▼
+                     compose.py  ── phrases ◄── gan.py (some phrases)
+                          │
+                          ├─ physics.humanise()  rubato, weight, meend, drift   (physics.py, Box2D)
+                          ├─ autotune.score()    pull pitch to the shruti        (autotune.py)
+                          ▼
+                     score JSON  { sa, drone, lead[], tabla[], lyrics[], sections[], meta }
+</code></pre></div>
+
+<h2 id="composepy-the-score-composer">compose.py — the score composer</h2>
+<p><code>compose(raga, tala="", tempo=72, duration=90, lyrics="", seed=None, sa=None, lead="bansuri", instrumental=False, poem=False, human=True) -&gt; dict</code></p>
+<p>A raga is treated as a grammar, so the song follows the classical form:</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>alap</strong></td>
+<td>Drone only, free time. The raga unfolds from Sa upward in stages, resting on the vadi every third phrase, with long notes (1.8 to 3 beats) and meend. About 20% of the song, at most 36 s (a poem keeps a longer alap to leave room for the spoken words).</td>
+</tr>
+<tr>
+<td><strong>gat</strong></td>
+<td>The tabla enters. Each avartan (tala cycle) opens on sam with the start of the <strong>pakad</strong> (at most 45% of the cycle, and 60% every third cycle, so it is stated but never fills the cycle), then alternates <strong>rise</strong> and <strong>fall</strong> phrases. The vadi and samvadi are held twice as long. The second half of the song moves faster (more half-beat notes). 30% of the time a <strong>GAN phrase</strong> replaces a rise/fall.</td>
+</tr>
+<tr>
+<td><strong>tihai</strong></td>
+<td>The closing figure (the end of the pakad, ending on Sa) is played three times with gaps sized so that the last note lands exactly on sam.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Notes</strong> are <code>[time, hz, duration, ornament]</code> (then <code>velocity</code> and <code>glide</code> are added by physics). Ornament: 0 plain, 1 <strong>meend</strong> (slide from the previous note, chosen 55% of the time on leaps of 2 or more semitones), 2 <strong>kan</strong> (a grace note from above, 40% on stressed notes).</li>
+<li><strong>Tabla</strong> follows the tala's bol per beat (<code>tala.py</code>). Beat 1 (sam) is loudest (1.0), the khali beat is softer (0.7), others 0.82. Every fourth avartan ends with a four-stroke fill (Dha Ge Na Ti).</li>
+<li><strong>Lyrics</strong> are spread over the gat (or over the whole song for a poem), one line per equal slot; <code>[Mukhda]</code>-style tags become timed headings with no duration.</li>
+<li><strong>Tempo</strong> is clamped 40 to 180 bpm, <strong>duration</strong> 30 to 240 s. The same <code>seed</code> always gives the same song.</li>
+<li>After composing, if <code>human=True</code>, <code>physics.humanise</code> and <code>autotune.score</code> run (the tihai is exempt so sam stays exact). The result is recorded in <code>meta.physics</code> (engine, rubato limit, mean auto-tune correction in cents, GAN phrases used and their mean score).</li>
+</ul>
+<blockquote>
+<p><strong>Fixed on 15 Nov 2026.</strong> In short talas (keherwa, dadra, adi, rupak, the bhajan talas) the whole pakad used to fill every cycle, so the gat repeated one motif and the GAN was never reached. For Yaman in keherwa, 4 of 17 cycles were different. Now 17 of 17 are, and the GAN supplies 5 to 11 phrases per song. A regression test (<code>test_short_talas_do_not_repeat_one_motif</code>) guards it.</p>
+</blockquote>
+<h2 id="ragaspy-raga-knowledge">ragas.py — raga knowledge</h2>
+<p>Notes are semitones above Sa (0 to 11; 12 is the upper Sa, negatives the lower octave). Pitch uses <strong>just intonation</strong> (<code>RATIO</code>: 1, 16/15, 9/8, 6/5, 5/4, 4/3, 45/32, 3/2, 8/5, 5/3, 9/5, 15/8). Three tonics are used: 183, 233 and 234 Hz.</p>
+<table>
+<thead>
+<tr>
+<th>Source of a raga</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Classical (30)</strong></td>
+<td>A hand-written table: name, ascent, descent, vadi, samvadi, time of day, mood. Yaman, Bhairavi, Todi, Bhoopali, Kafi, Marwa and others.</td>
+</tr>
+<tr>
+<td><strong>Melakarta 1 to 72</strong></td>
+<td>Generated from the rule: Ri/Ga pair (6) x Dha/Ni pair (6) x Ma (2). <code>get_raga("mela:29")</code>.</td>
+</tr>
+<tr>
+<td><strong>Gopi 1 to 16000</strong></td>
+<td>Ascent from one melakarta, descent from another, one of three tonics (72 x 72 x 3 = 15,552 combinations; the last 448 ids revisit early ones with a new janya cut). The vadi and samvadi are a fourth or fifth apart. Deterministic: the same number always gives the same raga. About 15,947 are distinct.</td>
+</tr>
+</tbody>
+</table>
+<p>Mood and time of day come from book heuristics: flat Re and Dha suggest dawn, a sharp Ma dusk, a flat Ga night. <code>get_raga(spec)</code> takes a name, <code>gopi:1234</code>, a bare number, or <code>mela:29</code>. <code>catalog()</code> lists everything for the Ragas page.</p>
+<h2 id="talapy-rhythm-cycles">tala.py — rhythm cycles</h2>
+<p><code>TALAS</code> holds, per tala, the number of beats, the vibhag (sections), the sam, the khali beats and a bol per beat:</p>
+<table>
+<thead>
+<tr>
+<th>Tala</th>
+<th>Beats</th>
+<th>Sections</th>
+<th>Khali</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>teental</td>
+<td>16</td>
+<td>4+4+4+4</td>
+<td>beat 9</td>
+</tr>
+<tr>
+<td>keherwa</td>
+<td>8</td>
+<td>4+4</td>
+<td>beat 5</td>
+</tr>
+<tr>
+<td>dadra</td>
+<td>6</td>
+<td>3+3</td>
+<td>beat 4</td>
+</tr>
+<tr>
+<td>rupak</td>
+<td>7</td>
+<td>3+2+2</td>
+<td>sam</td>
+</tr>
+<tr>
+<td>jhaptal</td>
+<td>10</td>
+<td>2+3+2+3</td>
+<td>beat 6</td>
+</tr>
+<tr>
+<td>ektal</td>
+<td>12</td>
+<td>2 x 6</td>
+<td>beats 3 and 7</td>
+</tr>
+<tr>
+<td>adi</td>
+<td>8</td>
+<td>4+2+2</td>
+<td>beat 5</td>
+</tr>
+</tbody>
+</table>
+<p><code>bol_class(bol)</code> says which drum plays a bol: dha, dhin, dhi use <strong>both</strong>; na, ti, tin, ta, ra, ki, tu the <strong>right</strong> (dayan); ge, ka, kat the <strong>left</strong> (bayan). The synths turn each bol into a stroke (see <a href="SOUND.html">SOUND.md</a>).</p>
+<h2 id="briefpy-prompt-to-plan">brief.py — prompt to plan</h2>
+<p><code>make_brief(prompt, opts, api_key, timeout=11)</code> returns the plan the composer needs: raga, tala, tempo, mood, language, lead instrument, title and lyrics.
+1. If a key is set it asks OpenRouter, trying <code>z-ai/glm-5.3-flash</code> then <code>deepseek/deepseek-v4-flash</code>. The system prompt makes the model reply with one JSON object; <code>_clean</code> validates every field (raga must exist, tempo in range, language and lead from the allowed lists).
+2. If both models fail or reply with junk, <strong>keyword rules</strong> (<code>fallback</code>) pick a raga from the mood (calm to Bhoopali, devotional to Bhairavi, sad to Todi, romantic and so on), a tempo from the mood, a gopi raga when the prompt names Krishna, Radha, flute and similar words, and a bank lyric in the right language. <code>source</code> says which path ran (<code>fallback</code> or the model name).
+3. Choices made in the UI (<code>raga</code>, <code>tala</code>, <code>tempo</code>, <code>language</code>, <code>lead</code>, your own <code>lyrics</code>, <code>instrumental</code>, <code>poem</code>) always override the model. A poem forces a slow tempo (at most 66 bpm).</p>
+<p>Also here: <code>detect_language(prompt)</code> (by script), <code>translate(text, to, key)</code> (21 target languages) and <code>chat(system, user, key)</code> (one model turn, used by the studio). Languages for songs: Hindi, Marathi, Sanskrit, English, Telugu, Gujarati, Kannada, Tamil.</p>
+<h2 id="poemspy-and-lyrics_bankpy-words-without-a-model">poems.py and lyrics_bank.py — words without a model</h2>
+<ul>
+<li><strong><code>poems_bank.json</code> and <code>poems.pick(language, hint)</code></strong>: short rhymed spiritual-love poems per language, used when a poem is asked for and the model is not available. <code>rhyme()</code> is a cheap rhyme test (do the two lines of a couplet end in the same last two letters); <code>tag()</code> adds <code>[Verse]</code> and <code>[Chorus]</code> tags.</li>
+<li><strong><code>lyrics_bank.make_lyrics(language, theme)</code></strong>: couplets in seven languages in native script, grouped by theme (dawn, krishna, rain, night). It draws a mukhda and an antara from the same theme. The offline song factory uses it so each language has varied lyrics with no model call.</li>
+</ul>
+<h2 id="physicspy-box2d-feel">physics.py — Box2D feel</h2>
+<p>Backend: <code>import Box2D</code> (pybox2d 2.3.10, the C++ engine). If that fails (a laptop without the wheel) a small pure-Python solver ports the same algorithms. <code>BACKEND</code> says which ran and is written into every score.</p>
+<table>
+<thead>
+<tr>
+<th>Effect</th>
+<th>Model</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>rubato</strong></td>
+<td>A heavy body on a damped spring (k 14, damping ratio 0.3). Long phrase-ending notes kick it; it swings back.</td>
+<td>Note onsets move by a few ms (limit 28 ms), so phrases lean into their ends and recover.</td>
+</tr>
+<tr>
+<td><strong>weight</strong></td>
+<td>A ball dropped onto a floor that follows the melody.</td>
+<td>Leaps hit harder than steps, so velocity runs 0.62 to 1.0; stressed notes (vadi and samvadi) add 0.06.</td>
+</tr>
+<tr>
+<td><strong>meend</strong></td>
+<td>A critically damped spring; a bigger interval is a heavier mass.</td>
+<td>The settling time is the glide time (up to 0.30 s, never more than half the note).</td>
+</tr>
+<tr>
+<td><strong>drift</strong></td>
+<td>A spring pushed by small random impulses.</td>
+<td>A few cents of vibrato-like wander; auto-tune then removes part of it.</td>
+</tr>
+</tbody>
+</table>
+<p><code>humanise(events, beat, seed, stress_notes, sa, guard_from)</code> applies all four; notes at or after <code>guard_from</code> (the tihai) keep exact timing so the last note stays on sam.</p>
+<h2 id="ganpy-phrase-gan">gan.py — phrase GAN</h2>
+<p>A tiny generative adversarial network: the <strong>generator</strong> maps 6 noise values to 8 melodic contour values (6 -&gt; 16 -&gt; 8), the <strong>discriminator</strong> maps a contour to a realness score (8 -&gt; 16 -&gt; 1). It is trained offline with numpy (<code>agentic/train_gan.py</code>) on 8-note phrases harvested from the grammar across all classical ragas; the weights ship as <code>gan_weights.json</code>. Inference is plain Python so it runs in the Lambda.
+At composition time a generated contour is <strong>snapped to the raga's own notes</strong>, so it can never leave the raga, and a phrase the discriminator scores below 0.35 is thrown away (up to six tries). Honest limit: it varies phrases in the style of the grammar; it does not learn taste.</p>
+<h2 id="autotunepy-pull-to-the-shruti">autotune.py — pull to the shruti</h2>
+<p><code>snap(f, sa, scale, speed)</code> moves a pitch a fraction <code>speed</code> of the way (in log frequency) to the nearest allowed svara. <code>speed</code> 1.0 is the hard robotic snap, 0.3 is gentle. <code>track()</code> does the same for a recorded pitch track and leaves notes inside a dead-band alone so vibrato survives. <code>score()</code> retunes every lead note (default speed 0.75) and returns the mean correction in cents. The tihai uses speed 1.0 so the final Sa is exact.</p>
+<h2 id="agentic-the-offline-song-factory">agentic/ — the offline song factory</h2>
+<p><code>evolve.py</code> (producer agents, Thompson sampling, catalogue), <code>critics.py</code> (eight rule-based critics), <code>library.py</code> (reference-tune profiles), <code>make_poems.py</code>, <code>train_gan.py</code>. See <a href="AGENTIC_ARCHITECTURE.html">AGENTIC_ARCHITECTURE.md</a> and <a href="https://github.com/quantum-coder-732/mhRaaga/blob/main/tool_layer_mhraga/mhraaga-cloud/web/docs/agents.html" target="_blank" rel="noopener">the agents page</a>.</p>
+<h2 id="tests">Tests</h2>
+<p><code>tests/test_engine_api.py</code> (grammar, scores land on sam for every tala), <code>tests/test_physics_team.py</code> (physics, auto-tune, GAN, backend), <code>tests/test_agentic.py</code>, <code>tests/test_poems.py</code>, <code>tests/test_studio.py</code>, <code>tests/test_voice.py</code>, <code>tests/test_admin.py</code> (the dashboard). Run with <code>python3 tests/test_*.py</code>; use <code>PYTHONPATH=/tmp/b2d /usr/bin/python3 ...</code> to run against the real Box2D build.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#composepy-the-score-composer">compose.py — the score composer</a><a class="l2" href="#ragaspy-raga-knowledge">ragas.py — raga knowledge</a><a class="l2" href="#talapy-rhythm-cycles">tala.py — rhythm cycles</a><a class="l2" href="#briefpy-prompt-to-plan">brief.py — prompt to plan</a><a class="l2" href="#poemspy-and-lyrics_bankpy-words-without-a-model">poems.py and lyrics_bank.py — words without a model</a><a class="l2" href="#physicspy-box2d-feel">physics.py — Box2D feel</a><a class="l2" href="#ganpy-phrase-gan">gan.py — phrase GAN</a><a class="l2" href="#autotunepy-pull-to-the-shruti">autotune.py — pull to the shruti</a><a class="l2" href="#agentic-the-offline-song-factory">agentic/ — the offline song factory</a><a class="l2" href="#tests">Tests</a></aside></div>
+<script src="docs.js"></script></body></html>

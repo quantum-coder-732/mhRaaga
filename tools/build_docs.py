@@ -34,7 +34,7 @@ CACHE = Path(os.environ.get("DOCS_CACHE", "/tmp/mhraaga_docs_cache"))
 GROUPS = [
     ("Start here", [("README.md", "overview.html", "Overview"), (None, "system.html", "How the system works"), (None, "agents.html", "All the agents")]),
     ("mhRaaga", [
-        ("docs/ARCHITECTURE.md", None, "Architecture"), ("docs/API.md", None, "API for developers"), ("docs/SOUND.md", None, "Sound"),
+        ("docs/ARCHITECTURE.md", None, "Architecture"), ("docs/ENGINE.md", None, "Engine, module by module"), ("docs/BACKEND.md", None, "Backend, file by file"), ("docs/ADMIN.md", None, "Admin dashboard"), ("docs/API.md", None, "API for developers"), ("docs/SOUND.md", None, "Sound"),
         ("docs/VOICE.md", None, "AI voice"), ("docs/TEAM_AND_PHYSICS.md", None, "Shared studio and physics"), ("docs/STUDIO.md", None, "Stories, people, rules"),
         ("docs/AGENTIC_ARCHITECTURE.md", None, "Song factory agents"), ("docs/DOMAIN.md", None, "Domain and HTTPS"),
         ("docs/components/music-engine.md", None, "Music engine"), ("docs/components/android-app.md", None, "Android app"),

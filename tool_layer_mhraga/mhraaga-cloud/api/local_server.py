@@ -84,7 +84,7 @@ class H(BaseHTTPRequestHandler):
         b = p.read_bytes(); self.send_response(200); self.send_header("Content-Type", TYPES.get(p.suffix, "application/octet-stream"))
         self.send_header("Permissions-Policy", "microphone=(self)"); self.send_header("Content-Length", str(len(b))); self.end_headers(); self.wfile.write(b)
 
-    do_POST = do_PUT = do_DELETE = do_OPTIONS = _api
+    do_POST = do_PUT = do_PATCH = do_DELETE = do_OPTIONS = _api
     def log_message(self, *a): pass
 
 

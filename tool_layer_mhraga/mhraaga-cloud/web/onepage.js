@@ -33,6 +33,8 @@ if (authed) {
   nav.addEventListener("click", (e) => { const a = e.target.closest("a.l"); if (!a) return; e.preventDefault(); show(a.dataset.v); });
   logo.onclick = (e) => { e.preventDefault(); show("home"); };
   window.addEventListener("hashchange", () => show(location.hash.slice(1), false));
+  // administrators get one more entry; the server checks the role again on every admin call
+  try { const t = localStorage.getItem("mh_token"); if (t) fetch("/api/me", { headers: { Authorization: "Bearer " + t } }).then((r) => r.json()).then((m) => { if (m && m.admin) { const a = document.createElement("a"); a.className = "l"; a.href = "admin.html"; const i = document.createElement("span"); i.className = "ic"; i.textContent = "🛠"; a.append(i, "Admin"); nav.append(a); } }).catch(() => {}); } catch {}
 }
 
 // frames: load when near the viewport, then follow their content height (same origin, so we can read it)

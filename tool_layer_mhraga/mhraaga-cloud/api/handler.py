@@ -30,6 +30,7 @@ from mhraaga_engine import catalog, compose, get_raga, make_brief
 from mhraaga_engine.brief import TARGETS, detect_language, translate
 from mhraaga_engine.tala import TALAS
 
+import admin
 import studio
 import team
 import voice
@@ -118,6 +119,8 @@ def user_from(event: dict) -> dict:
     item = _users.get_item(Key={"email": sub}).get("Item")
     if not item:
         raise ApiError(401, "Your session has expired. Sign in again.")
+    if item.get("disabled"):
+        raise ApiError(403, "This account is disabled. Ask an administrator.")
     return item
 
 
@@ -171,21 +174,33 @@ def login(event):
                                ExpressionAttributeValues={":f": 0 if fails >= MAX_FAILS else fails,
                                                           ":l": now + LOCK_SECONDS if fails >= MAX_FAILS else 0})
         raise ApiError(401, "Wrong email or password.")
-    if item.get("fails"):
-        _users.update_item(Key={"email": email}, UpdateExpression="SET fails=:z", ExpressionAttributeValues={":z": 0})
+    if item.get("disabled"):
+        raise ApiError(403, "This account is disabled. Ask an administrator.")
+    _users.update_item(Key={"email": email}, UpdateExpression="SET fails=:z, last_login=:t", ExpressionAttributeValues={":z": 0, ":t": datetime.now(timezone.utc).isoformat()})
     return 200, {"token": make_token(email), "user": {"name": item["name"], "email": email}}
 
 
 def me(event):
     u = user_from(event)
     used = int(u["qn"]) if u.get("qday") == today() else 0
-    return 200, {"name": u["name"], "email": u["email"], "composed_today": used, "daily_limit": DAILY_LIMIT, "admin": u["email"].lower() in studio.ADMINS}
+    return 200, {"name": u["name"], "email": u["email"], "composed_today": used, "daily_limit": int(u.get("limit", DAILY_LIMIT)), "admin": admin.is_admin(u),
+                 "role": "admin" if admin.is_admin(u) else "user"}
+
+
+def rename_me(event):
+    u = user_from(event)
+    name = text(body_of(event).get("name"), 60)
+    if not name:
+        raise ApiError(400, "Enter a name.")
+    _users.update_item(Key={"email": u["email"]}, UpdateExpression="SET #n=:n", ExpressionAttributeNames={"#n": "name"}, ExpressionAttributeValues={":n": name})
+    return 200, {"name": name, "email": u["email"]}
 
 
 def take_quota(u: dict) -> None:
     day, used = today(), int(u["qn"]) if u.get("qday") == today() else 0
-    if used >= DAILY_LIMIT:
-        raise ApiError(429, f"Daily limit of {DAILY_LIMIT} songs reached. Come back tomorrow.")
+    limit = int(u.get("limit", DAILY_LIMIT))
+    if used >= limit:
+        raise ApiError(429, f"Daily limit of {limit} songs reached. Come back tomorrow.")
     _users.update_item(Key={"email": u["email"]}, UpdateExpression="SET qday=:d, qn=:n",
                        ExpressionAttributeValues={":d": day, ":n": used + 1})
 
@@ -350,6 +365,10 @@ def handler(event, context=None):
             status, out = login(event)
         elif (method, path) == ("GET", "/me"):
             status, out = me(event)
+        elif (method, path) == ("PATCH", "/me"):
+            status, out = rename_me(event)
+        elif path == "/admin" or path.startswith("/admin/"):
+            status, out = admin.route(method, path[6:], event, user_from, body_of, event.get("queryStringParameters") or {})
         elif (method, path) == ("POST", "/translate"):
             u = user_from(event)
             b = body_of(event)

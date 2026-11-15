@@ -15,7 +15,7 @@ ORIGIN=$(aws ssm get-parameter --name /mhraaga/origin_secret --with-decryption -
 
 # 2. Lambda package = API handler + the music engine layer
 rm -rf "$HERE/build"; mkdir -p "$HERE/build/lambda"
-cp "$HERE/api/handler.py" "$HERE/api/studio.py" "$HERE/api/team.py" "$HERE/api/voice.py" "$HERE/build/lambda/"
+cp "$HERE/api/handler.py" "$HERE/api/studio.py" "$HERE/api/team.py" "$HERE/api/voice.py" "$HERE/api/admin.py" "$HERE/build/lambda/"
 cp -r "$ROOT/music_engine_framework_layer/mhraaga_engine" "$HERE/build/lambda/"
 rm -rf "$HERE/build/lambda/mhraaga_engine/agentic/data" "$HERE/build/lambda/mhraaga_engine/agentic"   # offline tooling, not needed at runtime
 # real Box2D (pybox2d 2.3.10) for the Lambda runtime: python3.12 on x86_64. Without it the engine falls back to its pure-Python solver.

@@ -8,6 +8,9 @@ Start with the [root README](../README.md), then:
 | Doc | For |
 |---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | The detailed architecture, step by step, and how Kalkee is (and is not) used |
+| [ENGINE.md](ENGINE.md) | Every engine module: compose, ragas, tala, brief, poems, lyrics, physics, GAN, auto-tune |
+| [BACKEND.md](BACKEND.md) | handler, studio, team, voice, admin, the tables and the infrastructure |
+| [ADMIN.md](ADMIN.md) | The admin dashboard: users, types, columns, cloud cost |
 | [API.md](API.md) | Developers who call the API from outside (accounts, endpoints, the score format) |
 | [../tool_layer_mhraga/mhraaga-cloud/web/developers.html](../tool_layer_mhraga/mhraaga-cloud/web/developers.html) | The architecture page, published at https://www.mhraaga.in/developers.html |
 | [SOUND.md](SOUND.md) | How the instruments are modelled and why it should sound natural, with the measurements |

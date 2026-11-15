@@ -34,7 +34,8 @@ curl -s $B/compose -H "Authorization: Bearer $TOKEN" -H 'Content-Type: applicati
 | `GET /health` | no | Liveness check and the list of talas. |
 | `POST /auth/signup` | no | `{name, email, password(8-128)}` -> `201 {token, user}`. `409` if the email exists. |
 | `POST /auth/login` | no | `{email, password}` -> `{token, user}`. `401` wrong, `429` locked. |
-| `GET /me` | yes | Name, email, `composed_today`, `daily_limit`. |
+| `GET /me` | yes | Name, email, role, `composed_today`, `daily_limit`. |
+| `PATCH /me` | yes | `{name}` change your display name. |
 | `GET /ragas` | no | The raga catalogue (classical, 72 melakartas, gopi 1-16000). |
 | `GET /ragas/{name}` | no | One raga: aroha, avaroha, vadi, samvadi, time, mood. |
 | `GET /playlist` | no | The community playlist (summaries). |
@@ -49,6 +50,9 @@ curl -s $B/compose -H "Authorization: Bearer $TOKEN" -H 'Content-Type: applicati
 | `GET /tts/info` | no | Voices, styles and the character limit. |
 | `GET/POST /teams`, `/teams/{id}/...` | yes | Shared studio projects: members, layers, comments, assemble, render. |
 | `GET/POST /films`, `/film/plan`, `/story/outline`, `/story/section`, `/people` | yes | Film, story and voice-profile tools. |
+
+### Admin endpoints (administrators only)
+`GET /admin/users`, `POST /admin/users`, `PATCH /admin/users/{email}` (name, role, disabled, daily_limit, password, reset_quota, extra), `POST /admin/users/{email}/delete`, `GET|PUT /admin/schema`, `GET /admin/stats`, `GET /admin/costs`. `PATCH /me {name}` renames yourself. See [ADMIN.md](ADMIN.md).
 
 ### `POST /compose` body
 | Field | Type | Notes |

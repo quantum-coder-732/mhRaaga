@@ -38,6 +38,17 @@ class _Phrases:
         p = self.r["pakad"]
         return self._stress([(n, 1.0) for n in p[:-1]] + [(p[-1], 2.0)])
 
+    def pakad_head(self, max_beats: float) -> list[tuple[int, float]]:
+        """The opening of the pakad, cut so it never fills the whole cycle. In a short tala (keherwa, dadra, adi, rupak) the full pakad used to
+        take every beat, so each avartan repeated the same motif and no rise, fall or GAN phrase was ever reached."""
+        out, tot = [], 0.0
+        for n, b in self.pakad():
+            if out and tot + b > max_beats:
+                break
+            out.append((n, b))
+            tot += b
+        return out
+
     def rise(self, fast: bool) -> list[tuple[int, float]]:
         lo = self.asc[: max(2, len(self.asc) // 2)]
         top = self.rng.choice([self.r["vadi"], self.r["samvadi"], self.r["vadi"]])
@@ -134,7 +145,7 @@ def compose(raga: dict, tala: str = "", tempo: int = 72, duration: int = 90, lyr
         t0 = gat_start + av * cyc
         fast = av >= n_av // 2
         limit = tihai_start - beat * 0.25 if av == n_av - 1 else t0 + cyc - beat * 0.5
-        seq = P.pakad()
+        seq = P.pakad_head(max(3.0, cb * 0.45)) if av % 3 else P.pakad_head(max(4.0, cb * 0.6))   # every third cycle states more of the motif
         order = [P.rise, P.fall] if av % 2 == 0 else [P.fall, P.rise]
         t = t0
         gen = 0

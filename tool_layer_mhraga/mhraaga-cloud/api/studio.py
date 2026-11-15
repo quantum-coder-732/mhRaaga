@@ -79,7 +79,7 @@ def rules_public() -> dict:
 
 
 def need_admin(u: dict) -> None:
-    if u["email"].lower() not in ADMINS:
+    if u["email"].lower() not in ADMINS and u.get("role") != "admin":
         raise H().ApiError(403, "Only an administrator can change the rules.")
 
 

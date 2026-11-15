@@ -39,6 +39,20 @@ class Engine(unittest.TestCase):
                 self.assertAlmostEqual(s["tabla"][-1][0], end_gat, places=2)
                 self.assertEqual(s["lead"][-1][1], s["sa"])
 
+    def test_short_talas_do_not_repeat_one_motif(self):
+        """Regression: in keherwa, dadra, adi and rupak the pakad used to fill every cycle, so the gat repeated and the GAN never ran."""
+        for tala in ("keherwa", "dadra", "adi", "rupak"):
+            for spec in ("yaman", "bhairavi"):
+                s = compose(get_raga(spec), tala, 76, 150, "", seed=3)
+                beat, cyc = 60 / s["meta"]["tempo"], TALAS[tala]["beats"] * 60 / s["meta"]["tempo"]
+                g = [x for x in s["sections"] if x["name"] == "gat"][0]
+                av = {}
+                for t, f, *_ in s["lead"]:
+                    if g["t0"] <= t < g["t1"]:
+                        av.setdefault(int((t - g["t0"]) // cyc), []).append(round(f))
+                self.assertGreaterEqual(len({tuple(v) for v in av.values()}) / len(av), 0.7, (tala, spec))
+                self.assertGreater(s["meta"]["physics"]["gan_phrases"], 0, (tala, spec))
+
     def test_lyrics_and_instrumental(self):
         s = compose(get_raga("yaman"), "teental", 70, 90, "[A]\nl1\nl2", seed=1)
         self.assertEqual([x["text"] for x in s["lyrics"] if not x["tag"]], ["l1", "l2"])

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The backend, file by file · mhRaaga docs</title><meta name="description" content="The backend, file by file">
+<link rel="stylesheet" href="docs.css"></head>
+<body data-root="">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="overview.html">Overview</a></li><li><a href="system.html">How the system works</a></li><li><a href="agents.html">All the agents</a></li></ul></details><details open><summary>mhRaaga</summary><ul><li><a href="ARCHITECTURE.html">Architecture</a></li><li><a href="ENGINE.html">Engine, module by module</a></li><li><a href="BACKEND.html" class=cur aria-current=page>Backend, file by file</a></li><li><a href="ADMIN.html">Admin dashboard</a></li><li><a href="API.html">API for developers</a></li><li><a href="SOUND.html">Sound</a></li><li><a href="VOICE.html">AI voice</a></li><li><a href="TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="STUDIO.html">Stories, people, rules</a></li><li><a href="AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="DOMAIN.html">Domain and HTTPS</a></li><li><a href="components/music-engine.html">Music engine</a></li><li><a href="components/android-app.html">Android app</a></li><li><a href="components/music-backend.html">Backend prototype</a></li><li><a href="components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="kalkee/index.html">About these documents</a></li></ul></details><details><summary>Kalkee</summary><ul><li><a href="kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="the-backend-file-by-file">The backend, file by file</h1>
+<p>Folder: <code>tool_layer_mhraga/mhraaga-cloud/api/</code>. One Lambda (Python 3.12, x86_64) behind API Gateway. Standard library plus boto3 only; the Box2D wheel is added at deploy time.
+<code>local_server.py</code> runs the same handler on your laptop with a JSON-file database (<code>python3 api/local_server.py</code>, http://localhost:8787).</p>
+<h2 id="handlerpy-the-front-door">handler.py — the front door</h2>
+<p><code>handler(event)</code> routes by method and path under <code>/api</code>, turns <code>ApiError</code> into <code>{"error": ...}</code>, and never leaks internals (an unexpected error is logged and returns a plain 500).</p>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Access</strong></td>
+<td>If <code>ORIGIN_SECRET</code> is set, the <code>x-origin-verify</code> header must match it (CloudFront adds it), so the raw API Gateway address answers 403.</td>
+</tr>
+<tr>
+<td><strong>Accounts</strong></td>
+<td><code>signup</code> and <code>login</code>. Passwords are hashed with scrypt (n=2^14, r=8, p=1, random 16-byte salt). A token is a 7-day HS256-signed JWT with the email as subject. Eight wrong passwords lock an account for 10 minutes. A disabled account cannot sign in and its tokens stop working.</td>
+</tr>
+<tr>
+<td><strong>Quota</strong></td>
+<td><code>take_quota</code> allows 30 songs per user per day (<code>DAILY_COMPOSE_LIMIT</code>), or the user's own <code>limit</code> if an administrator set one.</td>
+</tr>
+<tr>
+<td><strong>Compose</strong></td>
+<td><code>make_song</code>: checks the text against the rules (<code>studio.check</code>), takes quota, builds the brief, gets the raga, composes the score, saves it, returns it.</td>
+</tr>
+<tr>
+<td><strong>Songs</strong></td>
+<td><code>list_songs</code>, <code>get_song</code>, <code>delete_song</code> (your own); the shared playlist is the owner <code>playlist#common</code> and is readable without sign-in. Plays and downloads are counted with an atomic <code>ADD</code>.</td>
+</tr>
+<tr>
+<td><strong>Other routes</strong></td>
+<td><code>/translate</code>, <code>/rules</code>, <code>/people</code>, <code>/story/*</code>, <code>/films</code>, <code>/film/plan</code>, <code>/tts</code>, <code>/teams</code>, <code>/admin</code>.</td>
+</tr>
+<tr>
+<td><strong>Secrets</strong></td>
+<td>Read from SSM Parameter Store on first use and cached for the life of the container.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="studiopy-rules-people-stories-films">studio.py — rules, people, stories, films</h2>
+<ul>
+<li><strong>Rules</strong>: <code>DEFAULT_RULES</code> (principles, blocked terms, blocked impersonation phrases, maximum prompt length) are kept as <code>rules/ethics.json</code> in S3 with a version history. <code>check(*texts)</code> runs on <strong>every</strong> prompt, lyric, story topic, translation and profile text and returns 422 on a violation. Administrators edit them with <code>PUT /rules</code>. <code>learned_defaults(language)</code> returns the tala, lead and tempo the offline factory found work best.</li>
+<li><strong>People</strong>: voice profiles with consent. A profile stores a name, a consent note, up to 20 audio samples (S3 <code>samples/</code>, each at most 2.5 MB) and style notes learned from a <strong>pasted transcript</strong> (<code>people_learn</code>); nothing is downloaded from anywhere. Profiles are for you or people who agreed, and are never used to clone a voice.</li>
+<li><strong>Stories and pravachan</strong>: <code>story_outline</code> then <code>story_section</code> write a long spoken piece (1 to 30 minutes) section by section, limited to 80 model calls per user per day.</li>
+<li><strong>Films</strong>: <code>film_plan</code> expands a short idea into a director's brief and a storyboard of scenes with effects (glow, vignette, grain, blur, light leak, particles, slow zoom, fade, black and white, warm, cool) using two model calls. <code>film_save/get/delete</code> keep projects up to 330 KB.</li>
+</ul>
+<h2 id="teampy-shared-studio">team.py — shared studio</h2>
+<p>Up to 150 members and 300 layers per project, all stored in the songs table:</p>
+<table>
+<thead>
+<tr>
+<th>Key (owner / id)</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>team#&lt;pid&gt;</code> / <code>0meta</code></td>
+<td>Project: title, kind (film or song), members <code>{email: role}</code>, revision</td>
+</tr>
+<tr>
+<td><code>team#&lt;pid&gt;</code> / <code>L#&lt;lid&gt;</code></td>
+<td>A layer (a film shot or a song section) owned by one artist</td>
+</tr>
+<tr>
+<td><code>team#&lt;pid&gt;</code> / <code>C#&lt;ts&gt;-&lt;r&gt;</code></td>
+<td>A comment</td>
+</tr>
+<tr>
+<td><code>member#&lt;email&gt;</code> / <code>&lt;pid&gt;</code></td>
+<td>Index so a member can list their projects</td>
+</tr>
+</tbody>
+</table>
+<p>Roles: <strong>director</strong> (everything), <strong>artist</strong> (their own layers), <strong>viewer</strong> (read and comment). Layer saves carry the revision they were based on and lose with <strong>409</strong> if someone changed the layer first (optimistic locking). Clients poll <code>GET /teams/{pid}?since=...</code> every 5 s; only changed layers return. <code>assemble</code> orders film scenes or merges song lyrics; <code>render_song</code> lets the director turn the merged lyrics into a normal song.</p>
+<h2 id="voicepy-neural-speech">voice.py — neural speech</h2>
+<p><code>POST /tts {text, lang, style, voice}</code> -&gt; <code>{url, seconds, cached}</code>. Calls OpenRouter's <code>openai/gpt-audio</code> (poem, bhajan, song, pravachan) or <code>gpt-audio-mini</code> (story, explainer, speech, narration) with a strict "read it word for word, add nothing" prompt. The audio is stored once under <code>tts/&lt;hash&gt;.wav</code> (the key is <code>v2|model|voice|style|lang|text</code>) so every later request is free and instant. Defences: retry with back-off on 429 and 5xx, a 503 "busy" the client can retry, output that is far too long or too short is rejected, mini output that adds sentences is redone on the full model, and spend is capped at <strong>$0.60 per user and $12 per site per day</strong>. See <a href="VOICE.html">VOICE.md</a>.</p>
+<h2 id="adminpy-the-dashboard-api">admin.py — the dashboard API</h2>
+<p>Users, roles, custom columns, usage and cloud cost. See <a href="ADMIN.html">ADMIN.md</a>.</p>
+<h2 id="data-dynamodb">Data (DynamoDB)</h2>
+<p><strong><code>mhraaga-users</code></strong> (key <code>email</code>): <code>name</code>, <code>pw</code>, <code>created</code>, <code>fails</code>, <code>locked_until</code>, <code>qday</code>/<code>qn</code> (today's song count), <code>tday</code>/<code>tusd</code> (today's voice spend), and, set by the dashboard, <code>role</code>, <code>disabled</code>, <code>limit</code>, <code>extra</code> (custom columns), <code>last_login</code>.
+<strong><code>mhraaga-songs</code></strong> (keys <code>owner</code>, <code>id</code>): one table for many kinds of rows, told apart by the owner:</p>
+<table>
+<thead>
+<tr>
+<th>Owner</th>
+<th>Holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;email&gt;</code></td>
+<td>A user's songs (<code>brief</code> and <code>score</code> stored as JSON strings)</td>
+</tr>
+<tr>
+<td><code>playlist#common</code></td>
+<td>The shared community playlist and its counters</td>
+</tr>
+<tr>
+<td><code>people#&lt;email&gt;</code>, <code>film#&lt;email&gt;</code></td>
+<td>Voice profiles, film projects</td>
+</tr>
+<tr>
+<td><code>team#...</code>, <code>member#...</code></td>
+<td>Shared studio (above)</td>
+</tr>
+<tr>
+<td><code>quota#tts</code></td>
+<td>Site voice spend per day</td>
+</tr>
+<tr>
+<td><code>admin#audit</code>, <code>admin#config</code>, <code>admin#cache</code></td>
+<td>Admin action log (kept 180 days), custom column definitions, cached cost report</td>
+</tr>
+</tbody>
+</table>
+<h2 id="infrastructure-infra">Infrastructure (<code>infra/</code>)</h2>
+<p><code>template.yaml</code> (CloudFormation: S3, CloudFront with a strict CSP, API Gateway with throttling, the Lambda and its least-privilege role, two tables) and <code>deploy.sh</code> (builds the zip with the engine and a Box2D wheel, updates the stack, syncs the site, invalidates the cache and checks the raw API returns 403). The Lambda role can read parameters under <code>/mhraaga/*</code>, use <code>rules/</code>, <code>samples/</code> and <code>tts/</code> in the site bucket, list <code>tts/</code>, scan the users table, and read AWS cost (<code>ce:GetCostAndUsage</code>).</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#handlerpy-the-front-door">handler.py — the front door</a><a class="l2" href="#studiopy-rules-people-stories-films">studio.py — rules, people, stories, films</a><a class="l2" href="#teampy-shared-studio">team.py — shared studio</a><a class="l2" href="#voicepy-neural-speech">voice.py — neural speech</a><a class="l2" href="#adminpy-the-dashboard-api">admin.py — the dashboard API</a><a class="l2" href="#data-dynamodb">Data (DynamoDB)</a><a class="l2" href="#infrastructure-infra">Infrastructure (infra/)</a></aside></div>
+<script src="docs.js"></script></body></html>

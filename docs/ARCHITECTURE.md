@@ -3,6 +3,8 @@
 Live at https://www.mhraaga.in (AWS account 877157050453, region ap-south-1, stack `mhraaga`). A developer-friendly version with a diagram:
 https://www.mhraaga.in/developers.html. How to call the API from outside: [API.md](API.md).
 
+Module-level detail: [ENGINE.md](ENGINE.md) (compose, ragas, tala, brief, poems, lyrics, physics, GAN, auto-tune) and [BACKEND.md](BACKEND.md) (handler, studio, team, voice, admin, data).
+
 ## 1. The four layers
 
 ```
@@ -22,6 +24,7 @@ https://www.mhraaga.in/developers.html. How to call the API from outside: [API.m
         │   engine: compose, ragas, tala, brief, poems, lyrics        │
         │   physics (Box2D), GAN phrases, auto-tune                   │
         │   studio.py (stories, film, rules), team.py, voice.py       │
+        │   admin.py (users, roles, columns, cost)                    │
         └────────┬──────────────────┬───────────────────┬────────────┘
                  ▼                  ▼                   ▼
           DynamoDB            SSM Parameter Store   OpenRouter (hosted models)
@@ -52,6 +55,7 @@ https://www.mhraaga.in/developers.html. How to call the API from outside: [API.m
 - **S3** one private bucket: site files, `catalog/`, `library/`, `rules/`, `samples/`, `tts/`. Sync with `--delete` excludes those data prefixes.
 - **SSM** `/mhraaga/openrouter_key`, `jwt_secret`, `origin_secret` as SecureString. Nothing secret is in the repository.
 - **CloudFront** adds the origin secret; the raw API Gateway URL returns 403. HSTS, a strict CSP (no inline script or style, `connect-src 'self'`), microphone-only Permissions-Policy.
+- **Admin**: owners (the `ADMIN_EMAILS` setting) and users with role admin reach `/api/admin` and `admin.html`: user list, type, name, status, limits, custom columns, usage, AWS and OpenRouter cost, an audit log. See [ADMIN.md](ADMIN.md).
 - **Abuse limits**: route throttling, 8 wrong passwords lock 10 minutes, a content check (`studio.check`) on prompts and lyrics.
 
 ## 4. Web app structure
