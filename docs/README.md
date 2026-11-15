@@ -1,5 +1,8 @@
 # Documentation index
 
+**Read these as web pages, with search and diagrams: https://www.mhraaga.in/docs/index.html**
+The pages are built from the Markdown here: `python3 tools/build_docs.py` (needs `pip install markdown pygments`; see the header of that file for the diagram step), then deploy.
+
 Start with the [root README](../README.md), then:
 
 | Doc | For |

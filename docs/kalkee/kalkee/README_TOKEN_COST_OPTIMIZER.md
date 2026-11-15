@@ -1,6 +1,6 @@
 # Token & Cost Optimizer
 
-ALGO AKANADE's cost layer — every LLM call already goes through a small
+Kalkee's cost layer — every LLM call already goes through a small
 number of paid, hosted models (Claude/GPT-class tiers, Groq, DeepSeek)
 alongside free local SLMs (Ollama). This layer makes that choice
 cost-aware: it predicts what a call would cost before it's made,

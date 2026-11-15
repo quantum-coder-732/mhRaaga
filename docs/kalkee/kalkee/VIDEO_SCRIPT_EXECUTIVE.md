@@ -1,4 +1,4 @@
-# ALGO AKANADE — Executive Overview (Video Script)
+# Kalkee — Executive Overview (Video Script)
 
 **Purpose**: a 5-10 minute video script for a non-technical, executive/
 business audience — leadership, prospective customers, board members.
@@ -22,16 +22,16 @@ prompt appearing before anything happens]**
 > one question, whether they've said it out loud or not: how much do
 > we trust this thing to act on our behalf, and how do we get proof —
 > not a promise — that it's acting safely, and getting better at its
-> job, on its own? This is ALGO AKANADE: a system built to answer that
+> job, on its own? This is Kalkee: a system built to answer that
 > question with a working product, not a slide.
 
 ---
 
-## 1. What ALGO AKANADE Is ⏱ 0:30–1:30
+## 1. What Kalkee Is ⏱ 0:30–1:30
 
 **NARRATION:**
 
-> ALGO AKANADE — Multi-Agent GenAI Network with Evolving Training and
+> Kalkee — Multi-Agent GenAI Network with Evolving Training and
 > Orchestration — is an AI orchestration platform. In plain terms: it's
 > the layer that sits between "we have access to AI models" and "our
 > team actually has a reliable, safe, self-improving AI assistant."
@@ -73,7 +73,7 @@ prompt appearing before anything happens]**
 >
 > **Wall three: the system doesn't get smarter, a person has to.**
 > Most AI deployments need a team continuously re-tuning prompts and
-> thresholds by hand. ALGO AKANADE's routing, its security judgment, and
+> thresholds by hand. Kalkee's routing, its security judgment, and
 > even the local model's own skills improve automatically from real
 > usage — the system's belief about what works updates itself,
 > continuously, without a human in the loop tuning knobs.
@@ -88,14 +88,14 @@ prompt appearing before anything happens]**
 > directly, because the differences are structural, not just marketing.
 >
 > Most agent tools on the market today are, at their core, one
-> application wrapped around one model choice. ALGO AKANADE is a *network*
+> application wrapped around one model choice. Kalkee is a *network*
 > — many models, many specialized agents, competing and cooperating,
 > automatically routed by a learning system, not a static configuration
 > file. Adding a new AI-powered capability to the business is adding
 > one new component to that network, not standing up a parallel system.
 >
 > Where competitors have recently announced built-in security scanning
-> as a new feature, ALGO AKANADE already had it — and had already taken it
+> as a new feature, Kalkee already had it — and had already taken it
 > further: real, verifiable checks against public vulnerability
 > databases, real configuration-security scanning for cloud
 > deployments, and — newest — a live safety layer that watches every
@@ -105,7 +105,7 @@ prompt appearing before anything happens]**
 
 **[VISUAL: a simplified version of the comparison table — just three
 columns: "Model gateways (OpenRouter, LiteLLM)," "Agent frameworks
-(CrewAI, AutoGen, LangGraph)," "ALGO AKANADE"]**
+(CrewAI, AutoGen, LangGraph)," "Kalkee"]**
 
 **NARRATION:**
 
@@ -161,7 +161,7 @@ padlock icon]**
 > This is the single most important slide for anyone evaluating AI
 > vendors on security or compliance grounds, so it gets its own moment.
 >
-> ALGO AKANADE can run entirely against models hosted on the organization's
+> Kalkee can run entirely against models hosted on the organization's
 > own infrastructure — no API key, no third party, no data ever
 > leaving the building for that request. That's not a stripped-down
 > "offline mode" bolted on afterward; it's a fully competitive option
@@ -264,11 +264,11 @@ events, a "today's report" card with a one-paragraph summary]**
 
 ## 🎬 Closing ⏱ 10:15–11:00
 
-**[VISUAL: ALGO AKANADE name, fade out]**
+**[VISUAL: Kalkee name, fade out]**
 
 **NARRATION:**
 
-> The bet behind ALGO AKANADE is simple: an AI system an organization can
+> The bet behind Kalkee is simple: an AI system an organization can
 > actually trust with real work isn't the one with the flashiest single
 > demo — it's the one built on real safety guarantees, real learning,
 > and real control over where sensitive data goes, all as one coherent

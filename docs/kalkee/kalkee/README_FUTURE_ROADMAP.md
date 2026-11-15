@@ -145,7 +145,7 @@ decision equally well. Concretely:
   directly into the bandit instead of only through `TaskMemory`'s
   separate similarity lookup — see that module's own docstring for why
   it currently does the latter, not the former).
-- **Genuine multi-agent RL (QMIX, MADDPG, or similar)** — ALGO AKANADE
+- **Genuine multi-agent RL (QMIX, MADDPG, or similar)** — Kalkee
   already computes a REAL Shapley-attributed shared reward across every
   agent that participated in a task (`shapley.py`), then updates each
   agent's OWN independent bandit posterior with its share. That's

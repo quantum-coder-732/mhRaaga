@@ -1,7 +1,7 @@
 # The SLM Generation Layer
 
-ALGO AKANADE's model layer isn't just "call an LLM" — one rung in it,
-Ollama, is a model ALGO AKANADE's own process actively *produces and
+Kalkee's model layer isn't just "call an LLM" — one rung in it,
+Ollama, is a model Kalkee's own process actively *produces and
 improves*, not just calls. That whole subsystem — collecting what the
 model should learn, training it, quantizing it, exporting it, gating
 it, and registering it back into the router every agent already
@@ -51,7 +51,7 @@ Three concrete, real additions on top of the pipeline above:
   quant type, sanity-check/gate outcome, whether it shipped) to
   `exported_models/<tag>/`, unconditionally — even a candidate that
   fails the gate stays there for inspection instead of vanishing.
-- **One consistent product name: Algo-Akanade-SLM.** The output is no
+- **One consistent product name: Algo-Kalkee-SLM.** The output is no
   longer named after whichever base model happened to produce it
   (`qwen2.5-tuned`) — every base (Qwen, SmolLM, Llama, ...) that goes
   through `finetune_local_slm.py --base-model ...` produces a tag
@@ -131,18 +131,18 @@ in the same chains every agent already calls through:
               │                          chains every tier already uses
               ▼
    get_llm_client(tier, preferred="algo-akanade-slm")   ◀── any of
-              │                                              ALGO AKANADE's 9
+              │                                              Kalkee's 9
               ▼                                              default agents
    TierClient.chat(node, messages)  ── identical call site whether the
                                         answering model is Groq, Claude,
-                                        or Algo-Akanade-SLM
+                                        or Algo-Kalkee-SLM
 ```
 
 No orchestrator-side code changes, no redeploy, no restart — the
 Adaptive Router (`ARCHITECTURE.md` §3), Agent Network, and Workflow
 Engine above this layer are completely unaware of *which* concrete
 model answered a given turn; they only see `LLMResult`. This layer's
-whole job is making sure that when Algo-Akanade-SLM DOES answer, it's
+whole job is making sure that when Algo-Kalkee-SLM DOES answer, it's
 already been proven at least as good as what it's replacing.
 
 ## 4. Quickstart: `scripts/quickstart_lora_example/`
@@ -181,7 +181,7 @@ candidate.
 
 ## 5. Domain-specific SLMs — the RL orchestrator that picks between them
 
-Everything above produces ONE general-purpose Algo-Akanade-SLM. Real
+Everything above produces ONE general-purpose Algo-Kalkee-SLM. Real
 deployments often want several — a legal-support model, a customer-
 support model, a coding model — each fine-tuned on its own domain's
 data via the exact same pipeline. `llm/domain_router.py` is the small
@@ -271,7 +271,7 @@ Two more pieces close the loop between "here's the pipeline" and
 **`POST`/`GET`/`PUT`/`DELETE /api/admin/finetune-config`**
 (`app/routers/admin_finetune_config.py`) — what SHOULD get trained
 tonight, one row per domain (`None` = the general-purpose model),
-editable from Admin > AI Models > "Algo-Akanade-SLM nightly config" in
+editable from Admin > AI Models > "Algo-Kalkee-SLM nightly config" in
 the UI instead of hand-editing `deploy/finetune.env` or shell-script
 env vars on the deploy box. Each row is: a domain, any HuggingFace
 `base_model` id, the `ollama_base_tag` it gets gated against, a
@@ -408,7 +408,7 @@ overview — pick the Ollama or Direct path depending on the model.
 
 1. Pull the base tag into the running Ollama container:
    `sudo docker exec ak-ollama ollama pull <tag>` (e.g. `qwen2.5-coder:1.5b`).
-2. In the chat widget, open Admin > AI Models > "Algo-Akanade-SLM
+2. In the chat widget, open Admin > AI Models > "Algo-Kalkee-SLM
    nightly config" and click **+ Add config** (or edit the `general`
    row to switch what it trains). Set: `domain` (blank for
    general-purpose, or a name like `coder`), `base_model` (the
@@ -421,7 +421,7 @@ overview — pick the Ollama or Direct path depending on the model.
    `ak-finetune-cron` container: `python3 /app/nightly_cron_daemon.py --now`).
 4. Watch it happen: `tail -f /opt/algo-kaizen/logs/ak-finetune.log`.
 5. Confirm it's live: Admin > AI Models shows the new row in
-   "Algo-Akanade-SLM versions" with **Live now**, and a matching row in
+   "Algo-Kalkee-SLM versions" with **Live now**, and a matching row in
    "Nightly verification reports" with the per-prompt scores. The
    provider (`algo-akanade-slm[-<domain>]`) is now selectable in the
    chat widget's model picker, and Domain mode routes to it

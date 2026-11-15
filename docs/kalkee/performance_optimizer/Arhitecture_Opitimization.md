@@ -4,17 +4,17 @@ This is the system-level companion to [`Algo Engine.md`](Algo%20Engine.md)
 (the build manual: quick start, commands, testing, license). That file
 tells you how to run it; this one explains how it actually works
 internally, and how it plugs into the rest of Algo-Kaizen as a real rung
-in ALGO AKANADE's model router. No build manual duplicated here — where the
+in Kalkee's model router. No build manual duplicated here — where the
 two overlap, this file points at the source file that's the real answer.
 
 ## 1. What this is, in one paragraph
 
 **Algo Engine is not an MoE-only engine and not a GPU-only accelerator.**
 Those are capabilities inside a broader runtime. Algo Engine is
-ALGO AKANADE's self-hosted **model execution and optimization layer**: given a
+Kalkee's self-hosted **model execution and optimization layer**: given a
 model, a workload, and the hardware actually available, its job is to
 determine — and keep learning — the most efficient way to execute that
-model while preserving exact correctness. **ALGO AKANADE decides WHAT to
+model while preserving exact correctness. **Kalkee decides WHAT to
 run; Algo Engine decides HOW to run it** — across CPU, GPU, or hybrid
 execution, and across VRAM, RAM, and disk as one tiered memory
 hierarchy, streaming only the weights a given token actually needs
@@ -23,7 +23,7 @@ family (MoE, via a tiered expert store) is the first, fully real
 instance of that general idea, not the ceiling of it — see §10 for the
 generalization already underway. It ships an OpenAI-compatible HTTP API
 (`/v1/chat/completions`), which is the only thing that matters to the
-rest of this repo — it means ALGO AKANADE's model router
+rest of this repo — it means Kalkee's model router
 (`orchestrator_framework_layer/akanade/backend/app/llm/router.py`) can
 treat a running Algo Engine exactly like any other OpenAI-compatible
 provider, just pointed at a different `base_url`, with no protocol
@@ -32,7 +32,7 @@ translation layer of its own.
 ## 2. Where this fits in Algo-Kaizen
 
 ```
- ALGO AKANADE backend (orchestrator_framework_layer/akanade/backend)
+ Kalkee backend (orchestrator_framework_layer/akanade/backend)
         │
         │  llm/router.py — TierClient.chat(), one of many chain rungs
         ▼
@@ -140,7 +140,7 @@ three-tier kernel story.
  chatResponse{choices[0].message.content, finish_reason}
         │  (or the final SSE chunk with finish_reason set, if streaming)
         ▼
- back to ALGO AKANADE's TierClient — indistinguishable from any other
+ back to Kalkee's TierClient — indistinguishable from any other
  OpenAI-compatible rung in the chain
 ```
 
@@ -302,7 +302,7 @@ one invariant this whole design exists to guarantee.
 
 ## 10. Beyond MoE — the generalization roadmap
 
-§1's positioning ("ALGO AKANADE decides WHAT to run; Algo Engine decides HOW")
+§1's positioning ("Kalkee decides WHAT to run; Algo Engine decides HOW")
 is the target architecture, not yet fully built — per the project's own
 non-negotiable rule, that means extending what's here, not rebuilding
 it. Concretely, in order:
@@ -329,7 +329,7 @@ it. Concretely, in order:
    where) and pick the cheapest one that fits the hardware, instead of
    today's fixed "whichever kernel tier this binary was built with."
 5. **RL over execution strategy** — the same `LinearBanditCore`
-   Thompson-Sampling primitive ALGO AKANADE's own optimizers already use
+   Thompson-Sampling primitive Kalkee's own optimizers already use
    (`framework/bandit.py`), applied to a different decision: not which
    provider or generation-parameter arm, but which execution strategy
    (device placement, prefetch, eviction, batch size) actually performed
@@ -348,5 +348,5 @@ new accelerated path is trusted.
 - `orchestrator_framework_layer/akanade/backend/app/llm/router.py` — the
   `algo-engine` provider entry and `ALGO_ENGINE_BASE_URL` (§2 above).
 - `orchestrator_framework_layer/akanade/README_ARROW_DIAGRAMS.md` — the
-  equivalent diagram set for ALGO AKANADE's own request path, same visual
+  equivalent diagram set for Kalkee's own request path, same visual
   convention used in §4–§6 above.

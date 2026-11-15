@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data model — every store, table, and embedding this service persists · mhRaaga docs</title><meta name="description" content="Data model — every store, table, and embedding this service persists">
+<link rel="stylesheet" href="../../docs.css"></head>
+<body data-root="../../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../../overview.html">Overview</a></li><li><a href="../../system.html">How the system works</a></li><li><a href="../../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../../ARCHITECTURE.html">Architecture</a></li><li><a href="../../API.html">API for developers</a></li><li><a href="../../SOUND.html">Sound</a></li><li><a href="../../VOICE.html">AI voice</a></li><li><a href="../../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../../STUDIO.html">Stories, people, rules</a></li><li><a href="../../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../../components/music-engine.html">Music engine</a></li><li><a href="../../components/android-app.html">Android app</a></li><li><a href="../../components/music-backend.html">Backend prototype</a></li><li><a href="../../components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="../../kalkee/index.html">About these documents</a></li></ul></details><details open><summary>Kalkee</summary><ul><li><a href="../../kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="../../kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="../../kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="../../kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="../../kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="../../kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="../../kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="../../kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="../../kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="../../kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="../../kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="../../kalkee/kalkee/README_DATA_MODEL.html" class=cur aria-current=page>Data Model</a></li><li><a href="../../kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="../../kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="../../kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="../../kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="../../kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="../../kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="../../kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="../../kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="../../kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="../../kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="../../kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="../../kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="../../kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="../../kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="../../kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="../../kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="../../kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="../../kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="../../kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="../../kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="data-model-every-store-table-and-embedding-this-service-persists">Data model — every store, table, and embedding this service persists</h1>
+<p>One backend, three kinds of persistence, all real and grounded in
+<code>backend/app/db.py</code>/<code>backend/app/retrieval/vectorstore.py</code> — no
+speculative future schema, only what's actually written to today.</p>
+<h2 id="the-document-store-appdbpy">The document store (<code>app/db.py</code>)</h2>
+<p>Every table below shares ONE tiny API — <code>put(pk, sk, item)</code> /
+<code>get(pk, sk)</code> / <code>scan(pk_prefix, sk_prefix)</code> / <code>delete(pk, sk)</code> — backed
+by either <code>LocalStore</code> (one JSON file per table, <code>DATA_DIR</code>, zero
+infra — the default, and what every test in this repo runs against) or
+<code>DynamoStore</code> (real DynamoDB or <code>dynamodb-local</code>, <code>STORAGE_BACKEND=dynamodb</code>).
+Neither the service layer nor any table below knows which backend is
+active — see <code>db.py</code>'s own docstring.</p>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>PK</th>
+<th>SK</th>
+<th>What it holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Users</code></td>
+<td><code>USER#{username}</code></td>
+<td><code>PROFILE</code></td>
+<td>Demo-mode user accounts (name, role, password hash) — unused when <code>REAL_APP_API_BASE_URL</code> is set, since auth then defers to the real PM app entirely</td>
+</tr>
+<tr>
+<td><code>Spaces</code></td>
+<td><code>SPACE#{id}</code></td>
+<td><code>META</code></td>
+<td>Demo PM data — top-level spaces</td>
+</tr>
+<tr>
+<td><code>Projects</code></td>
+<td><code>PROJECT#{id}</code></td>
+<td><code>META</code></td>
+<td>Demo PM data — projects, <code>member_roles</code> map</td>
+</tr>
+<tr>
+<td><code>Tasks</code></td>
+<td><code>TASK#{id}</code></td>
+<td><code>META</code></td>
+<td>Demo PM data — tasks</td>
+</tr>
+<tr>
+<td><code>Sprints</code></td>
+<td><code>SPRINT#{id}</code></td>
+<td><code>META</code></td>
+<td>Demo PM data — sprints</td>
+</tr>
+<tr>
+<td><code>Subtasks</code></td>
+<td><code>SUBTASK#{id}</code></td>
+<td><code>META</code></td>
+<td>Demo PM data — subtasks</td>
+</tr>
+<tr>
+<td><code>ChatSessions</code></td>
+<td><code>USER#{user_id}</code></td>
+<td><code>SESSION#{session_id}</code></td>
+<td>One row per (user, chat session): rolling message window, <code>pendingConfirmation</code>/<code>pendingClarification</code>, the running <code>summary</code> string (see <code>agent/memory.py</code>)</td>
+</tr>
+<tr>
+<td><code>Providers</code></td>
+<td><code>PROVIDER#{id}</code></td>
+<td><code>META</code></td>
+<td>Admin-added LLM providers (<code>admin_providers.py</code>) — API keys stored <strong>plaintext</strong> (a known, accepted gap — see <code>OAuthConnections</code> below for the higher-stakes case that DOES get encrypted)</td>
+</tr>
+<tr>
+<td><code>OAuthConnections</code></td>
+<td><code>USER#{user_id}</code></td>
+<td><code>PROVIDER#{github\|linear\|google}</code></td>
+<td>Per-user OAuth tokens (<code>oauth_store.py</code>) — <code>access_token</code>/<code>refresh_token</code> <strong>encrypted at rest</strong> (<code>app/crypto.py</code>, Fernet), <code>expires_at</code>, <code>scopes</code>, <code>connected_at</code></td>
+</tr>
+<tr>
+<td><code>BanditState</code></td>
+<td><code>OPTIMIZER#{name}</code></td>
+<td><code>STATE</code></td>
+<td>RL optimizer posteriors, durable across restarts (<code>framework/bandit_persistence.py</code>) — currently <code>security_optimizer</code> is the one wired-up example; see the Security README</td>
+</tr>
+</tbody>
+</table>
+<p>Demo-mode tables (<code>Users</code>/<code>Spaces</code>/<code>Projects</code>/<code>Tasks</code>/<code>Sprints</code>/<code>Subtasks</code>)
+exist so the chatbot works fully standalone against a seeded Compass OS
+dataset with zero external dependencies — see <code>seed.py</code>. When
+<code>REAL_APP_API_BASE_URL</code> is set, PM reads/writes go to the real app's own
+REST API instead (<code>services/real_pm_service.py</code>) and these tables sit
+unused for that traffic.</p>
+<h2 id="the-vector-store-appretrievalvectorstorepy">The vector store (<code>app/retrieval/vectorstore.py</code>)</h2>
+<p>Two interchangeable backends, selected automatically (never a hard
+dependency on either):</p>
+<ul>
+<li><strong><code>ChromaStore</code></strong> — <code>chromadb.PersistentClient</code>, disk-persisted at
+  <code>CHROMA_DIR</code>, one collection (<code>"algopm"</code>), cosine similarity
+  (<code>hnsw:space: cosine</code>). The real backend whenever <code>chromadb</code> is
+  installed (it's a required dependency — see <code>requirements.txt</code>).</li>
+<li><strong><code>MemoryStore</code></strong> — plain in-process dict + cosine, the test double
+  and zero-infra fallback if Chroma ever fails to initialize.</li>
+</ul>
+<p>Neither store cares which embedder produced a vector — <code>upsert(doc_id,
+vector, text, meta)</code> / <code>query(vector, k)</code> is the whole contract.</p>
+<p><strong>Embeddings — two interchangeable embedders</strong> (<code>make_embedder()</code>,
+<code>EMBEDDER=auto|minilm|hash</code>):</p>
+<ul>
+<li><strong><code>MiniLMEmbedder</code></strong> — real semantic embeddings, <code>sentence-transformers</code>'
+  <code>all-MiniLM-L6-v2</code> (384-dim, local, CPU, ~80MB) — used automatically
+  whenever that optional dependency is installed (<code>EMBEDDER=auto</code>, the
+  default).</li>
+<li><strong><code>HashEmbedder</code></strong> — a deterministic, dependency-free fallback: a
+  384-dim hashed bag-of-words vector (MD5 token → bucket index, L2
+  normalized), so retrieval is always REAL — never a stub — even before
+  the MiniLM model file lands on the box, and what every hermetic test
+  in this repo runs against. Stopword-filtered before hashing (a real,
+  empirically-confirmed fix — see the module's own docstring for the
+  "how do I reset my password" vs "how do I delete my account"
+  false-positive it closed).</li>
+</ul>
+<p>What gets embedded: <code>app/framework/document_pipeline.py</code>'s
+<code>ingest_path()</code> chunks a document (<code>rag.py</code>'s <code>chunk_text</code>, word-boundary-
+safe overlap) and upserts each chunk's embedding + text + metadata
+(source doc id, chunk index) into whichever store/embedder pair is
+active. <code>framework/rag_optimizer.py</code> is the RL layer deciding WHICH
+registered store + WHICH retrieval algorithm (<code>vector</code>/<code>lexical_rerank</code>/
+<code>hybrid</code>) answers a given query — see the main README's RL section and
+<code>README_REINFORCEMENT_LEARNING.md</code>.</p>
+<h2 id="rbac-on-retrieval">RBAC on retrieval</h2>
+<p>A vector index has no concept of "who can see this chunk" — <code>post_filter()</code>
+(<code>vectorstore.py</code>) runs on every query result, filtering out anything
+the calling user's real project membership wouldn't let them see,
+<em>before</em> it ever reaches the LLM or the user. Retrieval never bypasses
+the same visibility rules a direct PM API call would enforce.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#the-document-store-appdbpy">The document store (app/db.py)</a><a class="l2" href="#the-vector-store-appretrievalvectorstorepy">The vector store (app/retrieval/vectorstore.py)</a><a class="l2" href="#rbac-on-retrieval">RBAC on retrieval</a></aside></div>
+<script src="../../docs.js"></script></body></html>

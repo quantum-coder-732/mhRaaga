@@ -70,7 +70,7 @@ acting on your repo on its own initiative.
 ## The design
 
 The model still runs server-side (same routing, same policy gate, same
-provider chain, same ALGO AKANADE account/login) — only *where a tool call
+provider chain, same Kalkee account/login) — only *where a tool call
 actually executes* moves. When a turn opts into `client_tools` mode:
 
 1. `CodingAgent` decides it wants to call a tool (same as always), but

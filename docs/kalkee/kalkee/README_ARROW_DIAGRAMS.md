@@ -1,4 +1,4 @@
-# ALGO AKANADE — Arrow Diagrams, Layer by Layer
+# Kalkee — Arrow Diagrams, Layer by Layer
 
 Every real data-flow in this system, as an arrow diagram, in the order a
 request actually moves through them. No math here (see

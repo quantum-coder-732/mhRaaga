@@ -1,6 +1,6 @@
-# Algo-Akanade-SLM — the complete deep dive
+# Algo-Kalkee-SLM — the complete deep dive
 
-One document, everything: what Algo-Akanade-SLM actually is, the full
+One document, everything: what Algo-Kalkee-SLM actually is, the full
 pipeline that produces it, exactly what PEFT/LoRA/QLoRA are doing and
 why, how it's actually used at inference time, how it differs from the
 alternatives, and what's real vs. still-unverified today. Companion
@@ -8,7 +8,7 @@ docs (`README_SLM_PIPELINE.md`, `README_SLM_GENERATION_LAYER.md`,
 `ARCHITECTURE.md` §8) cover pieces of this in their own context; this
 is the one place that walks the whole thing start to finish.
 
-## 1. What Algo-Akanade-SLM actually is
+## 1. What Algo-Kalkee-SLM actually is
 
 A small (0.6B–4B parameter) language model — Qwen, SmolLM, or Llama,
 your choice of base — that:
@@ -127,7 +127,7 @@ deployment."
                                            ▼
                 llm/router.py's _effective_chains() splices the
                 provider into the SAME realtime/bulk fallback chains
-                every one of ALGO AKANADE's 9 default agents already calls
+                every one of Kalkee's 9 default agents already calls
                 through via get_llm_client(tier, ...) — no orchestrator
                 code change, no restart
                                            │
@@ -379,7 +379,7 @@ tradeoff isn't symmetric either.
 
 **Domain mode** (`llm/domain_router.py`) — a DIFFERENT axis: not
 "local vs. hosted" but "WHICH of possibly several registered
-domain-specific Algo-Akanade-SLM variants is this query actually
+domain-specific Algo-Kalkee-SLM variants is this query actually
 about." Domains are discovered live by naming convention
 (`algo-akanade-slm-<domain>`, produced by running the SAME pipeline
 above with a domain-filtered training log and `DOMAIN=<name>` set on
@@ -458,7 +458,7 @@ serving a real GGUF.
 
 ## 8. How this differs from the alternatives
 
-| Approach | What you get | What Algo-Akanade-SLM adds |
+| Approach | What you get | What Algo-Kalkee-SLM adds |
 |---|---|---|
 | Just call a hosted LLM (Groq/Claude/GPT) | Strong general answers, real per-token cost, zero domain adaptation, data leaves your infra | Free after the first fine-tune, runs entirely local, learns YOUR usage specifically |
 | RAG only, no fine-tuning | Grounds answers in your documents, but the MODEL itself never gets better at your specific phrasing/tool-calling patterns | RAG still runs on top (§8 of `ARCHITECTURE.md`'s RAG+Agents layer) — this isn't instead of RAG, it's the model underneath RAG also improving |

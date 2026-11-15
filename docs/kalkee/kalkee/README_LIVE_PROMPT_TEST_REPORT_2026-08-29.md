@@ -73,7 +73,7 @@ tool-confirmation bleeding into the next (see the caveat under row 7).
 | 6 | What's the capital of France? | "Paris" | ✅ correct, general knowledge |
 | 7 | Who is the CEO of Algoanalytics? | Asked to confirm an external Wikipedia fetch (`fetch` MCP tool) | ✅ correct routing — recognized as needing outside info, safely asked before calling out |
 | 8 | list roles as a Member | Listed all 4 built-in roles | ⚠️ not a real RBAC test — I was authenticated as Admin, not an actual Member account, so this only confirms an Admin caller sees the full list correctly, not what a Member would see (prior report's #30 already covered the real Member-decline case with Groq) |
-| 9 | What is ALGO AKANADE? / What does ALGO AKANADE do? | A list of unrelated **projects**, then (retried) a RAG search returning 3 unrelated ticket-like snippets **each scored 0.0** | ❌ real bug — see §6 |
+| 9 | What is Kalkee? / What does Kalkee do? | A list of unrelated **projects**, then (retried) a RAG search returning 3 unrelated ticket-like snippets **each scored 0.0** | ❌ real bug — see §6 |
 
 ## 4. Nightly PEFT fine-tuning — mechanism works, no data yet
 
@@ -132,7 +132,7 @@ This template (`deploy/chatbot.env.example`) never had this line —
 it's specific to this one server's env file, so no repo change was
 needed, only the server-side fix.
 
-## 6. Known issue: "What is ALGO AKANADE?" gets misrouted
+## 6. Known issue: "What is Kalkee?" gets misrouted
 
 Asking the chatbot to explain itself — a reasonable, expected question
 for a brand-new admin — does not get answered directly. It was
@@ -147,7 +147,7 @@ observed doing two different wrong things across two tries:
 
 Two separate, real gaps worth a follow-up pass: (1) a meta/self
 question about the product isn't recognized and routed to a real
-"about ALGO AKANADE" answer, and (2) RAG results with a similarity score of
+"about Kalkee" answer, and (2) RAG results with a similarity score of
 0.0 should never be presented as matches at all — that's a missing
 relevance floor, not a missing document.
 
@@ -178,7 +178,7 @@ in this session:
 | PM tool prompts (real data) | ✅ 4/4 correct |
 | General knowledge / external-tool routing | ✅ 2/2 correct |
 | Coding prompt | ✅ correct, minor phrasing nit |
-| "What is ALGO AKANADE?" self-description | ❌ real bug, not yet fixed — see §6 |
+| "What is Kalkee?" self-description | ❌ real bug, not yet fixed — see §6 |
 | Nightly PEFT cron | ✅ schedule + exit-clean behavior confirmed; no training data yet (expected) |
 | Optimization dashboard | ✅ now receiving real events — was silently broken (§5), fixed live |
 | Voice in/out | ✅ fixed this session (mobile + VS Code), not curl-testable |

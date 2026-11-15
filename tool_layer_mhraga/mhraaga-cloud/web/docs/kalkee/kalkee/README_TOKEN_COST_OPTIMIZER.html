@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Token &amp; Cost Optimizer · mhRaaga docs</title><meta name="description" content="Token &amp; Cost Optimizer">
+<link rel="stylesheet" href="../../docs.css"></head>
+<body data-root="../../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../../overview.html">Overview</a></li><li><a href="../../system.html">How the system works</a></li><li><a href="../../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../../ARCHITECTURE.html">Architecture</a></li><li><a href="../../API.html">API for developers</a></li><li><a href="../../SOUND.html">Sound</a></li><li><a href="../../VOICE.html">AI voice</a></li><li><a href="../../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../../STUDIO.html">Stories, people, rules</a></li><li><a href="../../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../../components/music-engine.html">Music engine</a></li><li><a href="../../components/android-app.html">Android app</a></li><li><a href="../../components/music-backend.html">Backend prototype</a></li><li><a href="../../components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="../../kalkee/index.html">About these documents</a></li></ul></details><details open><summary>Kalkee</summary><ul><li><a href="../../kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="../../kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="../../kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="../../kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="../../kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="../../kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="../../kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="../../kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="../../kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="../../kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="../../kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="../../kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="../../kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="../../kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="../../kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="../../kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="../../kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="../../kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="../../kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="../../kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="../../kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="../../kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="../../kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="../../kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="../../kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="../../kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="../../kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html" class=cur aria-current=page>Token Cost Optimizer</a></li><li><a href="../../kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="../../kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="../../kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="../../kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="../../kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="token-cost-optimizer">Token &amp; Cost Optimizer</h1>
+<p>Kalkee's cost layer — every LLM call already goes through a small
+number of paid, hosted models (Claude/GPT-class tiers, Groq, DeepSeek)
+alongside free local SLMs (Ollama). This layer makes that choice
+cost-aware: it predicts what a call would cost before it's made,
+learns (via RL) to prefer the cheapest option that's still actually
+answering successfully, and tracks real token usage, latency, quality,
+and $ savings so the answer to "how much is AI actually costing us,
+and is it going down" is a real number, not a guess.</p>
+<h2 id="what-it-does">What it does</h2>
+<ol>
+<li><strong>Predicts cost before execution</strong> — <code>POST /api/v1/cost/predict</code>
+   estimates token count and $ cost across every model currently
+   available for a tier, before any of them is actually called.</li>
+<li><strong>Selects the most cost-effective model while maintaining quality</strong>
+   — a Thompson Sampling bandit re-ranks a tier's provider chain,
+   seeded toward cheaper candidates but learning from real outcomes:
+   success matters most, then latency, then whether the reply was
+   truncated (a real quality signal), then real dollar cost.</li>
+<li><strong>Uses RL feedback to continuously improve</strong> — every real call
+   updates the bandit's posterior for that (tier, provider) pair; the
+   ranking keeps adapting as real evidence accumulates, the same
+   Thompson Sampling primitive (<code>framework/bandit.py</code>) every other RL
+   layer in this codebase already uses.</li>
+<li><strong>Tracks token usage, latency, quality, and cost savings</strong> — <code>GET
+   /api/v1/metrics/cost</code> (Admin) returns real per-(tier, provider)
+   totals and a whole-system savings estimate.</li>
+</ol>
+<h2 id="where-it-lives">Where it lives</h2>
+<ul>
+<li><code>app/llm/pricing_table.py</code> — real, best-effort $/1k-token rates per
+  provider (public list prices, admin-overridable — see below), plus
+  the chars/4 token-count heuristic every estimate is built from.</li>
+<li><code>app/llm/cost_optimizer.py</code> — the RL layer itself: <code>estimate()</code>
+  (pre-execution prediction), <code>order()</code> (cost-aware re-ranking),
+  <code>record_outcome()</code> (real per-call reward), <code>stats()</code> /
+  <code>savings_summary()</code> (the dashboard's data source).</li>
+<li><code>app/routers/v1/cost.py</code> — <code>POST /api/v1/cost/predict</code> (any
+  authenticated user).</li>
+<li><code>app/routers/v1/metrics.py</code> — <code>GET /api/v1/metrics/cost</code> (Admin).</li>
+<li><code>tool_layer_akanade/frontend/src/pages/CostOptimizerDashboard.tsx</code> —
+  the dashboard (Admin + Senior Manager), reachable from the sidebar as
+  <strong>Token &amp; Cost Optimizer</strong>.</li>
+</ul>
+<h2 id="how-it-composes-with-the-existing-routing-stack">How it composes with the existing routing stack</h2>
+<p><code>app/llm/router.py</code>'s <code>TierClient.chat()</code> already had a provider-
+ordering bandit (<code>llm/provider_optimizer.py</code>) — its own docstring is
+explicit that its reward is "pure success+latency... no cost term at
+all." This layer doesn't replace that; it adds a second re-rank
+immediately after it:</p>
+<div class="hl"><pre><span></span><code>policy gate (safety) → availability/budget filter
+  → provider_optimizer.order()   (success + latency, existing)
+  → cost_optimizer.order()       (+ real $ cost, this layer)
+  → force_local/force_hosted policy resort (safety, still wins outright)
+  → preferred override (a user's own model pick, still wins outright)
+</code></pre></div>
+
+<p>Same "augments, never replaces the safety net" rule every optimizer in
+this codebase follows: this never removes a candidate, never lets the
+deterministic <code>rule</code> floor move ahead of a real provider, and never
+overrides a policy decision or an explicit user pick.</p>
+<h2 id="pricing-real-rates-admin-overridable">Pricing — real rates, admin-overridable</h2>
+<p><code>llm/provider_budget.py</code> already lets an admin set a real $/1k-token
+rate per provider for budget-capping purposes — this layer checks that
+rate FIRST, so a real operator-entered number always wins. Where no
+admin rate is configured, <code>pricing_table.py</code>'s own best-effort public
+list-price table is used instead. Ollama (local) and the deterministic
+<code>rule</code> floor are always exactly $0.00 — there's no metered API call
+happening for either.</p>
+<p><strong>Honesty note</strong>: the default table's rates are approximate public
+list prices as of 2026-08, for the model class each hosted tier is
+wired to in this deployment — not a live pricing feed, and not a claim
+of billing-accurate reconciliation. Good enough for relative
+cost-aware ranking and directional savings tracking; set a real
+admin rate via <code>provider_budget.set_budget()</code> for anything that needs
+to match an actual invoice.</p>
+<h2 id="quality-honestly">Quality, honestly</h2>
+<p>"Quality" here means two real, synchronously-available signals inside
+<code>TierClient.chat()</code>: whether the call actually succeeded, and whether
+the provider's own reply was truncated (<code>LLMResult.truncated</code> — an
+HTTP-successful-but-cut-off reply is real evidence of lower quality
+even though the call technically "worked"). This deliberately does
+NOT require the deferred-finalize wiring <code>llm/token_optimizer.py</code>
+needs (that module has to wait for <code>retried</code>/<code>out_of_scope</code> because a
+trimmed tool schema can silently "succeed" at the HTTP level while
+still picking the wrong tool) — a provider's own success/truncation
+signal has no such ambiguity, so this stays fully synchronous, at the
+same complexity tier as <code>provider_optimizer.py</code>.</p>
+<h2 id="savings-a-real-counterfactual-not-a-fabricated-percentage">Savings — a real counterfactual, not a fabricated percentage</h2>
+<p><code>savings_summary()</code> compares real total spend against what the SAME
+total token volume would have cost if every call had gone to the
+single priciest provider this system's own pricing table knows about,
+instead. A deployment that has been routing everything to a free local
+model still gets a real, honest "here's what that would have cost on
+the priciest real alternative" number — not an artificial zero just
+because the pricier option happened to never actually get called.</p>
+<h2 id="testing">Testing</h2>
+<div class="hl"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>orchestrator_framework_layer/akanade/backend
+.venv/bin/python3<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/test_pricing_table.py<span class="w"> </span>tests/test_cost_optimizer.py<span class="w"> </span>tests/test_cost_api.py<span class="w"> </span>-v
+</code></pre></div>
+
+<p>31 unit tests (<code>pricing_table</code>/<code>cost_optimizer</code>, including the real
+wiring into <code>TierClient.chat()</code>) + 6 REST-endpoint tests, all passing.
+Full backend suite (747 tests) run clean alongside this layer — see
+this session's own testing log for two real, pre-existing bugs this
+work surfaced and fixed along the way:
+1. <code>routers/admin_finetune_config.py</code>'s <code>_to_out()</code> did a hard
+   <code>row["baseModel"]</code> dict lookup — a partially-written config row
+   (as some other tests' fixtures intentionally write) 500'd the whole
+   <code>GET .../enabled</code> listing for every caller. Now falls back to the
+   same defaults <code>FinetuneConfigIn</code>'s own model declares.
+2. <code>tests/test_retrieval_and_router.py</code>'s truncation-escalation test
+   pinned <code>provider_optimizer.order()</code> to a deterministic identity
+   function but didn't know about this layer's own new re-rank step
+   right after it — updated to pin both.</p>
+<h2 id="example-predicting-cost-from-the-api">Example: predicting cost from the API</h2>
+<div class="hl"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;host&gt;/chatbot/api/v1/cost/predict<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"message": "Backtest AAPL for the last 10 years", "tier": "realtime"}'</span>
+</code></pre></div>
+
+<p>Returns one estimate per candidate provider actually available for
+that tier right now, cheapest first — real inputs (chars/4 token
+estimate × each provider's real/admin-configured rate), one honest
+assumption (an estimated completion length, since the real completion
+doesn't exist yet to measure).</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#what-it-does">What it does</a><a class="l2" href="#where-it-lives">Where it lives</a><a class="l2" href="#how-it-composes-with-the-existing-routing-stack">How it composes with the existing routing stack</a><a class="l2" href="#pricing-real-rates-admin-overridable">Pricing — real rates, admin-overridable</a><a class="l2" href="#quality-honestly">Quality, honestly</a><a class="l2" href="#savings-a-real-counterfactual-not-a-fabricated-percentage">Savings — a real counterfactual, not a fabricated percentage</a><a class="l2" href="#testing">Testing</a><a class="l2" href="#example-predicting-cost-from-the-api">Example: predicting cost from the API</a></aside></div>
+<script src="../../docs.js"></script></body></html>

@@ -122,7 +122,7 @@ process runs.
 A SEPARATE `TaskMemory` instance (not shared with §2.3's agent-routing
 one — each `DomainRouter`/`ContextualThompsonRouter` owns its own),
 remembering `(query, domain, reward)` triples so Domain mode
-(`README_SLM_ALL.md` §6) can tell "which registered Algo-Akanade-SLM
+(`README_SLM_ALL.md` §6) can tell "which registered Algo-Kalkee-SLM
 domain variant has handled a query LIKE this one well before." Unlike
 §2.3's usage (a one-time cold-start seed via `LinearBanditCore.ensure()`),
 this bonus is added live on EVERY routing decision — see that module's

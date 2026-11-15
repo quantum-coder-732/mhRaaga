@@ -1,9 +1,9 @@
-# The ALGO AKANADE Journey — Video Script & Deep-Dive Companion
+# The Kalkee Journey — Video Script & Deep-Dive Companion
 
 **Purpose of this document**: a narration-ready script, with embedded
 diagrams, meant to be fed into a video/podcast generation tool (e.g.
 NotebookLM's "video overview" or "deep dive" feature) to produce a
-~15-20 minute walkthrough of the entire ALGO AKANADE system. Every diagram
+~15-20 minute walkthrough of the entire Kalkee system. Every diagram
 is real Mermaid — a generator can render it directly, or a narrator can
 describe it live. Every technical claim below is grounded in real code
 in this repository, not aspirational — where something is a *pattern*
@@ -17,7 +17,7 @@ the original 15-20 minute target for full box-by-box architecture
 coverage, the named "Algo AI Layer" auto-model-selection explainer, a
 detailed 7-way competitor comparison table (OpenWorker, OpenRouter,
 LiteLLM, CrewAI, AutoGen/AG2, LangGraph Platform), how the
-UI/PM-backend/ALGO AKANADE pieces actually deploy and connect, the adaptive
+UI/PM-backend/Kalkee pieces actually deploy and connect, the adaptive
 MCP/ACP and Hybrid-mode deep dives, the data-security highlight, the
 admin Security dashboard, and a full technology/file-structure
 reference. For a tight 15-20 minute cut, keep sections 1, 1b, 2 (table
@@ -31,7 +31,7 @@ written for a non-technical/business audience.**
 
 ## 🎬 Cold Open ⏱ 0:00–0:30
 
-**[VISUAL: ALGO AKANADE logo / title card, then a single chat bubble typing
+**[VISUAL: Kalkee logo / title card, then a single chat bubble typing
 "Create a task called Fix login bug, assign it to Rohan, due Friday"
 and a reply appearing instantly]**
 
@@ -42,18 +42,18 @@ and a reply appearing instantly]**
 > AI product eventually hits: how do you route a request to the right
 > model, the right agent, the right tool — and get *better* at that
 > routing over time, automatically, without a human re-tuning
-> thresholds every week? This is the story of ALGO AKANADE: a system built
+> thresholds every week? This is the story of Kalkee: a system built
 > to answer that question for real, in production, with real users.
 
 ---
 
-## 1. What is ALGO AKANADE? ⏱ 0:30–1:30
+## 1. What is Kalkee? ⏱ 0:30–1:30
 
 **[VISUAL: The full name spelling itself out letter by letter]**
 
 **NARRATION:**
 
-> ALGO AKANADE stands for **Multi-Agent GenAI Network with Evolving
+> Kalkee stands for **Multi-Agent GenAI Network with Evolving
 > Training and Orchestration**. Every word in that name is doing real
 > work:
 >
@@ -117,7 +117,7 @@ lighting up in sequence: "Tier: realtime" → "Provider: Groq" →
 ## 2. How is this different from OpenWorker and "the rest out there"? ⏱ 2:15–5:15
 
 **[VISUAL: A two-column comparison — "Typical coding-agent harness" vs
-"ALGO AKANADE"]**
+"Kalkee"]**
 
 **NARRATION:**
 
@@ -127,10 +127,10 @@ lighting up in sequence: "Tier: realtime" → "Provider: Groq" →
 > Tools like OpenWorker are, at their core, **one harness around one
 > model choice** — you pick a backend (local open-weight, or a hosted
 > API), the harness gives that model tools, and you audit the harness
-> because it's open source. That's a genuinely good idea, and ALGO AKANADE
+> because it's open source. That's a genuinely good idea, and Kalkee
 > borrows the same instinct in its own security-agent design.
 >
-> But ALGO AKANADE's shape is different in three structural ways:
+> But Kalkee's shape is different in three structural ways:
 >
 > **First — it's not one model, it's a *network* the system routes
 > across automatically.** Every chat turn walks a real fallback chain
@@ -149,7 +149,7 @@ lighting up in sequence: "Tier: realtime" → "Provider: Groq" →
 > algorithm. Adding a new domain is one new file, not a fork.
 >
 > **Third — where OpenWorker's cybersecurity agents were a new
-> announcement, ALGO AKANADE had already built the same *category* of
+> announcement, Kalkee had already built the same *category* of
 > capability independently, and pushed it further**: not just
 > code-vulnerability scanning, but a real, no-API-key call to OSV.dev
 > — Google's actual public vulnerability database — for every
@@ -170,9 +170,9 @@ lighting up in sequence: "Tier: realtime" → "Provider: Groq" →
 > compare this to, one by one, rather than leaving it at "OpenWorker."
 
 **[VISUAL: render this exact comparison table — from `README.md`'s
-"How ALGO AKANADE compares" section — one row appearing at a time]**
+"How Kalkee compares" section — one row appearing at a time]**
 
-| | OpenWorker | OpenRouter | LiteLLM | CrewAI | AutoGen / AG2 | LangGraph Platform | **ALGO AKANADE** |
+| | OpenWorker | OpenRouter | LiteLLM | CrewAI | AutoGen / AG2 | LangGraph Platform | **Kalkee** |
 |---|---|---|---|---|---|---|---|
 | What it fundamentally is | Coding-agent harness, pick your own model backend | LLM API gateway/marketplace (300+ models) | Open-source LLM gateway/proxy | Multi-agent framework (Crews/Flows) | Multi-agent conversation framework | Graph-based agent orchestration + hosted deploy platform | Multi-agent orchestration framework, PM app as first tenant |
 | Routing that learns from real outcomes (RL/bandit) | Not documented | No — deterministic price/latency rules | No — explicit strategies | No (RL is an external add-on, not built in) | No (same external add-on) | No — architectural, not learned | **Yes — Thompson Sampling, 9 real optimizers** |
@@ -197,7 +197,7 @@ lighting up in sequence: "Tier: realtime" → "Provider: Groq" →
 > **CrewAI and AutoGen — now AG2 — are the two leading open-source
 > multi-agent frameworks**, and structurally the closest cousins to
 > this system: both let you compose a new capability as a new agent,
-> the same principle section twelve covers for ALGO AKANADE. Neither has
+> the same principle section twelve covers for Kalkee. Neither has
 > built-in adaptive routing — the "RL" that shows up in searches about
 > either one traces to a separate Microsoft research project that
 > trains agents built with these frameworks, not a routing capability
@@ -217,7 +217,7 @@ lighting up in sequence: "Tier: realtime" → "Provider: Groq" →
 > gateway, OpenRouter or LiteLLM is simpler and probably the right
 > call. If you need a general multi-agent framework with a bigger
 > ecosystem today, CrewAI or AutoGen/AG2 has more third-party
-> integrations built by more people. What ALGO AKANADE bets on is the
+> integrations built by more people. What Kalkee bets on is the
 > *combination* — adaptive, self-improving routing, AND real security
 > scanning, AND a general agent framework, together, in one system,
 > rather than picking one of those and living without the others.
@@ -238,7 +238,7 @@ flowchart TB
 
     subgraph API["FastAPI process — one deployment"]
         CHAT["/api/chat/message\nthe PM chat widget's own endpoint"]
-        V1["/api/v1/*\nALGO AKANADE's generic orchestration API"]
+        V1["/api/v1/*\nKalkee's generic orchestration API"]
         ACPR["/acp/*\nAgent Communication Protocol"]
 
         subgraph Tracks["Four interchangeable agent tracks"]
@@ -314,7 +314,7 @@ flowchart TB
 > required to be behaviorally identical — that's a hard equivalence
 > rule enforced by shared test suites, not just a design intention.
 >
-> The newer entry point, `/api/v1/*`, is ALGO AKANADE's own generic
+> The newer entry point, `/api/v1/*`, is Kalkee's own generic
 > orchestration API — capability-based, not tied to project management
 > at all. A task declares what it needs; the *Orchestrator*, powered
 > by a contextual Thompson Sampling router, picks the best-scoring
@@ -395,7 +395,7 @@ scrolling slowly downward as each box is narrated]**
    │                          (agent/mcp_client.py) — proves MCP is a real     │
    │                          capability source, not PM-only                   │
    │   langchain-research-agent ► a real langchain_core Runnable + a real      │
-   │                          BaseRetriever over ALGO AKANADE's own RAG store        │
+   │                          BaseRetriever over Kalkee's own RAG store        │
    │   code-security-agent, supply-chain-agent, cloud-config-agent ──►         │
    │                          real static-pattern / OSV.dev / IaC-config       │
    │                          security scans — deterministic, never an         │
@@ -511,7 +511,7 @@ scrolling slowly downward as each box is narrated]**
 > tool set comes from external MCP servers, proving that's a real
 > capability source, not something bolted onto the PM domain only.
 > `langchain-research-agent` is a genuine `langchain_core` Runnable with
-> a real `BaseRetriever` wired to ALGO AKANADE's own RAG store — proof
+> a real `BaseRetriever` wired to Kalkee's own RAG store — proof
 > LangChain agents aren't second-class citizens here either. And the
 > three security agents — `code-security-agent`, `supply-chain-agent`,
 > `cloud-config-agent` — get their own deep dive in section seven. And
@@ -563,7 +563,7 @@ scrolling slowly downward as each box is narrated]**
 
 ---
 
-## 3c. How the pieces actually connect — UI, PM backend, and ALGO AKANADE ⏱ 10:45–12:00
+## 3c. How the pieces actually connect — UI, PM backend, and Kalkee ⏱ 10:45–12:00
 
 **[VISUAL: render this exact diagram]**
 
@@ -581,7 +581,7 @@ scrolling slowly downward as each box is narrated]**
 ┌─────────────────┐  ┌─────────────────────┐  ┌──────────────────────────┐
 │  React SPA           │  │  tool_layer/backend     │  │  orchestrator_framework_    │
 │  (static files,          │  │  (PM CRUD API — spaces,   │  │  layer/akanade/backend         │
-│  ONE frontend               │  │  projects, tasks, auth,     │  │  — ALGO AKANADE itself: chat,           │
+│  ONE frontend               │  │  projects, tasks, auth,     │  │  — Kalkee itself: chat,           │
 │  container,                    │  │  DynamoDB)                    │  │  RL, RAG, security,                     │
 │  image: algo-                    │  │  image: algo-                    │  │  integrations                                │
 │  kaizen-frontend)                    │  │  kaizen-backend                     │  │  image: algo-kaizen-chatbot                     │
@@ -593,7 +593,7 @@ scrolling slowly downward as each box is narrated]**
 
 **NARRATION:**
 
-> Everything in this video so far has been "what happens inside ALGO AKANADE
+> Everything in this video so far has been "what happens inside Kalkee
 > once a request reaches it." This is the piece connecting that to an
 > actual browser — three separately built, separately deployed Docker
 > images, sitting behind one nginx origin so the browser never makes a
@@ -605,13 +605,13 @@ scrolling slowly downward as each box is narrated]**
 > UI." What makes it talk to two completely different backends is two
 > separate, deliberately independent API clients: `apiClient` for
 > everything PM-related — projects, tasks, users, the admin dashboards
-> — and `chatbotClient`, pointed at ALGO AKANADE specifically, with a much
+> — and `chatbotClient`, pointed at Kalkee specifically, with a much
 > longer timeout because a real model call can legitimately take far
 > longer than a normal CRUD request.
 >
 > nginx is what makes this invisible to the browser: `/api/*` and `/ws`
 > get reverse-proxied to the PM backend container, and `/chatbot/*` gets
-> its prefix stripped and reverse-proxied to the ALGO AKANADE container —
+> its prefix stripped and reverse-proxied to the Kalkee container —
 > three containers, one origin, zero CORS configuration needed anywhere,
 > and the frontend image never needs to know a deployment-specific URL
 > for either backend baked in at build time.
@@ -619,7 +619,7 @@ scrolling slowly downward as each box is narrated]**
 > This is also, concretely, the answer to "which Docker images actually
 > need rebuilding when something changes": a change to `tool_layer/frontend`
 > — a new page, a new dashboard — means rebuilding and pushing
-> `algo-kaizen-frontend`; a change to ALGO AKANADE's own backend code means
+> `algo-kaizen-frontend`; a change to Kalkee's own backend code means
 > rebuilding `algo-kaizen-chatbot`; the two are genuinely independent
 > deployments that happen to share one nginx origin at runtime.
 
@@ -816,7 +816,7 @@ supply-chain graph, a cloud icon with a lock]**
 
 **NARRATION:**
 
-> There are two entirely different security systems in ALGO AKANADE, built
+> There are two entirely different security systems in Kalkee, built
 > for two different jobs, and it's worth being precise about which is
 > which.
 >
@@ -1049,7 +1049,7 @@ GitHub" toggle flips on/off]**
 │  LangGraph StateGraph, or           │
 │  Google ADK Runner, or                │
 │  the native Python reference,           │
-│  or ALGO AKANADE's own capability-routed      │
+│  or Kalkee's own capability-routed      │
 │  Orchestrator (/api/v1/*)                 │
 └───────────────┬──────────────┘
                 │  get_llm_client() — the ONE sanctioned
@@ -1311,7 +1311,7 @@ flowchart TB
 
 ## 12. How 25+ external integrations become possible ⏱ 31:00–32:00
 
-**[VISUAL: a hub-and-spoke diagram — ALGO AKANADE in the center, spokes labeled "LLM providers," "MCP servers," "OAuth apps," "webhook agents"]**
+**[VISUAL: a hub-and-spoke diagram — Kalkee in the center, spokes labeled "LLM providers," "MCP servers," "OAuth apps," "webhook agents"]**
 
 **NARRATION:**
 
@@ -1331,7 +1331,7 @@ flowchart TB
 > service can be added to by implementing the same three functions:
 > exchange a code for a token, fetch a valid token, call the real API.
 > And any external agent, in any language, hosted anywhere, joins the
-> agent registry via one webhook registration call — ALGO AKANADE never
+> agent registry via one webhook registration call — Kalkee never
 > needs to see its source code.
 >
 > That's the honest claim: not "25 integrations already wired," but "a
@@ -1434,11 +1434,11 @@ logos/names appearing as each is named]**
 
 ## 🎬 Closing — Thank You ⏱ 33:45–34:00
 
-**[VISUAL: fade to the ALGO AKANADE name one more time]**
+**[VISUAL: fade to the Kalkee name one more time]**
 
 **NARRATION:**
 
-> ALGO AKANADE was built on one repeated idea: build a capability once, at
+> Kalkee was built on one repeated idea: build a capability once, at
 > the shared layer, and let every track, every agent, every
 > integration inherit it for free — routing, retrieval, security,
 > confirmation, and now, continuous learning, all as one coherent
@@ -1557,7 +1557,7 @@ directory; every file listed is real and current as of this script.
 | `routers/acp.py` | `/acp/*` — peer-agent reachability |
 | `routers/admin_providers.py` | Admin-managed LLM provider CRUD |
 | `routers/admin_security.py` | `/api/admin/security/*` — the flagged-events log and daily report, Admin-only |
-| `routers/v1/*` | ALGO AKANADE's generic API — orchestration, agent registration, feedback, metrics, RAG, tasks, workflows |
+| `routers/v1/*` | Kalkee's generic API — orchestration, agent registration, feedback, metrics, RAG, tasks, workflows |
 
 ### `backend/scripts/`
 
@@ -1598,7 +1598,7 @@ extend the script rather than re-deriving facts from scratch:
 | Section | Primary source files |
 |---|---|
 | §3 Architecture | `app/main.py`, `app/framework/registry.py`, `app/framework/orchestrator.py`, `app/llm/router.py` |
-| §3c UI/backend/ALGO AKANADE connectivity | `tool_layer/frontend/nginx.conf`, `tool_layer/frontend/Dockerfile`, `tool_layer/frontend/src/api/client.ts` + `chatbot.ts`, `deploy/README.md` |
+| §3c UI/backend/Kalkee connectivity | `tool_layer/frontend/nginx.conf`, `tool_layer/frontend/Dockerfile`, `tool_layer/frontend/src/api/client.ts` + `chatbot.ts`, `deploy/README.md` |
 | §4/§5 Layers & request flow | `app/agent/native_agent.py` (the numbered reference implementation), `app/llm/guardrails.py` |
 | §6 RL algorithms | `app/framework/bandit.py`, `README_RL_ALGORITHMS.md` |
 | §7 Security agents | `app/framework/agents/{code_security,supply_chain,cloud_config}_agent.py`, `app/security_guard.py`, `app/security_optimizer.py`, `README_CYBERSECURITY.md` |

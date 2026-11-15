@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The local SLM pipeline — Enterprise Data → Data Engine → Base SLM → ... → Enterprise Software · mhRaaga docs</title><meta name="description" content="The local SLM pipeline — Enterprise Data → Data Engine → Base SLM → ... → Enterprise Software">
+<link rel="stylesheet" href="../../docs.css"></head>
+<body data-root="../../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../../overview.html">Overview</a></li><li><a href="../../system.html">How the system works</a></li><li><a href="../../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../../ARCHITECTURE.html">Architecture</a></li><li><a href="../../API.html">API for developers</a></li><li><a href="../../SOUND.html">Sound</a></li><li><a href="../../VOICE.html">AI voice</a></li><li><a href="../../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../../STUDIO.html">Stories, people, rules</a></li><li><a href="../../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../../components/music-engine.html">Music engine</a></li><li><a href="../../components/android-app.html">Android app</a></li><li><a href="../../components/music-backend.html">Backend prototype</a></li><li><a href="../../components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="../../kalkee/index.html">About these documents</a></li></ul></details><details open><summary>Kalkee</summary><ul><li><a href="../../kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="../../kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="../../kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="../../kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="../../kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="../../kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="../../kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="../../kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="../../kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="../../kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="../../kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="../../kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="../../kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="../../kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="../../kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="../../kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="../../kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="../../kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="../../kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="../../kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="../../kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="../../kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="../../kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_PIPELINE.html" class=cur aria-current=page>Slm Pipeline</a></li><li><a href="../../kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="../../kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="../../kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="../../kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="../../kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="../../kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="../../kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="../../kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="../../kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="the-local-slm-pipeline-enterprise-data-data-engine-base-slm-enterprise-software">The local SLM pipeline — Enterprise Data → Data Engine → Base SLM → ... → Enterprise Software</h1>
+<p>Every stage of the local-model pipeline, what it actually does in this
+codebase, and which file owns it — the "how does raw usage/enterprise
+data actually turn into a better local model" story end to end. For the
+per-message Hybrid-mode routing decision (which turn goes to the local
+model at all), see <code>ARCHITECTURE.md</code> §8 and <code>README_OPTIMIZERS.md</code> §4;
+this doc is specifically the training/data side.</p>
+<h2 id="the-whole-pipeline-one-diagram">The whole pipeline, one diagram</h2>
+<div class="hl"><pre><span></span><code>   ╔══════════════════════════════════════════════════════════════════╗
+   ║   Kalkee runtime — every live chat turn passes through here,      ║
+   ║   producing the "real chat usage" this pipeline trains on          ║
+   ╚══════════════════════════════════════════╤═════════════════════╝
+                                              │ orchestrator.py routes to
+                                              │ 1 of 9 agents, hybrid_router.py
+                                              │ decides local Ollama vs. hosted
+                                              ▼
+                    Enterprise Data
+             (real chat usage + ingested
+              CSV / PDF / TXT / MD files)
+                          │
+                          ▼
+              ┌─────────────────────────┐
+              │ Collect enterprise       │  YOUR curated prompt list —
+              │ prompts                  │  questions the business
+              └────────────┬─────────────┘  actually cares about
+                          │
+                          ▼
+              ┌─────────────────────────┐
+              │ Create ground truth      │  framework/ground_truth.py
+              │ (grounded + reviewed)    │  POST /api/v1/rag/ground-truth
+              └────────────┬─────────────┘  — DELIBERATE, not incidental
+                          │
+                          ▼
+                  ┌───────────────┐
+                  │  Data Engine  │  scripts/data_engine.py
+                  │  scrub PII +  │  agent/finetune_log.py
+                  │  persistent   │
+                  │  dedup store  │
+                  └───────┬───────┘
+                          │
+                          ▼
+                  ┌───────────────────┐
+                  │     Base SLM      │  Ollama — config.py's
+                  │ Qwen / SmolLM /   │  OLLAMA_MODEL, default
+                  │ Llama, 0.6B–4B    │  llama3.2:1b, deploy
+                  └─────────┬─────────┘  bumps to qwen2.5:3b
+                          │
+                    LoRA / QLoRA          scripts/finetune_local_slm.py,
+                          │              run nightly by deploy/nightly_
+                          │              finetune.sh — see §4b below
+                          ▼
+                  ┌───────────────────┐
+                  │    Domain SLM     │  reward-weighted
+                  │    (fine-tuned)   │  supervised fine-tune
+                  └─────────┬─────────┘
+                          │
+              Quantization / Pruning     GGUF/Q4_K_M (real) +
+                          │              torch.nn.utils.prune (real,
+                          ▼              opt-in, honest limitation)
+                  ┌───────────────────┐
+                  │  Algo-Kalkee-SLM │  scripts/convert_and_
+                  │  (4-bit, your own │  register_ollama_model.sh
+                  │  branded model)   │  tag: algo-akanade-slm:&lt;date&gt;
+                  └─────────┬─────────┘
+                          │
+              ┌───────────┴────────────┐
+              ▼                        ▼
+             RAG                    Agents
+      (rag.py, RL-picked      (9 default agents,
+       store × algorithm)      Thompson Sampling router)
+              │                        │
+              └───────────┬────────────┘
+                          ▼
+                  Enterprise Software
+              (the PM chatbot / Kalkee's
+                    /api/v1/* surface)
+                          │
+                          │ POST /api/admin/providers registers the new
+                          │ Ollama tag — hybrid_router.py's "local" arm
+                          │ uses it on the very next message, no restart
+                          ▼
+   ╔══════════════════════════════════════════════════════════════════╗
+   ║   ...back to the SAME Kalkee runtime box at the top — this is a   ║
+   ║   CLOSED LOOP, not a one-shot pipeline. See the next section for   ║
+   ║   exactly which Kalkee components sit on which side of it.        ║
+   ╚══════════════════════════════════════════════════════════════════╝
+</code></pre></div>
+
+<h2 id="how-kalkee-fits-around-this-pipeline-the-closed-loop">How Kalkee fits around this pipeline — the closed loop</h2>
+<p>Everything above is the TRAINING side. It doesn't run in isolation —
+it's one half of a loop that closes through Kalkee's actual runtime
+components (<code>README_AGENTS.md</code>, <code>README_RL_ALGORITHMS.md</code>), each of
+which is a SEPARATE bandit/mechanism from the ones this doc already
+covers — worth being explicit about which is which, since three
+different "which model/agent wins" decisions exist in this codebase and
+conflating them is an easy mistake:</p>
+<figure class="diagram"><a href="../../diagrams/1cfd6e7099b9.svg" target="_blank" rel="noopener" title="Open the diagram full size"><img src="../../diagrams/1cfd6e7099b9.svg" alt="Diagram" loading="lazy"></a></figure>
+<ul>
+<li><strong>Three bandits, three different decisions</strong> — don't conflate them:
+  <code>orchestrator.py</code>'s router picks WHICH AGENT (of 9) handles a task;
+  <code>hybrid_router.py</code> picks LOCAL VS. HOSTED for a single message once an
+  agent's already decided to call a model; <code>provider_optimizer.py</code> then
+  orders the HOSTED fallback chain if hosted was picked. All three reuse
+  the same <code>LinearBanditCore</code> math (<code>README_RL_ALGORITHMS.md</code> §1) but
+  keep entirely separate posteriors — an agent-routing decision never
+  feeds the local/hosted bandit's learning, and vice versa.</li>
+<li><strong>The loop closes through a config change, not a code change.</strong> The
+  nightly job's output is a NEW Ollama tag (<code>qwen2.5-tuned:20260827</code>,
+  say) — <code>hybrid_router.py</code>'s "local" arm keeps pointing at whichever
+  tag <code>config.py</code>'s <code>OLLAMA_MODEL</code> (or the Admin AI Models UI) currently
+  names. Promoting a fine-tune is changing that pointer, exactly the
+  same mechanism as adding any other provider — never a redeploy.</li>
+<li><strong>RAG and the training pipeline share a document source, not a
+  bandit.</strong> <code>framework/rag.py</code>'s own store×algorithm bandit is
+  unrelated to any of the three above — it's listed here only because
+  ingested CSV/PDF documents (pipeline stage 1) feed both RAG retrieval
+  AND, via <code>log_document_turn()</code>, the training data.</li>
+</ul>
+<h2 id="stage-by-stage-whats-real-what-file-owns-it">Stage by stage — what's real, what file owns it</h2>
+<h3 id="1-enterprise-data">1. Enterprise Data</h3>
+<p>Two real sources feed the pipeline, not one:</p>
+<ul>
+<li><strong>Real chat usage</strong> — every turn the local Ollama model actually
+  answers, plus every Hybrid-mode escalation (local timed out, a hosted
+  model answered instead — that answer is a real, worked example of
+  what the local model should have done itself). Logged by
+  <code>agent/finetune_log.py</code>'s <code>log_ollama_turn()</code> /
+  <code>log_hybrid_escalation_turn()</code>.</li>
+<li><strong>Ingested documents</strong> — CSV, PDF, TXT, and MD files under
+  <code>RAG_INGEST_DIR</code> (<code>framework/document_pipeline.py</code>'s <code>ingest_path()</code>).
+  CSV rows render as <code>field: value, field: value</code> text
+  (<code>_extract_csv</code>); PDFs extract real per-page text via <code>pypdf</code>
+  (<code>_extract_pdf</code>) — a genuine optional dependency, with a clear,
+  actionable skip reason ("pip install pypdf") if it's missing, never a
+  crash. When a summary or follow-up prompts generated from ingested
+  content is actually answered by the local Ollama rung,
+  <code>log_document_turn()</code> logs that grounded Q&amp;A too (reward 0.9 — strong
+  signal, but without the retried/out_of_scope check a live chat turn
+  gets, so a hair below the 1.0 a clean chat answer earns).</li>
+</ul>
+<p>Both sources above are INCIDENTAL — whatever happened to get asked.
+Two more stages make the corpus DELIBERATE instead:</p>
+<h3 id="1b-collect-enterprise-prompts">1b. Collect enterprise prompts</h3>
+<p>Not a piece of code — this is you, or whoever owns the fine-tune,
+writing down the real questions the business actually wants the local
+model to get right (a support team's most common tickets, a sales
+team's recurring objections, the ten things new hires always ask). The
+list itself is just <code>list[str]</code>, the input to the next stage.</p>
+<h3 id="1c-create-ground-truth-frameworkground_truthpy">1c. Create ground truth (<code>framework/ground_truth.py</code>,</h3>
+<p><code>POST /api/v1/rag/ground-truth</code>, Admin-only)</p>
+<p>For each collected prompt: optionally retrieve real grounding context
+from any already-registered store (an ingested CSV/PDF corpus, or
+<code>pm-index</code>) via the SAME <code>rag_optimizer.retrieve_with_optimizer()</code>
+pipeline <code>summarize_document()</code>/<code>suggest_prompts()</code> already use, then
+ask the LLM router's <code>"bulk"</code> tier for one precise, reviewable answer —
+grounded ONLY in the retrieved excerpts when a store is given, general
+knowledge otherwise. Every result is returned to the caller for review
+BEFORE anything is trusted, exactly like a summary. Only calls that
+actually succeeded get logged, via a NEW <code>finetune_log.py</code> function,
+<code>log_ground_truth_turn()</code> — fixed reward <code>1.0</code>, the highest of any
+logger here, and deliberately <strong>not</strong> gated to <code>provider.startswith
+("ollama")</code> the way <code>log_ollama_turn()</code> is: the whole point is
+distilling from whichever model produced the best verified answer
+(often a stronger hosted tier), the same "teach the local model from
+what actually worked" reasoning <code>log_hybrid_escalation_turn()</code> already
+established. The logged messages include the retrieved context as a
+system message when grounded — matching what real RAG-augmented
+inference actually looks like — but never this stage's own "produce
+verified training data" instruction, which the model will never
+actually see in production.</p>
+<h3 id="2-data-engine-scriptsdata_enginepy">2. Data Engine (<code>scripts/data_engine.py</code>)</h3>
+<p>The real curation step between raw logged data and what actually trains
+the model — and, deliberately, a <strong>persistent, ever-growing store</strong>, not
+a value recomputed from scratch each night:</p>
+<ul>
+<li><strong><code>scrub_pii()</code></strong> — redacts email addresses, API-key-shaped tokens,
+  credit-card numbers, SSNs, and phone numbers from every example
+  <em>before</em> it can ever be baked into model weights. This has to happen
+  upstream of the actual gradient step — unlike a logging/display-layer
+  redaction, a fine-tuned model can't un-learn a secret it was trained
+  on.</li>
+<li><strong><code>DataEngineStore</code></strong> — dedupes each new example against <strong>every
+  example this store has ever kept</strong>, not just tonight's batch (cosine
+  similarity on a cheap hashed bag-of-words vector, <code>--dedup-threshold</code>
+  configurable). A prompt logged Monday still blocks its near-duplicate
+  from being re-added Thursday. Only genuinely new examples are
+  appended to the durable JSONL corpus (<code>--curated-path</code>); <code>ingest()</code>
+  returns exactly what was added.</li>
+<li><code>finetune_local_slm.py</code> trains on the curated store's full
+  accumulated contents (capped at <code>--max-examples</code>, most recent first),
+  not a single night's raw log — <code>--no-data-engine</code> bypasses all of
+  this for a quick local test run only; the nightly cron should not set
+  it.</li>
+</ul>
+<h3 id="3-base-slm">3. Base SLM</h3>
+<p>Ollama, configured via <code>config.py</code>'s <code>OLLAMA_MODEL</code> — defaults to
+<code>llama3.2:1b</code>, with <code>deploy/update_containers.sh</code> bumping it to
+<code>qwen2.5:3b</code> for the real deployed box. Both are comfortably inside the
+0.6B–4B range this pipeline targets; any other Ollama-hosted model
+(a different Qwen/Llama size, or another small open model) works via
+the same config, no code change.</p>
+<h3 id="4-lora-qlora-scriptsfinetune_local_slmpy">4. LoRA / QLoRA (<code>scripts/finetune_local_slm.py</code>)</h3>
+<ul>
+<li><strong>LoRA</strong> (default, CPU-friendly) — <code>r=8, alpha=16</code> adapters on the
+  attention + MLP projections, reward-weighted loss
+  (<code>RewardWeightedTrainer</code>): a 1.0-reward example teaches more than a
+  0.7-reward one, not identically. Bounded by <code>--max-minutes</code>
+  wall-clock, the real safety cutoff on an unattended nightly job (step
+  count alone doesn't reliably bound CPU wall-clock time).</li>
+<li><strong>QLoRA</strong> (<code>--qlora</code>, opt-in) — loads the base model 4-bit via
+  <code>bitsandbytes</code> (<code>nf4</code>, double-quant) instead. Needs a real CUDA GPU —
+  bitsandbytes' 4-bit kernels don't run on CPU — and refuses cleanly
+  with an actionable message if requested without one, rather than a
+  cryptic crash deep inside bitsandbytes. Not installed by default (see
+  <code>finetune_requirements.txt</code>'s comment) since it only does anything
+  useful on a GPU box, unlike everything else in that file.</li>
+</ul>
+<p><strong>Which hyperparameters to use — the 10th real optimizer
+(<code>scripts/peft_hyperparam_optimizer.py</code>, <code>--auto-hyperparams</code>).</strong> Every
+OTHER "which option, learned from outcomes" decision in this codebase
+is the same <code>LinearBanditCore</code> Thompson Sampling primitive
+(<code>README_RL_ALGORITHMS.md</code>); the hyperparameters above were the one
+fixed exception — <code>lora_r=8</code>, <code>alpha=16</code>, <code>min_reward=0.7</code>, chosen once
+and never revisited. <code>--auto-hyperparams</code> closes that gap: a bandit
+over three named presets (<code>conservative</code> / <code>balanced</code> / <code>aggressive</code> —
+bundling rank+alpha+reward-threshold together, since they interact)
+picks tonight's configuration from context = [curated example count,
+average reward], and <code>scripts/eval/regression_gate.py --update-peft-bandit</code>
+feeds its own <code>new_score - old_score</code> margin back as the reward once
+tonight's fine-tune has actually been scored — the SAME regression gate
+that decides whether to promote it. Off by default (the fixed values
+above are unchanged unless both flags are set); persisted to a plain
+JSON file (<code>--peft-bandit-state</code>), not <code>bandit_persistence.py</code>'s
+DynamoDB-backed store, since this standalone script has no access to
+the live app's database. 11 tests in <code>test_peft_hyperparam_optimizer.py</code>,
+including that a repeatedly-winning arm is picked more often after a
+fresh process reloads the persisted state from disk.</p>
+<h3 id="4b-the-nightly-job-mechanically-deploynightly_finetunesh">4b. The nightly job, mechanically (<code>deploy/nightly_finetune.sh</code>)</h3>
+<p>Stages 4 through 7 above describe what the training/quantization math
+<em>does</em>; this is how it actually gets RUN, unattended, every night, on
+the real deploy box:</p>
+<div class="hl"><pre><span></span><code>crontab: 30 3 * * *  /opt/algo-kaizen/nightly_finetune.sh
+                          │
+                          ▼
+          docker cp ak-chatbot:/srv/data/finetune/ollama_turns.jsonl
+          (pulls today's log straight out of the LIVE chatbot
+           container — no separate export step, no shared volume)
+                          │
+              no log yet? ──────► exit 0, log "nothing to do tonight",
+              (first night, or                touch nothing already serving
+               local SLM never answered)
+                          │
+                          ▼
+          docker run algo-kaizen-finetune  (deploy/Dockerfile.finetune —
+                                             a SEPARATE image from the
+                                             three deployed ak-* services,
+                                             built once, reused nightly)
+              scripts.finetune_local_slm
+                --log-path .../ollama_turns.jsonl
+                --base-model Qwen/Qwen2.5-1.5B-Instruct   (FINETUNE_BASE_MODEL)
+                --max-minutes 120                          (FINETUNE_MAX_MINUTES)
+                          │
+              too few reward≥threshold examples? ──► no merged/ dir produced,
+              (Data Engine's dedup can starve            skip conversion, exit
+               a quiet night down to zero)                cleanly, log why
+                          │
+                          ▼  (merged/ exists)
+          scripts/convert_and_register_ollama_model.sh
+              GGUF convert → llama-quantize Q4_K_M →
+              new tag qwen2.5-tuned:&lt;UTC-date&gt; (base tag untouched) →
+              sanity check ("does it answer at all") →
+              eval/regression_gate.py vs. the CURRENT base tag,
+              same harness that picked the base model originally
+                          │
+              fails the gate? ──────► tag exists on disk but is NEVER
+                                       registered — tonight's run is a
+                                       no-op from the running system's
+                                       point of view
+                          │
+                          ▼ (passes)
+          POST /api/admin/providers  — live, selectable, no restart;
+          hybrid_router.py's "local" arm starts using it on the very
+          next message that arm is picked for
+                          │
+                          ▼
+          retention: keep only the last 3 nights' out/&lt;date&gt;/ directories
+          on disk (multi-GB checkpoints — this alone stops the deploy
+          box quietly filling up over weeks)
+</code></pre></div>
+
+<p>Every failure mode above — no data, no image, too little new data, a
+failed regression gate — exits cleanly and changes nothing already
+serving; the only way tonight's run ever changes runtime behavior is by
+successfully clearing every one of those gates and reaching the
+<code>POST /api/admin/providers</code> call. <code>LOG=/opt/algo-kaizen/logs/ak-finetune.log</code>
+captures the full run (stdout+stderr) for a human to check in the
+morning — this job pages nobody and blocks nothing if it fails silently
+overnight, on purpose.</p>
+<h3 id="5-domain-slm">5. Domain SLM</h3>
+<p>The merged result of step 4 — <code>model.merge_and_unload()</code>, a plain HF
+model directory. This is the point where the base model has genuinely
+learned from this deployment's own real usage.</p>
+<h3 id="6-quantization-pruning">6. Quantization / Pruning</h3>
+<ul>
+<li><strong>Quantization</strong> (always, via the follow-on script) — GGUF f16 →
+  <code>llama-quantize</code> → Q4_K_M. This is what actually ships to Ollama.</li>
+<li><strong>Pruning</strong> (<code>--prune-sparsity</code>, opt-in, default <code>0.0</code>/off) — real
+  global L1-unstructured magnitude pruning (<code>torch.nn.utils.prune</code>, no
+  new dependency) over every linear layer, with <code>prune.remove()</code> making
+  it permanent so the zeros survive <code>save_pretrained()</code>. The actual
+  measured sparsity is printed after, not just the requested fraction.
+  <strong>Honest limitation, stated in <code>prune_model()</code>'s own docstring</strong>: the
+  GGUF/Q4_K_M quantizer above does not specially exploit exact zeros
+  for a smaller or faster result today — this is a real, verifiable
+  transform without a proven inference-time win through <em>this</em> serving
+  path yet, which is exactly why it defaults off.</li>
+</ul>
+<h3 id="7-algo-kalkee-slm">7. Algo-Kalkee-SLM</h3>
+<p><code>scripts/convert_and_register_ollama_model.sh</code> — GGUF conversion,
+quantization, then an <strong>export step</strong>: the quantized GGUF + the
+Modelfile that produced it + a <code>metadata.json</code> (base tag, quant type,
+sanity-check/gate outcome, whether it was registered) are copied to
+<code>exported_models/&lt;tag&gt;/</code> — a real, standalone, portable artifact
+outside both the script's own temp dir and Ollama's opaque blob store,
+kept even when a candidate fails, so it stays inspectable rather than
+just vanishing. Then: a new Ollama tag (the base tag is never touched),
+a sanity check ("does it answer at all"), then
+<code>scripts/eval/regression_gate.py</code> compares the new tag against the base
+tag on the SAME eval harness used to pick the base model in the first
+place. Only a tag that passes ever reaches <code>POST /api/admin/providers</code>
+as <code>"algo-akanade-slm"</code> — live, selectable, no restart. See
+<code>README_SLM_GENERATION_LAYER.md</code> for the full layer writeup (what's
+already used vs. what this adds) and a quickstart LoRA example
+(<code>scripts/quickstart_lora_example/</code>) for experimenting outside the
+full nightly Docker pipeline.</p>
+<h3 id="8-rag-agents">8. RAG + Agents</h3>
+<p>Both consume the now-improved local model exactly like before — nothing
+downstream of "which Ollama tag answers" changes:</p>
+<ul>
+<li><strong>RAG</strong> (<code>framework/rag.py</code>) — RL-picked store × algorithm retrieval,
+  now also fed by CSV/PDF-ingested enterprise documents (step 1) via
+  the same <code>VectorStoreAdapter</code> every other content source uses.</li>
+<li><strong>Agents</strong> — Kalkee's 9 default agents (<code>README_AGENTS.md</code>), any of
+  which can be routed to <code>get_llm_client(...)</code>'s local Ollama rung the
+  same way <code>pm-agent</code> already is.</li>
+</ul>
+<h3 id="9-enterprise-software">9. Enterprise Software</h3>
+<p>The PM chatbot and Kalkee's <code>/api/v1/*</code> orchestration API — the actual
+consuming application every stage above exists to serve.</p>
+<h2 id="trying-it-locally">Trying it locally</h2>
+<div class="hl"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>backend
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w">          </span><span class="c1"># CSV/PDF ingestion works out of the box (pypdf)</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/test_data_engine.py<span class="w"> </span>tests/test_document_pipeline.py<span class="w"> </span>-q
+
+<span class="c1"># The heavy training path — separate venv, see finetune_requirements.txt:</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>scripts/finetune_requirements.txt
+python<span class="w"> </span>scripts/finetune_local_slm.py<span class="w"> </span>--help
+</code></pre></div>
+
+<h2 id="whats-verified-vs-what-still-needs-the-real-deploy-box">What's verified vs. what still needs the real deploy box</h2>
+<p>Same honesty standard <code>finetune_local_slm.py</code>'s own module docstring
+already holds itself to:</p>
+<ul>
+<li><strong>Fully test-verified</strong> (pure Python, no heavy deps, real unit tests
+  in the main suite): <code>data_engine.py</code>'s scrub/dedup/persistent store,
+  <code>document_pipeline.py</code>'s CSV/PDF extraction and ingestion, and the
+  <code>log_document_turn()</code> wiring from document Q&amp;A into the fine-tune log.</li>
+<li><strong>Syntax-verified, smoke-tested on a tiny model, NOT yet run
+  end-to-end on the real deploy box</strong>: the Data-Engine-integrated
+  training loop, <code>--prune-sparsity</code>, and especially <code>--qlora</code> (which
+  additionally needs a CUDA GPU this pipeline was never validated
+  against at all). Re-run once on the real box with real accumulated
+  data before trusting any of the three unattended.</li>
+</ul></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#the-whole-pipeline-one-diagram">The whole pipeline, one diagram</a><a class="l2" href="#how-kalkee-fits-around-this-pipeline-the-closed-loop">How Kalkee fits around this pipeline — the closed loop</a><a class="l2" href="#stage-by-stage-whats-real-what-file-owns-it">Stage by stage — what&#x27;s real, what file owns it</a><a class="l3" href="#1-enterprise-data">1. Enterprise Data</a><a class="l3" href="#1b-collect-enterprise-prompts">1b. Collect enterprise prompts</a><a class="l3" href="#1c-create-ground-truth-frameworkground_truthpy">1c. Create ground truth (framework/ground_truth.py,</a><a class="l3" href="#2-data-engine-scriptsdata_enginepy">2. Data Engine (scripts/data_engine.py)</a><a class="l3" href="#3-base-slm">3. Base SLM</a><a class="l3" href="#4-lora-qlora-scriptsfinetune_local_slmpy">4. LoRA / QLoRA (scripts/finetune_local_slm.py)</a><a class="l3" href="#4b-the-nightly-job-mechanically-deploynightly_finetunesh">4b. The nightly job, mechanically (deploy/nightly_finetune.sh)</a><a class="l3" href="#5-domain-slm">5. Domain SLM</a><a class="l3" href="#6-quantization-pruning">6. Quantization / Pruning</a><a class="l3" href="#7-algo-kalkee-slm">7. Algo-Kalkee-SLM</a><a class="l3" href="#8-rag-agents">8. RAG + Agents</a><a class="l3" href="#9-enterprise-software">9. Enterprise Software</a><a class="l2" href="#trying-it-locally">Trying it locally</a><a class="l2" href="#whats-verified-vs-what-still-needs-the-real-deploy-box">What&#x27;s verified vs. what still needs the real deploy box</a></aside></div>
+<script src="../../docs.js"></script></body></html>

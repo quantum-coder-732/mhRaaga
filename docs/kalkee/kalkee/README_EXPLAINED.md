@@ -1,4 +1,4 @@
-# ALGO AKANADE — Explained: What, How, and the Code Line by Line
+# Kalkee — Explained: What, How, and the Code Line by Line
 
 This is the "explain it to me" document — no arrow diagrams (see
 `README_ARROW_DIAGRAMS.md`), no formula reference (see

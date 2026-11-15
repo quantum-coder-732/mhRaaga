@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalkee — Tech Doc: One-Liner Architecture + Glossary · mhRaaga docs</title><meta name="description" content="Kalkee — Tech Doc: One-Liner Architecture + Glossary">
+<link rel="stylesheet" href="../../docs.css"></head>
+<body data-root="../../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../../overview.html">Overview</a></li><li><a href="../../system.html">How the system works</a></li><li><a href="../../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../../ARCHITECTURE.html">Architecture</a></li><li><a href="../../API.html">API for developers</a></li><li><a href="../../SOUND.html">Sound</a></li><li><a href="../../VOICE.html">AI voice</a></li><li><a href="../../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../../STUDIO.html">Stories, people, rules</a></li><li><a href="../../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../../components/music-engine.html">Music engine</a></li><li><a href="../../components/android-app.html">Android app</a></li><li><a href="../../components/music-backend.html">Backend prototype</a></li><li><a href="../../components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="../../kalkee/index.html">About these documents</a></li></ul></details><details open><summary>Kalkee</summary><ul><li><a href="../../kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="../../kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="../../kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="../../kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="../../kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="../../kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="../../kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="../../kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="../../kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="../../kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="../../kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="../../kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="../../kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="../../kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="../../kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="../../kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="../../kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="../../kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="../../kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="../../kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="../../kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="../../kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="../../kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="../../kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="../../kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="../../kalkee/kalkee/README_TECH_DOC.html" class=cur aria-current=page>Tech Doc</a></li><li><a href="../../kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="../../kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="../../kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="../../kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="../../kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="../../kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="kalkee-tech-doc-one-liner-architecture-glossary">Kalkee — Tech Doc: One-Liner Architecture + Glossary</h1>
+<p>Every subsystem in this framework, compressed to a single arrow-chain
+line each, plus a glossary that defines every term used anywhere in
+this repo's docs. For the full multi-box diagrams see
+<code>README_ARROW_DIAGRAMS.md</code>; for the math see <code>README_RL_ALGORITHMS.md</code>;
+for prose explanations see <code>README_EXPLAINED.md</code>; for optimizers
+specifically see <code>README_OPTIMIZERS.md</code>. This doc is the fast index —
+one line to place any subsystem, one glossary entry to define any term.</p>
+<h2 id="the-entire-architecture-one-line">The entire architecture, one line</h2>
+<p><strong>User message → query refinement (RL-gated: bandit decides refine vs
+skip, an embedding-memory cache reuses prior refinements for free, a
+drift check reverts any rewrite that strayed too far) → input security
+precheck (🔴-tier prompts — credential exfiltration, bulk-exfil asks,
+"skip confirmation" — refused outright, before any tool runs) → agent
+framework (native/langgraph/adk, picked by a bandit) → guardrails →
+Hybrid-mode-or-manual model tier routing (local SLM vs hosted, RL-picked)
+→ intent classification against a fixed PM
+tool schema (trimmed for local models by another bandit) → optional
+RAG-optimizer-picked retrieval (RL-picked store × algorithm, from live
+PM data or an ingested folder, itself IVF/quantization-optimized) →
+entity resolution against real data → guardrail-gated confirmation for
+destructive/external actions → tool execution as the calling user →
+output security flag (🟢/🟡/🔴, scored on the reply + any external
+content it quotes) → templated reply → session persisted + every RL
+layer's reward finalized + nightly PEFT data logged → reply broadcast to
+the widget — with a nightly, regression-gated LoRA fine-tune of the
+local model, an on-demand candidate-selection pipeline (the same
+test-asset harness), and on-demand code/supply-chain/cloud-config
+security scans, all run entirely outside that hot path.</strong></p>
+<h2 id="the-layers-one-arrow-line-each-every-layer-what-it-does-security-included">The layers, one arrow line each — every layer, what it does, security included</h2>
+<p>The same flow as above, broken into one line per layer instead of one
+run-on paragraph — copy/paste-able on its own:</p>
+<ul>
+<li><strong>Client</strong> → PM chat widget, Flutter mobile app, or another agent over ACP — one message/task in.</li>
+<li><strong>Query refinement</strong> → bandit decides refine-vs-skip → memory cache reuses a prior accepted rewrite for free → drift check reverts a rewrite that strayed too far from the original meaning.</li>
+<li><strong>Input security precheck</strong> (<code>security_guard.py</code> / <code>native_agent.security_precheck()</code>) → a 🔴-tier prompt (credential/token exfiltration, bulk data-exfil requests, explicit "skip confirmation" instructions) is refused OUTRIGHT here, before any tool ever runs.</li>
+<li><strong>Framework picker</strong> (pm-agent only) → native / langgraph / adk / claude, chosen by a bandit on measured latency + reliability, not a fixed default.</li>
+<li><strong>Guardrails</strong> (<code>llm/guardrails.py</code>) → <code>input_guard()</code> injection scan on the way in, <code>output_guard()</code> schema-validates the model's tool call on the way out — identical on every framework track.</li>
+<li><strong>Model tier + Hybrid routing</strong> → <code>classify_task_complexity()</code> picks realtime/delay_ok/bulk → either the normal provider fallback chain, or (Hybrid mode) a 2-arm bandit choosing local Ollama SLM vs hosted, with a hard timeout that escalates mid-turn if local is too slow.</li>
+<li><strong>Token optimizer</strong> (local models only) → when the answering provider is Ollama, a bandit trims the tool schema to full/top12/top6/top3 based on keyword overlap with the message.</li>
+<li><strong>Intent classification</strong> (<code>perceive_intent</code>) → one LLM call maps the message to a PM tool + arguments, against the (possibly trimmed) schema above.</li>
+<li><strong>RAG optimizer</strong> (only if the message needs it) → bandit picks <code>{store}::{algorithm}</code>, retrieves and reranks context, injects it as an extra system message before intent classification finalizes.</li>
+<li><strong>Entity resolution</strong> → tool arguments resolved against REAL data (a real task/project/user id), never an id the model invented.</li>
+<li><strong>Guardrail-gated confirmation</strong> → every DESTRUCTIVE PM tool and every MCP tool call stops and asks "are you sure?" — the model's own judgment is never trusted alone for these.</li>
+<li><strong>Tool execution</strong> → runs as the calling user, against the real PM service / MCP server / Google API — never an elevated bot credential.</li>
+<li><strong>Output security flag</strong> (<code>security_guard.assess_security()</code>) → the final reply, plus any external content it quotes (email/calendar/chat/tool output), is scored 🟢 Safe / 🟡 Needs Review / 🔴 Security Risk and rendered as a badge next to the model/tier chip.</li>
+<li><strong>Templated reply</strong> → <code>response_template.format(**fields)</code> — plain string formatting, never <code>eval</code>.</li>
+<li><strong>Session + reward persistence</strong> → the turn is saved to <code>ChatSessions</code>; every RL layer that fired this turn (refinement, tier/hybrid, token optimizer, RAG optimizer, agent router) finalizes its reward; a nightly-PEFT-eligible Ollama turn is logged.</li>
+<li><strong>Reply broadcast</strong> → back to the widget/mobile app over the same HTTP response (or WebSocket, for the live board).</li>
+<li><strong>Kalkee's own agent-level RL</strong> (only via <code>/api/v1/orchestration/execute</code>, not the pm-agent path above) → capability pre-filter → Thompson Sampling agent pick → Workflow Engine shape → Shapley credit split across every agent that participated → reward → policy update on every participant's posterior.</li>
+<li><strong>Security agents</strong> (on demand, not per chat turn — <code>code-security-agent</code>/<code>supply-chain-agent</code>/<code>cloud-config-agent</code>) → deterministic regex scans of real source/config + a real OSV.dev dependency-vulnerability lookup; an LLM only summarizes the findings list that already exists, never invents one.</li>
+<li><strong>Nightly PEFT fine-tune</strong> (batch, cron, entirely outside the request path above) → collect reward-tagged Ollama turns → reward-weighted LoRA → GGUF-quantize → regression-gate against the currently-served model → promote or discard.</li>
+</ul>
+<h2 id="every-use-case-optimizer-pipeline-and-algorithm-one-arrow-line-each">Every use case, optimizer, pipeline, and algorithm — one arrow line each</h2>
+<h3 id="query-refinement-runs-above-every-agent-track-in-routerschatpy">Query refinement (runs above every agent track, in routers/chat.py)</h3>
+<ul>
+<li><strong>Gate</strong>: <code>raw message → cheap heuristics (word count, filler phrases, missing punctuation) → bandit picks "refine" vs "skip" → skip: message passed through untouched, zero LLM cost</code></li>
+<li><strong>Memory lookup (learns as it goes)</strong>: <code>arm=="refine" → embed raw query → cosine vs quantized embeddings of past ACCEPTED refinements → similarity ≥ 0.93 → reuse cached refined text, zero LLM cost this time too</code></li>
+<li><strong>Refine + structure (memory miss only)</strong>: <code>ONE LLM call → {refined, missing_clarifications, suggested_queries} JSON → embedding similarity(raw, refined) as the drift signal, NOT a second LLM call</code></li>
+<li><strong>Repair</strong>: <code>similarity &lt; 0.6 → rewrite judged too risky → revert to the original raw text, never remembered</code></li>
+<li><strong>Remember</strong>: <code>similarity ≥ 0.6 and text actually changed → quantize(embed(raw)) stored in RefinementMemory → future near-duplicates hit the cache above</code></li>
+<li><strong>Reward finalize</strong>: <code>turn completes → out_of_scope known → skip: 1.0/-0.6 · memory hit: 1.0/-0.1 · llm error: -0.5 · no-op refine: -0.3 · real refine: 1.0/-0.2 → bandit updates</code></li>
+<li><strong>Confirmation surfacing</strong>: <code>was_repaired or missing_clarifications → needs_confirmation=true → ChatReply.refinement chip → user sees it, turn never blocks on it</code></li>
+</ul>
+<h3 id="core-chat-flow">Core chat flow</h3>
+<ul>
+<li><strong>A chat turn</strong>: <code>receive → load_session → guards → tier+hybrid routing → perceive_intent (+ optional RAG context) → output_guard → resolve_entities → confirm-if-destructive → execute → format_result → persist + log + finalize rewards → reply</code></li>
+<li><strong>Destructive action</strong>: <code>tool call → requires_confirmation() true (DESTRUCTIVE ∪ every MCP tool) → "are you sure?" → yes/no next turn → execute-or-cancel</code></li>
+<li><strong>Out-of-scope message</strong>: <code>perceive_intent returns free text, no tool call → out_of_scope=true → UI gate ("show me anyway") → user accepts → shown</code></li>
+</ul>
+<h3 id="model-routing">Model routing</h3>
+<ul>
+<li><strong>Tier fallback chain</strong>: <code>TierClient.chat → try rung 1 → fail → rung 2 → ... → rule-based floor (never errors)</code></li>
+<li><strong>Hybrid mode</strong>: <code>provider=="hybrid" → hybrid_router.choose(msg, tier) → arm local→preferred="ollama" | arm hosted→preferred=None → get_llm_client → normal chain</code></li>
+<li><strong>Hybrid escalation on slowness</strong>: <code>arm=="local" → preferred_timeout=LOCAL_TIMEOUT_SECONDS (10s) → local rung exceeds it → same exception path as a hard failure → hosted rung answers → log_hybrid_escalation_turn() feeds nightly PEFT</code></li>
+<li><strong>Context-limit escalation</strong>: <code>provider.chat() returns truncated=True (finish_reason=="length"/stop_reason=="max_tokens") → more rungs left? → keep same messages, try next rung → ChatReply.context_limit_switch=true</code></li>
+<li><strong>Real token usage</strong>: <code>every provider response → usage normalized to {prompt_tokens,completion_tokens,total_tokens} → ChatReply.usage → UI chip, every turn (not just local-trim estimates)</code></li>
+<li><strong>Admin-added provider</strong>: <code>POST /api/admin/providers → EXTRA_LLM_PROVIDERS registry entry → live in the picker, no redeploy</code></li>
+</ul>
+<h3 id="token-optimizer-local-model-only">Token optimizer (local model only)</h3>
+<ul>
+<li><strong>Schema trimming</strong>: <code>provider startswith "ollama" → required=DESTRUCTIVE∪MCP tools (never cut) + optional ranked by keyword overlap → bandit picks full/top12/top6/top3 → reduced schema sent</code></li>
+<li><strong>Reward finalize</strong>: <code>finish() computes retried/out_of_scope → record_outcome(success, tokens_saved) → bandit updates</code></li>
+</ul>
+<h3 id="rag-optimizer">RAG optimizer</h3>
+<ul>
+<li><strong>Retrieval decision</strong>: <code>is_rag_relevant(msg) → refine_query → bandit picks "{store}::{algorithm}" → store.search(k×3) → apply algorithm → truncate to k → context injected as extra system message</code></li>
+<li><strong>vector algorithm</strong>: <code>query → embed → cosine similarity vs every vector → top k, store's own order</code></li>
+<li><strong>lexical_rerank algorithm</strong>: <code>wide candidate pool (k×3, vector-ranked) → re-rank ALL by keyword/Jaccard overlap → top k</code></li>
+<li><strong>hybrid algorithm</strong>: <code>wide candidate pool → blended score = 0.5·(vector/max_vector) + 0.5·lexical_overlap → top k</code></li>
+<li><strong>Citation surfacing</strong>: <code>build_context_with_included_hits() → only the chunks that survived the char budget → sources_used in the reply</code></li>
+</ul>
+<h3 id="document-ingestion">Document ingestion</h3>
+<ul>
+<li><strong>Ingest a folder</strong>: <code>path (inside RAG_INGEST_DIR, traversal-guarded) → walk recursively → chunk every .txt/.md → fresh dedicated store → registered into rag_registry (now live for chat too)</code></li>
+<li><strong>Size-based auto-scaling</strong>: <code>chunks_indexed → _recommended_retrieval_params() → (k, max_context_chars) scaled min→max with corpus size → default for summarize()/suggest_prompts() unless overridden</code></li>
+<li><strong>Summarize</strong>: <code>store → retrieve_with_optimizer(scoped to that one store) → excerpts → LLM call on the "bulk" tier → grounded summary + sources_used</code></li>
+<li><strong>Suggest prompts</strong>: same retrieval → different ask → N concrete follow-up questions</li>
+</ul>
+<h3 id="vector-storage-retrieval-optimization">Vector storage + retrieval optimization</h3>
+<ul>
+<li><strong>IVF clustering</strong>: <code>corpus ≥ 50 vectors → Lloyd's k-means, K=round(sqrt(n)) clusters → query scores centroids first → scan only n_probe nearest clusters' members → O(sqrt(n)) instead of O(n)</code></li>
+<li><strong>Scalar quantization</strong>: <code>v_min,v_max per vector → scale=(v_max-v_min)/255 → uint8 code per component → 4-8x smaller, error bounded by scale/2</code></li>
+<li><strong>Size gate</strong>: <code>add_documents() → mark IVF stale → next search() rebuilds lazily → below IVF_MIN_VECTORS stays exact brute force</code></li>
+</ul>
+<h3 id="agent-level-rl-multi-agent-workflows">Agent-level RL (multi-agent workflows)</h3>
+<ul>
+<li><strong>Agent routing</strong>: <code>task arrives → cold-start prior U(a|T) (hand-designed) or learned posterior → Thompson-sample θ per agent → argmax θ·x → agent runs</code></li>
+<li><strong>Multi-agent credit</strong>: <code>task completes → per-agent Shapley value φ_i (marginal contribution, noisy-OR characteristic function) → reward split fairly → each agent's bandit updated with ITS share</code></li>
+<li><strong>Adaptive reward weights</strong>: <code>outcome → R = α·Quality+β·Success+γ·Feedback−δ·Cost−ε·Latency−ζ·Failure → weights (α..ζ) drift toward whatever correlated with high R, renormalized to sum to 1</code></li>
+</ul>
+<h3 id="nightly-peft-fine-tune">Nightly PEFT fine-tune</h3>
+<ul>
+<li><strong>Data collection</strong>: <code>every ollama-* turn → finetune_log.py → JSONL {messages, response, provider, reward = 1 − 0.3·retried − 0.5·out_of_scope}</code></li>
+<li><strong>Training</strong>: <code>filter reward≥0.7, most recent 500 → render through the model's own chat template, mask loss to the assistant's turn → LoRA (r=8,α=16) → reward-weighted loss → merge → save</code></li>
+<li><strong>Promotion pipeline</strong>: <code>merged model → GGUF (f16) → quantize (Q4_K_M) → new Ollama tag (base untouched) → sanity check → regression gate vs base tag → pass → register with live chatbot, no restart</code></li>
+<li><strong>Cron timeline</strong>: <code>02:00 DB dump → 03:30 nightly_finetune.sh → data → train → convert → gate → register → prune old checkpoints</code></li>
+</ul>
+<h3 id="candidate-selection-eval-pipeline-on-demand">Candidate-selection eval pipeline (on demand)</h3>
+<ul>
+<li><strong>Full sweep</strong>: <code>test_assets (32 gold+rubric items) × candidates (local + OpenRouter, hosting:local|cloud) → harness scores deterministic (exact/regex/schema) or llm_judge (bias-guarded) → human-sample 12% → aggregate (weighted score, latency p50/p95, $/1k) → decide (ranked top 1-2 + manual license/hosting checklist)</code></li>
+<li><strong>Regression gate (reused nightly)</strong>: <code>same harness, just base-tag vs new-tag, local Ollama only, zero cost → pass/fail/couldn't-run</code></li>
+</ul>
+<h3 id="voice">Voice</h3>
+<ul>
+<li><strong>Voice turn</strong>: <code>mic audio → STT → text → EXACT same handle_message() as typed chat → reply → TTS → spoken audio</code></li>
+</ul>
+<h3 id="mcp-external-tools">MCP (external tools)</h3>
+<ul>
+<li><strong>MCP tool call</strong>: <code>config.py's MCP_SERVERS → mcp_client.mcp_tool_specs() → merged into TOOL_SCHEMAS → model picks one → requires_confirmation()=true (always, every MCP tool) → confirm_prompt_for() shows name+args ONLY, never the server's own description → user confirms → tools.execute() dispatches to the real external server</code></li>
+</ul>
+<h3 id="external-sdk">External SDK</h3>
+<ul>
+<li><strong>Calling the API from outside</strong>: <code>pip install gmaofn-client → MAGNETClient(base_url).login() → send_message(provider="hybrid"|None|real-id) / rag_ingest_path() / rag_summarize() → same REST endpoints, zero repo-code dependency</code></li>
+</ul>
+<hr />
+<h2 id="glossary">Glossary</h2>
+<p><strong>Agent</strong> — one registered unit of work-doing logic (e.g. <code>pm-agent</code>,
+<code>coding-agent</code>) implementing <code>understand → plan → execute → validate</code>;
+Kalkee's agent registry can route a task to any of several.</p>
+<p><strong>Arm</strong> — one candidate option a bandit chooses between (e.g. "local"
+vs "hosted" in Hybrid mode, or one tool-schema reduction level).</p>
+<p><strong>Bandit / multi-armed bandit</strong> — the reinforcement-learning setting of
+repeatedly choosing among fixed options ("arms") with no state carried
+between choices (γ→0 special case of full RL), learning purely from
+each choice's own observed reward. Every RL layer in this repo is one.</p>
+<p><strong>Bayesian linear regression</strong> — the statistical model
+<code>LinearBanditCore</code> maintains per arm: a probability distribution over
+"how much each context feature predicts reward," updated from data
+rather than fixed.</p>
+<p><strong>Bias guard (LLM-as-judge)</strong> — never telling a judge model which
+candidate produced an answer, so it can't be swayed by knowing the
+model's identity/reputation.</p>
+<p><strong>Brute-force search</strong> — comparing a query against every single stored
+vector, O(n) — correct and simple, but slow once n is large; what IVF
+clustering exists to avoid.</p>
+<p><strong>Candidate-selection pipeline</strong> — the benchmarking harness (§A-G) used
+to decide which LLM is actually worth self-hosting, reused nightly in
+miniature as the regression gate.</p>
+<p><strong>Chunking</strong> — splitting a long document into smaller passages before
+embedding/retrieval, since retrieving a whole document is both less
+precise and more expensive than retrieving the specific relevant
+paragraph.</p>
+<p><strong>Cold start</strong> — the state of a bandit arm with no observed data yet;
+seeded from a hand-designed prior (e.g. <code>utility_prior</code>) rather than
+starting from nothing.</p>
+<p><strong>Context vector</strong> — the small, numeric description of "what's true
+about this decision right now" a bandit uses to predict reward (e.g.
+<code>[message_word_count, tier_is_delay_ok]</code>).</p>
+<p><strong>Confirmation gate</strong> — the "are you sure?" step before any destructive
+PM action or any MCP tool call executes; the model's judgement is never
+trusted alone for those.</p>
+<p><strong>Cosine similarity</strong> — a measure of how similar two vectors' directions
+are (dot product of unit-normalized vectors); the standard scoring
+function for embedding-based retrieval.</p>
+<p><strong>Query refinement layer</strong> — the RL-gated rewrite-for-clarity step
+(<code>gmaofn/query_refinement.py</code>) that runs BEFORE any agent track sees a
+message: a bandit decides whether refining is worth an LLM round trip,
+an embedding-based memory cache reuses past refinements for free, and a
+drift check reverts any rewrite that changed the message's actual
+meaning. See <code>README_OPTIMIZERS.md</code> §7.</p>
+<p><strong>Refinement memory</strong> — the quantized-embedding cache a repeat/near-
+duplicate query hits to reuse a prior accepted refinement without
+another LLM call; what makes the refinement layer "refine as it goes"
+rather than a static prompt run cold every time.</p>
+<p><strong>Task memory</strong> — <code>gmaofn/task_memory.py</code>'s quantized-embedding memory
+for agent ROUTING: a request similar to one an agent already won (or
+lost) on before nudges that agent's cold-start seed for this new
+request. Same mechanism as Refinement memory above, applied to "which
+agent" instead of "how to phrase this." See <code>README_OPTIMIZERS.md</code> §8.</p>
+<p><strong>Context-limit escalation</strong> — when a provider's own response says it
+got cut off by its context/output limit (OpenAI-shape
+<code>finish_reason=="length"</code>, Anthropic <code>stop_reason=="max_tokens"</code>),
+<code>TierClient</code> treats it like a failure and tries the next, bigger rung
+with the SAME conversation — the same fallback path a hard error
+already takes, so nothing the user typed is lost. See
+<code>README_OPTIMIZERS.md</code> §9.</p>
+<p><strong>DESTRUCTIVE</strong> — the fixed, hard-coded set of PM tool names
+(<code>delete_task</code>, <code>archive_project</code>, <code>complete_sprint</code>, <code>delete_user</code>, +
+destructive plugins) that always require confirmation — never the
+model's own judgement.</p>
+<p><strong>Description-leak fix</strong> — <code>confirm_prompt_for()</code>'s deliberate choice to
+show only an MCP tool's NAME and ARGUMENTS in the human-facing "Allow?"
+confirmation, never its own <code>description</code> string — that text is written
+to persuade a MODEL (the bundled <code>mcp-server-fetch</code> reference server's
+real description tries to talk a model into believing it now has
+internet access despite being told otherwise), not to inform a human
+making a trust decision. See <code>README.md</code>'s MCP section.</p>
+<p><strong>Embedding</strong> — a numeric vector representation of text such that
+semantically similar text produces nearby vectors; what makes
+similarity search possible at all.</p>
+<p><strong>Fallback chain</strong> — the ordered list of providers a tier tries in
+sequence until one succeeds, ending in a deterministic rule-based
+floor that never errors.</p>
+<p><strong>GGUF</strong> — the file format llama.cpp/Ollama load quantized model
+weights from; the target format any fine-tuned HF model must be
+converted to before Ollama can serve it.</p>
+<p><strong>Guardrail</strong> — any check (input_guard, output_guard,
+requires_confirmation) that runs identically regardless of which
+model/provider/optimizer path answered a turn — optimizers change
+speed/cost, never whether guardrails apply.</p>
+<p><strong>Hosting: local vs cloud</strong> — local = weights and computation both on
+your own hardware (Ollama), free, fully controlled; cloud = an API call
+to someone else's GPUs (OpenRouter et al.), billed per token, using
+THEIR key with the upstream provider, not yours.</p>
+<p><strong>Hybrid mode</strong> — the RL-selected choice, per message, between routing
+to the free local SLM or a hosted model, based on a cheap non-LLM
+complexity estimate.</p>
+<p><strong>Intent</strong> — in this system specifically: which single PM tool (if any)
+a message maps to, plus its extracted arguments — a narrow
+classification+extraction task, not open-ended reasoning.</p>
+<p><strong>IVF (Inverted File Index)</strong> — the standard first-level approximate-
+nearest-neighbor technique: partition vectors into clusters, and at
+query time only search the nearest few clusters instead of everything.</p>
+<p><strong>k (retrieval)</strong> — how many chunks a retrieval call asks for; scaled
+to corpus size in this repo rather than left fixed.</p>
+<p><strong>k-means / Lloyd's algorithm</strong> — the clustering algorithm IVF uses:
+alternately assign each point to its nearest centroid, then recompute
+each centroid as the mean of its assigned points, until stable.</p>
+<p><strong>LinearBanditCore</strong> — the ~60-line shared class (<code>gmaofn/bandit.py</code>)
+implementing Thompson Sampling over a linear reward model; reused,
+never reimplemented, by every RL layer in this repo.</p>
+<p><strong>LoRA (Low-Rank Adaptation)</strong> — a parameter-efficient fine-tuning
+technique: freeze the base model, train small "adapter" matrices
+instead — a few million trainable parameters instead of the full
+model's billions.</p>
+<p><strong>MCP (Model Context Protocol)</strong> — a standard for connecting an agent
+to external tool servers; every MCP tool call in this repo requires
+explicit user confirmation, the same gate a destructive PM action gets.</p>
+<p><strong>Modelfile</strong> — Ollama's config format describing how to build a model
+tag (weights + chat template + parameters); this repo reuses the base
+model's own Modelfile when creating a fine-tuned tag, swapping only the
+weights reference.</p>
+<p><strong>Noisy-OR</strong> — the characteristic function this repo's Shapley
+computation uses for a multi-agent coalition's value: the probability
+at least one member produced a good result, given each member's own
+independent quality.</p>
+<p><strong>PEFT (Parameter-Efficient Fine-Tuning)</strong> — fine-tuning approaches
+(of which LoRA is one) that update a small fraction of a model's
+parameters instead of all of them — practical on CPU where full
+fine-tuning isn't.</p>
+<p><strong>Perceive_intent</strong> — the one LLM call per turn that performs intent
+classification (see Intent above) with the full/reduced tool schema
+attached.</p>
+<p><strong>Posterior (Bayesian)</strong> — the updated belief about an arm's reward
+behavior after folding in observed data — narrower/more confident than
+the prior, but never certain.</p>
+<p><strong>PPA (Personal Package Archive)</strong> — a third-party Ubuntu package
+repository (e.g. deadsnakes, used to get newer Python versions); not
+always reliably indexed on every release, which is exactly why this
+repo's fine-tuning environment runs in Docker instead of depending on
+one.</p>
+<p><strong>Quantization (vector)</strong> — compressing a float vector into fewer bits
+per component (e.g. uint8 instead of float32/64) for a smaller memory
+footprint, at the cost of a small, bounded approximation error.</p>
+<p><strong>Regression gate</strong> — the check that a nightly fine-tuned model
+actually scores at least as well as the currently-served model,
+before ever being promoted/registered — using the same harness as the
+full candidate-selection pipeline, just two candidates instead of many.</p>
+<p><strong>Reward</strong> — the single number every bandit tries to maximize;
+computed differently per layer (see <code>README_RL_ALGORITHMS.md</code>'s table)
+but always representing "was this choice actually good."</p>
+<p><strong>RL (Reinforcement Learning)</strong> — learning what to do by trying things
+and observing a reward signal, rather than being told the right answer
+directly; every optimizer in this repo is a bandit-shaped special case
+of it, except the nightly PEFT loop, which is closer to full RL's
+weight-updating spirit (via a reward-weighted loss, not true policy
+gradient).</p>
+<p><strong>Shapley value</strong> — the cooperative-game-theory solution (Lloyd
+Shapley, 1953) for fairly splitting one shared outcome's credit across
+however many participants contributed to it, based on each one's
+average marginal contribution across every possible arrival order.</p>
+<p><strong>SLM (Small Language Model)</strong> — a language model small enough to run
+acceptably on CPU (e.g. Qwen2.5 1.5B/3B here), as opposed to a large
+hosted model needing real GPU infrastructure.</p>
+<p><strong>Thompson Sampling</strong> — the bandit decision rule: sample a random guess
+from each arm's own current belief distribution, then pick whichever
+arm's sample scored highest — exploration emerges naturally from
+sampling real uncertainty, no separate "explore X% of the time" knob
+needed.</p>
+<p><strong>Tier</strong> (<code>realtime</code>/<code>delay_ok</code>/<code>bulk</code>) — a coarse, non-LLM
+classification of how time-sensitive a request is, determining which
+fallback chain of providers it's tried against.</p>
+<p><strong>Tool schema</strong> — the JSON description (name, description, argument
+shape) of one callable action, given to the model so it can request
+it; the full set is what the token optimizer trims for local models.</p>
+<p><strong>UnsafePathError</strong> — raised when a requested ingest path resolves
+outside the allowed directory — the guard against path traversal on
+the document-ingestion REST endpoint.</p>
+<p><strong>Utility prior</strong> — the hand-designed formula seeding a brand-new
+bandit arm's belief before any real feedback exists, so routing isn't
+arbitrary on day one.</p>
+<p><strong>VectorStoreAdapter</strong> — the one interface (Protocol) every RAG backend
+implements (<code>add_documents</code>, <code>search</code>), so a new vector database is one
+new class, nothing else in the RAG layer changes.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#the-entire-architecture-one-line">The entire architecture, one line</a><a class="l2" href="#the-layers-one-arrow-line-each-every-layer-what-it-does-security-included">The layers, one arrow line each — every layer, what it does, security included</a><a class="l2" href="#every-use-case-optimizer-pipeline-and-algorithm-one-arrow-line-each">Every use case, optimizer, pipeline, and algorithm — one arrow line each</a><a class="l3" href="#query-refinement-runs-above-every-agent-track-in-routerschatpy">Query refinement (runs above every agent track, in routers/chat.py)</a><a class="l3" href="#core-chat-flow">Core chat flow</a><a class="l3" href="#model-routing">Model routing</a><a class="l3" href="#token-optimizer-local-model-only">Token optimizer (local model only)</a><a class="l3" href="#rag-optimizer">RAG optimizer</a><a class="l3" href="#document-ingestion">Document ingestion</a><a class="l3" href="#vector-storage-retrieval-optimization">Vector storage + retrieval optimization</a><a class="l3" href="#agent-level-rl-multi-agent-workflows">Agent-level RL (multi-agent workflows)</a><a class="l3" href="#nightly-peft-fine-tune">Nightly PEFT fine-tune</a><a class="l3" href="#candidate-selection-eval-pipeline-on-demand">Candidate-selection eval pipeline (on demand)</a><a class="l3" href="#voice">Voice</a><a class="l3" href="#mcp-external-tools">MCP (external tools)</a><a class="l3" href="#external-sdk">External SDK</a><a class="l2" href="#glossary">Glossary</a></aside></div>
+<script src="../../docs.js"></script></body></html>

@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1. build the binary · mhRaaga docs</title><meta name="description" content="1. build the binary">
+<link rel="stylesheet" href="../../docs.css"></head>
+<body data-root="../../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../../overview.html">Overview</a></li><li><a href="../../system.html">How the system works</a></li><li><a href="../../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../../ARCHITECTURE.html">Architecture</a></li><li><a href="../../API.html">API for developers</a></li><li><a href="../../SOUND.html">Sound</a></li><li><a href="../../VOICE.html">AI voice</a></li><li><a href="../../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../../STUDIO.html">Stories, people, rules</a></li><li><a href="../../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../../components/music-engine.html">Music engine</a></li><li><a href="../../components/android-app.html">Android app</a></li><li><a href="../../components/music-backend.html">Backend prototype</a></li><li><a href="../../components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="../../kalkee/index.html">About these documents</a></li></ul></details><details><summary>Kalkee</summary><ul><li><a href="../../kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="../../kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="../../kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="../../kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="../../kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="../../kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="../../kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="../../kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="../../kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="../../kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="../../kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="../../kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="../../kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="../../kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="../../kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="../../kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="../../kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="../../kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="../../kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="../../kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="../../kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="../../kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="../../kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="../../kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="../../kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="../../kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="../../kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="../../kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="../../kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="../../kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details open><summary>Kalkee performance optimizer</summary><ul><li><a href="../../kalkee/performance_optimizer/Algo Engine.html" class=cur aria-current=page>1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="../../kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><p align="center"><b>🐦 algo-engine</b><br>
+<i>Kalkee's self-hosted model execution layer, written entirely in Go.</i></p>
+
+<p><strong>Algo Engine</strong> is a laptop-runnable, single-binary model execution runtime.
+It is <strong>not</strong> an MoE-only engine and <strong>not</strong> a GPU-only accelerator — those
+are capabilities inside a broader runtime whose job is: given a model, a
+workload, and the hardware actually available, determine (and keep
+learning) the most efficient way to execute that model while preserving
+exact correctness. Kalkee decides <em>what</em> to run; Algo Engine decides <em>how</em>
+to run it — across CPU, GPU, or hybrid execution, and across VRAM, RAM, and
+disk as one tiered memory hierarchy, streaming only the weights a given
+token actually needs rather than requiring the whole model resident.</p>
+<p>This repository is the reference implementation for the <strong>Algo Engine Build
+Manual</strong> and the companion of <strong>Algo Engine Technical Design v0.1</strong>
+(AlgoAnalytics internal) and
+<a href="https://github.com/quantum-coder-732/mhRaaga/blob/main/docs/kalkee/Arhitecture_Opitimization.md" target="_blank" rel="noopener"><code>Arhitecture_Opitimization.md</code></a> (the
+system-level architecture and generalization roadmap beyond MoE). Today's
+shipped model family is a deliberately tiny <em>toy</em> MoE model, so the full
+pipeline — routing, int8 quantization, safetensors streaming, LRU +
+learned-pin caching, KV-cache persistence, the overlap pipeline — runs
+anywhere in milliseconds and is fully real, fully testable, with no real
+weights required; dense and hybrid model families are the next model-seam
+targets, not a rewrite of anything below.</p>
+<h2 id="highlights">Highlights</h2>
+<ul>
+<li><strong>Zero dependencies.</strong> Standard library only; <code>CGO_ENABLED=0</code> produces a
+  fully static binary. The one sanctioned seam for native acceleration (the
+  matmul kernel) is behind a build tag and off by default.</li>
+<li><strong>A five-step per-token path</strong> — route → union → place → overlap →
+  learn — implemented as goroutines with a semaphore-bounded disk tier.</li>
+<li><strong>The invariant, under test:</strong> placement decides speed, never semantics.
+  <code>TestTinyCacheStillCorrect</code> proves a capacity-1 expert cache produces
+  bit-identical output to a capacity-64 cache.</li>
+<li><strong>Learned caching:</strong> <code>usage.json</code> records your workload's routing; the
+  hottest experts are pinned into RAM at startup. The engine gets faster the
+  more you use it.</li>
+<li><strong>Warm sessions:</strong> per-session KV caches persist to disk; conversations
+  reopen with zero re-prefill.</li>
+<li><strong>OpenAI-compatible API</strong> (<code>/v1/chat/completions</code>, normal + SSE streaming)
+  and an <strong>embedded web dashboard</strong> with live tier stats — one binary, no
+  extra runtime.</li>
+</ul>
+<h2 id="quick-start">Quick start</h2>
+<p>Requires Go ≥ 1.22. From the repository root:</p>
+<div class="hl"><pre><span></span><code><span class="c1"># 1. build the binary</span>
+go<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>bin/algo-engine<span class="w"> </span>./cmd/algo-engine
+
+<span class="c1"># 2. generate the toy model (~1.4 MB, deterministic from the seed)</span>
+./bin/algo-engine<span class="w"> </span>gen<span class="w"> </span>--model<span class="w"> </span>toy-model
+
+<span class="c1"># 3. verify everything is wired (config, weights, one full forward pass)</span>
+./bin/algo-engine<span class="w"> </span>doctor<span class="w"> </span>--model<span class="w"> </span>toy-model
+
+<span class="c1"># 4. chat in the terminal (untrained weights → structured gibberish;</span>
+<span class="c1">#    watch tok/s, hit-rate and resident experts instead)</span>
+./bin/algo-engine<span class="w"> </span>chat<span class="w"> </span>--model<span class="w"> </span>toy-model
+
+<span class="c1"># 5. or serve the API + web dashboard and open http://localhost:8080</span>
+./bin/algo-engine<span class="w"> </span>web<span class="w"> </span>--model<span class="w"> </span>toy-model
+</code></pre></div>
+
+<p>Talk to the API like any OpenAI-style endpoint:</p>
+<div class="hl"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>localhost:8080/v1/chat/completions<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"messages":[{"role":"user","content":"hi"}],"max_tokens":24}'</span>
+
+curl<span class="w"> </span>-N<span class="w"> </span>-s<span class="w"> </span>localhost:8080/v1/chat/completions<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"messages":[{"role":"user","content":"hi"}],"stream":true}'</span>
+
+curl<span class="w"> </span>-s<span class="w"> </span>localhost:8080/stats<span class="w">   </span><span class="c1"># hit rate, resident experts, evictions</span>
+</code></pre></div>
+
+<h2 id="testing">Testing</h2>
+<div class="hl"><pre><span></span><code>go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>./...<span class="w">          </span><span class="c1"># full suite</span>
+go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-race<span class="w"> </span>./...<span class="w">    </span><span class="c1"># REQUIRED before every commit — the store and heat</span>
+<span class="w">                       </span><span class="c1"># map are shared mutable state; races are build failures</span>
+go<span class="w"> </span>vet<span class="w"> </span>./...
+
+<span class="c1"># the optional cgo kernel (needs a C compiler; default build never does):</span>
+<span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-tags<span class="w"> </span>asmkernel<span class="w"> </span>./...<span class="w">        </span><span class="c1"># incl. the equivalence guard</span>
+<span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span>-tags<span class="w"> </span>asmkernel<span class="w"> </span>-o<span class="w"> </span>bin/algo-engine-accel<span class="w"> </span>./cmd/algo-engine
+
+<span class="c1"># benchmark both kernels before trusting either:</span>
+go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-bench<span class="o">=</span>.<span class="w"> </span>./internal/quant/
+<span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-tags<span class="w"> </span>asmkernel<span class="w"> </span>-bench<span class="o">=</span>.<span class="w"> </span>./internal/quant/
+</code></pre></div>
+
+<p>Measured on the reference machine at the toy's 128×64 shapes, the cgo kernel
+is <em>slower</em> than pure Go (cgo call overhead dominates at small matrices) —
+the exact negative result the Technical Design anticipated. The tag stays
+optional; earn it with numbers at your model's real shapes.</p>
+<h3 id="gpu-tier-phase-4-tags-cuda">GPU tier (Phase 4, <code>-tags cuda</code>)</h3>
+<p>The CUDA scaffold ships tag-guarded: <code>internal/quant/cuda/kernels.cu</code>
+(upload-once resident weights, naive row-per-thread kernels) and
+<code>kernel_cuda.go</code>. Requires the NVIDIA toolkit — never the default build:</p>
+<div class="hl"><pre><span></span><code>make<span class="w"> </span>cuda<span class="w">                                          </span><span class="c1"># nvcc → static lib → go link</span>
+<span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>go<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-tags<span class="w"> </span>cuda<span class="w"> </span>./internal/quant/<span class="w"> </span><span class="c1"># equivalence guard vs the oracle</span>
+./bin/algo-engine-cuda<span class="w"> </span>doctor<span class="w"> </span>--model<span class="w"> </span>toy-model
+</code></pre></div>
+
+<p>The default and <code>asmkernel</code> builds are verified in CI; the <code>cuda</code> build's
+checkpoint requires GPU hardware (its Go side compiles; the equivalence
+guard covers it the moment it links). Acceptance bar, in order: identical
+output vs the CPU binary first, speed second.</p>
+<p>Key tests worth knowing by name:</p>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Proves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>engine.TestTinyCacheStillCorrect</code></td>
+<td>cache size never changes output (the project invariant)</td>
+</tr>
+<tr>
+<td><code>pipeline.TestForwardDeterministic</code></td>
+<td>20 runs under <code>-race</code> → bit-identical sums</td>
+</tr>
+<tr>
+<td><code>engine.TestSameSeedSameModelSameOutput</code></td>
+<td>reproducible model generation end to end</td>
+</tr>
+<tr>
+<td><code>expertstore.TestPinsSurviveEviction</code></td>
+<td>learned pins outlive LRU churn</td>
+</tr>
+<tr>
+<td><code>quant.TestQ8MatVecMatchesDequantPath</code></td>
+<td>the quantized kernel equals the float oracle</td>
+</tr>
+</tbody>
+</table>
+<h2 id="commands">Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gen --model DIR [--seed N]</code></td>
+<td>write a complete toy model directory</td>
+</tr>
+<tr>
+<td><code>chat --model DIR [--session S] [--temp T]</code></td>
+<td>terminal chat with live tier stats; sessions persist</td>
+</tr>
+<tr>
+<td><code>serve --model DIR [--addr :8080]</code></td>
+<td>headless OpenAI-compatible API + dashboard</td>
+</tr>
+<tr>
+<td><code>web --model DIR [--addr :8080]</code></td>
+<td>serve and open the dashboard</td>
+</tr>
+<tr>
+<td><code>doctor --model DIR</code></td>
+<td>config / weights / forward-pass readiness check</td>
+</tr>
+</tbody>
+</table>
+<h2 id="running-a-real-slm-the-models-seam">Running a real SLM (the <code>models/</code> seam)</h2>
+<p>The engine is family-agnostic behind the <code>ModelEngine</code> interface
+(<code>models/models.go</code>): the toy is one family; <strong>OLMoE</strong> (7B total / 1B
+active) is the first real target, with its adapter shipped — verified HF
+tensor map, config reader, OLMoE-Instruct chat template, and a planner:</p>
+<div class="hl"><pre><span></span><code>./bin/algo-engine<span class="w"> </span>families<span class="w">            </span><span class="c1">#   olmoe / toy</span>
+./bin/algo-engine<span class="w"> </span>plan<span class="w"> </span>--model<span class="w"> </span>/path/to/OLMoE-1B-7B<span class="w">   </span><span class="c1"># needs only config.json</span>
+<span class="c1"># → dense 0.44 GB RAM-resident · experts 6 GB streamed (6 MB/expert)</span>
+<span class="c1">#   active set 768 MB/token · suggested RAM tier ~1.5 GB for &gt;90% hits</span>
+</code></pre></div>
+
+<p>Running OLMoE end-to-end is gated on four bounded engine deltas
+(multi-head attention + RoPE with q/k norms, SwiGLU experts, the real
+tokenizer, per-group scales) plus executing the converter — Build Manual
+Step 18 specifies each; the tiering, pipeline, and surfaces don't change.</p>
+<h2 id="layout">Layout</h2>
+<table>
+<thead>
+<tr>
+<th>Go package</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>internal/tokenizer</code></td>
+<td>byte-level BPE</td>
+</tr>
+<tr>
+<td><code>internal/safetensors</code></td>
+<td>tensor container, ranged reads</td>
+</tr>
+<tr>
+<td><code>internal/quant</code></td>
+<td>int8 quantization + the kernel/compute-backend seam (Pure Go / cgo / CUDA)</td>
+</tr>
+<tr>
+<td><code>internal/router</code></td>
+<td>MoE gate (top-k + softmax)</td>
+</tr>
+<tr>
+<td><code>internal/heatmap</code></td>
+<td>usage counts → <code>usage.json</code>, drives the next load's RAM pin set</td>
+</tr>
+<tr>
+<td><code>internal/expertstore</code></td>
+<td>RAM (LRU+pins) / disk tiers</td>
+</tr>
+<tr>
+<td><code>internal/pipeline</code></td>
+<td>route→union→place→overlap→learn, as goroutines</td>
+</tr>
+<tr>
+<td><code>internal/attention</code> + <code>kvcache</code></td>
+<td>attention, persisted KV cache</td>
+</tr>
+<tr>
+<td><code>internal/engine</code></td>
+<td>forward pass, sampling, generate</td>
+</tr>
+<tr>
+<td><code>internal/api</code> (+ <code>web/</code>)</td>
+<td>OpenAI-compatible API + embedded dashboard</td>
+</tr>
+<tr>
+<td><code>cmd/algo-engine</code></td>
+<td>gen · chat · serve · web · doctor · families · plan</td>
+</tr>
+</tbody>
+</table>
+<h2 id="license">License</h2>
+<p>Proposed license: Apache-2.0. Algo Engine is an original implementation —
+not a fork, and does not vendor any third-party engine's code.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#highlights">Highlights</a><a class="l2" href="#quick-start">Quick start</a><a class="l2" href="#testing">Testing</a><a class="l3" href="#gpu-tier-phase-4-tags-cuda">GPU tier (Phase 4, -tags cuda)</a><a class="l2" href="#commands">Commands</a><a class="l2" href="#running-a-real-slm-the-models-seam">Running a real SLM (the models/ seam)</a><a class="l2" href="#layout">Layout</a><a class="l2" href="#license">License</a></aside></div>
+<script src="../../docs.js"></script></body></html>

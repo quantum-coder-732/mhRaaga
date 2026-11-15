@@ -1,17 +1,17 @@
-# ALGO AKANADE Architecture — layers, algorithms, and the math behind them
+# Kalkee Architecture — layers, algorithms, and the math behind them
 
 This document goes one level deeper than `README.md`'s tour: every layer
-ALGO AKANADE is built from, the exact per-task algorithm, and the formulas
+Kalkee is built from, the exact per-task algorithm, and the formulas
 behind adaptive routing (Thompson Sampling), fair multi-agent credit
 assignment (the Shapley value), the reward/feedback loop, and how the
 pre-existing PM chatbot's own framework picker (native/langgraph/adk)
-composes with ALGO AKANADE's agent-level router instead of being replaced by
+composes with Kalkee's agent-level router instead of being replaced by
 it. Plain-text arrow diagrams throughout — no rendering step needed to
 read this.
 
 ## 1. The full stack, top to bottom
 
-ALGO AKANADE adds THREE layers above what already existed (Adaptive Router,
+Kalkee adds THREE layers above what already existed (Adaptive Router,
 Agent Network, Workflow Engine) and reframes the PM chatbot's own
 machinery (framework picker, model tier chain, session memory) as what
 sits *underneath* one specific registered agent (`pm-agent`), not the
@@ -78,7 +78,7 @@ whole system:
    │                          (agent/mcp_client.py) — proves MCP is a real     │
    │                          capability source, not PM-only                   │
    │   langchain-research-agent ► a real langchain_core Runnable + a real      │
-   │                          BaseRetriever over ALGO AKANADE's own RAG store        │
+   │                          BaseRetriever over Kalkee's own RAG store        │
    │   code-security-agent, supply-chain-agent, cloud-config-agent ──►         │
    │                          real static-pattern / OSV.dev / IaC-config       │
    │                          security scans — deterministic, never an         │
@@ -150,21 +150,21 @@ load_session(user, session_id)
 framework_stats.choose() ──► pick native | langgraph | adk   (a SEPARATE,
   ▼                                                            lower-level
 classify_task_complexity(msg) → tier                          bandit than
-  ▼                                                            ALGO AKANADE's own
+  ▼                                                            Kalkee's own
 get_llm_client(tier, preferred) → provider chain               agent router
   ▼                                                            — see §5)
 perceive_intent → resolve_entities → confirm-if-destructive → execute → format
   ▼
 persist_session + record framework stats
   ▼
-reply ──► back up through pm_agent.respond() ──► ALGO AKANADE's own
+reply ──► back up through pm_agent.respond() ──► Kalkee's own
                                                    evaluate()/feedback loop
 ```
 
 **Two bandits, two different jobs, cleanly stacked:**
 
 ```
-  ALGO AKANADE's AdaptiveRouter          "Which AGENT should answer this task —
+  Kalkee's AdaptiveRouter          "Which AGENT should answer this task —
   (router.py)                      pm-agent, coding-agent, openclaw-agent,
                                     or a new one someone just registered?"
          │
@@ -176,13 +176,13 @@ reply ──► back up through pm_agent.respond() ──► ALGO AKANADE's own
 
 The PM domain's `native`/`langgraph`/`adk` picker never disappears or
 gets subsumed — it's a strategy decision happening one level BELOW
-ALGO AKANADE's own, for exactly one agent, exactly as it always has.
+Kalkee's own, for exactly one agent, exactly as it always has.
 
 ## 3. The Adaptive Agent Assignment Engine — Thompson Sampling
 
 Modeled as a **linear contextual bandit** (Agrawal & Goyal, "Thompson
 Sampling for Contextual Bandits with Linear Payoffs", ICML 2013). Per
-agent `a`, ALGO AKANADE keeps a Bayesian linear regression posterior over
+agent `a`, Kalkee keeps a Bayesian linear regression posterior over
 *reward given context*:
 
 ```
@@ -262,7 +262,7 @@ When more than one agent contributed to a single task (a
 `HierarchicalStep`'s lead + workers, a `SequentialStep`'s pipeline), only
 ONE reward is ever observed for the whole task. Dumping all of it on the
 last agent, or splitting it evenly, both teach the router the wrong
-lesson. ALGO AKANADE instead uses the **Shapley value** — Lloyd Shapley's 1953
+lesson. Kalkee instead uses the **Shapley value** — Lloyd Shapley's 1953
 cooperative-game-theory solution concept, for which he shared the 2012
 Nobel Memorial Prize in Economic Sciences (with Alvin Roth, "for the
 theory of stable allocations and the practice of market design").
@@ -372,7 +372,7 @@ Adaptive weight update                                  (α..ζ nudge toward wha
 ## 6. LangChain, RAG, and the model layer — optional, not foundational
 
 ```
-   ALGO AKANADE core (task.py, agent_base.py, registry.py, router.py,
+   Kalkee core (task.py, agent_base.py, registry.py, router.py,
                 workflow.py, network.py, feedback.py, orchestrator.py)
         │
         │   imports NOTHING LangChain-specific — deletable adapter,
@@ -380,12 +380,12 @@ Adaptive weight update                                  (α..ζ nudge toward wha
         ▼
    langchain_adapter.py
         │
-        ├──► gmaofn_tool_to_langchain()     any ALGO AKANADE/MCP tool → a real
+        ├──► gmaofn_tool_to_langchain()     any Kalkee/MCP tool → a real
         │                                    langchain_core.tools.StructuredTool
         ├──► vector_store_to_retriever()    any rag.VectorStoreAdapter → a real
         │                                    langchain_core.retrievers.BaseRetriever
         └──► LangChainRunnableAgent          any LangChain Runnable/AgentExecutor/
-                                              compiled LangGraph graph → a ALGO AKANADE Agent,
+                                              compiled LangGraph graph → a Kalkee Agent,
                                               registerable exactly like a native one
 ```
 
@@ -418,7 +418,7 @@ TierClient.chat()
 
 ## 7. Model optimization strategies — where they actually live
 
-**None of these six strategies run inside ALGO AKANADE's Python process** —
+**None of these six strategies run inside Kalkee's Python process** —
 they're properties of the **inference server** behind whichever
 model-layer provider answers (`llm/providers.py`'s
 `CustomProvider`/`HuggingFaceProvider`/`OpenAICompatible`), fixed at that
@@ -432,7 +432,7 @@ tokens, top_p/top_k — to send, learned from that call's own
 latency/success. Two honest, separate layers, composed:
 
 ```
-  ALGO AKANADE (this process)                              Inference server (vLLM / TGI / etc.)
+  Kalkee (this process)                              Inference server (vLLM / TGI / etc.)
   ──────────────────────                              ─────────────────────────────────────
   OptimizationRouter.select(provider, tier)
         │  Thompson Sampling over a FEW real arms
@@ -563,41 +563,41 @@ data parallelism ── multiple full replicas of the ENTIRE stack above,
                       load-balanced across requests, for raw throughput
                       beyond what one replica's GPUs can serve
         ▼
-response ──► back through CustomProvider.chat() ──► ALGO AKANADE, none the wiser
+response ──► back through CustomProvider.chat() ──► Kalkee, none the wiser
               about which of the above actually ran
 ```
 
-For the six SERVER-side strategies, ALGO AKANADE's own job stops at "know the
+For the six SERVER-side strategies, Kalkee's own job stops at "know the
 endpoint, send the request, read the response" — configuring `vllm
 serve --tensor-parallel-size 4 --speculative-model <draft>` (or TGI's
 equivalent flags) is a deployment decision made once, outside this
 codebase, for whichever `CUSTOM_MODEL_BASE_URL`/`HUGGINGFACE_ENDPOINT_URL`
-a ALGO AKANADE deployment points at. What ALGO AKANADE DOES actively decide, every
+a Kalkee deployment points at. What Kalkee DOES actively decide, every
 single call, on top of whatever server sits behind that URL, is which
 real request-level parameter arm to send — the `OptimizationRouter`
 described above.
 
 ## 8. The SLM Generation Layer — hybrid routing, token trimming, nightly self-improvement
 
-§7's six strategies are all things ALGO AKANADE points AT but never touches —
+§7's six strategies are all things Kalkee points AT but never touches —
 config baked into somebody else's inference server. The **SLM
 Generation Layer** (Ollama, `OLLAMA_BASE_URL`/`OLLAMA_MODEL` in
 `config.py`, plus everything in `README_SLM_GENERATION_LAYER.md`) is
-the one model in the whole tier chain ALGO AKANADE's own process actively
+the one model in the whole tier chain Kalkee's own process actively
 manages end to end: collecting the enterprise prompts and grounded
 ground truth it should learn from (§8.3 step 0 below), whether to even
 use the local model this turn, how to fit the PM tool schema into its
 smaller context window, and — the one loop in this entire document that
 isn't a bandit — a nightly job that rewrites its actual weights and
-produces a real, standalone, branded artifact: **Algo-Akanade-SLM**.
+produces a real, standalone, branded artifact: **Algo-Kalkee-SLM**.
 
 How it connects back into everything above: the artifact this layer
 produces is registered via `POST /api/admin/providers` with a `tiers`
 field (§8.3 step 3f), which `llm/router.py`'s `_effective_chains()`
 splices directly into the SAME realtime/bulk/delay_ok fallback chains
-§1's MODEL ABSTRACTION LAYER box shows — so every one of ALGO AKANADE's 9
+§1's MODEL ABSTRACTION LAYER box shows — so every one of Kalkee's 9
 default agents (§1's AGENT EXECUTION box) can be routed to Algo-
-ALGO AKANADE-SLM through the ordinary `get_llm_client(tier, ...)` call, with
+Kalkee-SLM through the ordinary `get_llm_client(tier, ...)` call, with
 no orchestrator-side code change and no restart. This layer only ever
 produces a candidate for that shared model abstraction layer — it never
 bypasses the Adaptive Router, the Workflow Engine, or Shapley credit
@@ -653,7 +653,7 @@ model-picker menu:
 A fourth selectable mode, alongside Auto / one specific model / Hybrid:
 where §8.1 decides local-vs-hosted by CHEAP COMPLEXITY features, Domain
 mode decides WHICH of possibly several registered domain-specific
-Algo-Akanade-SLM variants (README_SLM_GENERATION_LAYER.md §5) a message
+Algo-Kalkee-SLM variants (README_SLM_GENERATION_LAYER.md §5) a message
 is about, by CONTENT:
 
 ```

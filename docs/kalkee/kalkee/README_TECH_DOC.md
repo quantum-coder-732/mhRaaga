@@ -1,4 +1,4 @@
-# ALGO AKANADE — Tech Doc: One-Liner Architecture + Glossary
+# Kalkee — Tech Doc: One-Liner Architecture + Glossary
 
 Every subsystem in this framework, compressed to a single arrow-chain
 line each, plus a glossary that defines every term used anywhere in
@@ -52,7 +52,7 @@ run-on paragraph — copy/paste-able on its own:
 - **Templated reply** → `response_template.format(**fields)` — plain string formatting, never `eval`.
 - **Session + reward persistence** → the turn is saved to `ChatSessions`; every RL layer that fired this turn (refinement, tier/hybrid, token optimizer, RAG optimizer, agent router) finalizes its reward; a nightly-PEFT-eligible Ollama turn is logged.
 - **Reply broadcast** → back to the widget/mobile app over the same HTTP response (or WebSocket, for the live board).
-- **ALGO AKANADE's own agent-level RL** (only via `/api/v1/orchestration/execute`, not the pm-agent path above) → capability pre-filter → Thompson Sampling agent pick → Workflow Engine shape → Shapley credit split across every agent that participated → reward → policy update on every participant's posterior.
+- **Kalkee's own agent-level RL** (only via `/api/v1/orchestration/execute`, not the pm-agent path above) → capability pre-filter → Thompson Sampling agent pick → Workflow Engine shape → Shapley credit split across every agent that participated → reward → policy update on every participant's posterior.
 - **Security agents** (on demand, not per chat turn — `code-security-agent`/`supply-chain-agent`/`cloud-config-agent`) → deterministic regex scans of real source/config + a real OSV.dev dependency-vulnerability lookup; an LLM only summarizes the findings list that already exists, never invents one.
 - **Nightly PEFT fine-tune** (batch, cron, entirely outside the request path above) → collect reward-tagged Ollama turns → reward-weighted LoRA → GGUF-quantize → regression-gate against the currently-served model → promote or discard.
 
@@ -132,7 +132,7 @@ run-on paragraph — copy/paste-able on its own:
 
 **Agent** — one registered unit of work-doing logic (e.g. `pm-agent`,
 `coding-agent`) implementing `understand → plan → execute → validate`;
-ALGO AKANADE's agent registry can route a task to any of several.
+Kalkee's agent registry can route a task to any of several.
 
 **Arm** — one candidate option a bandit chooses between (e.g. "local"
 vs "hosted" in Hybrid mode, or one tool-schema reduction level).

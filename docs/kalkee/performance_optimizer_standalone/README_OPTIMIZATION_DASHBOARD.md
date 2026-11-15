@@ -1,8 +1,8 @@
 # The Optimization Dashboard — RL optimizers, GPU tier, daily feedback loop
 
-A small, standalone admin app that answers one question Algo Akanade's own API
+A small, standalone admin app that answers one question Kalkee's own API
 never surfaced anywhere: **is the optimization layer actually helping?**
-Every RL-driven decision Algo Akanade's `llm/router.py` makes on every LLM
+Every RL-driven decision Kalkee's `llm/router.py` makes on every LLM
 call — which provider to try first, which generation-parameter arm to
 send, whether the local Algo Engine's GPU tier is actually the one
 answering — now has a durable trail and a dashboard reading it.
@@ -10,12 +10,12 @@ answering — now has a durable trail and a dashboard reading it.
 Two admin-only ways to log in are unrelated by design: the main app's
 own Users table, and this dashboard's own separate admin/admin login
 (configurable). This is intentionally its own service — it keeps working
-to show yesterday's numbers even when Algo Akanade's own process is down.
+to show yesterday's numbers even when Kalkee's own process is down.
 
 ## Architecture
 
 ```
- Real LLM call in Algo Akanade
+ Real LLM call in Kalkee
  ──────────────────────────
  llm/router.py: TierClient.chat()
    │
@@ -36,12 +36,12 @@ to show yesterday's numbers even when Algo Akanade's own process is down.
  Optimization Dashboard (this app) — a SEPARATE FastAPI + React service
  ────────────────────────────────────────────────────────────────────
  dashboard/backend/app/
-   config.py         ALGO_AKANADE_DATA_DIR, ALGO_ENGINE_BASE_URL, its own admin
-                      credential + JWT secret — all independent of Algo Akanade's
+   config.py         ALGO_KALKEE_DATA_DIR, ALGO_ENGINE_BASE_URL, its own admin
+                      credential + JWT secret — all independent of Kalkee's
    auth.py            its OWN login (admin/admin by default) — NOT the
-                      Users table, NOT Algo Akanade's JWT secret
+                      Users table, NOT Kalkee's JWT secret
    events_store.py    reads OptimizationEvents.json + BanditState.json
-                      DIRECTLY off disk (no HTTP call to Algo Akanade needed —
+                      DIRECTLY off disk (no HTTP call to Kalkee needed —
                       works even if that process isn't running right now)
    engine_client.py   best-effort GET {ALGO_ENGINE_BASE_URL}/stats, plus
                       the static 3-tier kernel description (always shown)
@@ -57,20 +57,20 @@ to show yesterday's numbers even when Algo Akanade's own process is down.
                         provider/per-arm tables, recent events
 ```
 
-Why read files instead of calling Algo Akanade's HTTP API: `OptimizationEvents`
+Why read files instead of calling Kalkee's HTTP API: `OptimizationEvents`
 and `BanditState` are both `app/db.py` `LocalStore` JSON tables — the same
 on-disk shape every other admin surface in this codebase already reads
 (`security_events.py`, `bandit_persistence.py`). Reading them directly
-means this dashboard shows real numbers even when Algo Akanade's own process
+means this dashboard shows real numbers even when Kalkee's own process
 happens to be restarting or down, which is exactly the moment "what
 happened yesterday" needs to still work. In a container deployment this
-means mounting the same volume Algo Akanade's `DATA_DIR` uses, read-only, into
-this service — `ALGO_AKANADE_DATA_DIR` is the one setting that has to agree
-with Algo Akanade's own `DATA_DIR`.
+means mounting the same volume Kalkee's `DATA_DIR` uses, read-only, into
+this service — `ALGO_KALKEE_DATA_DIR` is the one setting that has to agree
+with Kalkee's own `DATA_DIR`.
 
 ## What gets recorded, and by what
 
-`app/optimization_events.py` (Algo Akanade side) — one row per `TierClient.chat()`
+`app/optimization_events.py` (Kalkee side) — one row per `TierClient.chat()`
 attempt, success OR failure: `node, tier, provider, arm_id, ok, latency_ms,
 fallback_used, occurred_at`. No message content — this is a metrics feed,
 not a transcript (the real transcript already lives in `ChatSessions`
@@ -79,11 +79,11 @@ under the user's own access controls). Hooked into the exact two places
 `modelTierLog`) — this durable log is the same facts, kept across
 sessions and restarts instead of thrown away when the chat turn ends.
 
-`app/framework/bandit_persistence.py` (Algo Akanade side, pre-existing) —
+`app/framework/bandit_persistence.py` (Kalkee side, pre-existing) —
 `provider_optimizer`'s Thompson Sampling posterior, saved every 20 calls.
 The ONE optimizer among optimization_router/token_optimizer/
 provider_optimizer that opts into durable persistence today — the other
-two are in-memory-only in this Algo Akanade version, so their live per-call
+two are in-memory-only in this Kalkee version, so their live per-call
 choices show up in the event log above (arm distribution, success/latency
 by arm), not as raw posterior weights on this dashboard. That's actually
 the more useful view for "is the RL policy working": a rising success
@@ -124,7 +124,7 @@ wrote — nothing is synthesized for the dashboard.
 ## Running it
 
 ```bash
-# 1. Algo Akanade's backend (the event producer) — from orchestrator_framework_layer/akanade/backend
+# 1. Kalkee's backend (the event producer) — from orchestrator_framework_layer/akanade/backend
 uvicorn app.main:app --port 8011
 
 # 2. (optional) a local Algo Engine, for the live GPU panel — from
@@ -133,7 +133,7 @@ go run ./cmd/algo-engine gen -model ./toy-model      # one-time: synthetic weigh
 go run ./cmd/algo-engine serve -model ./toy-model -addr :8081
 
 # 3. This dashboard's backend — from performance_optimizer/dashboard/backend
-export ALGO_AKANADE_DATA_DIR=../../../akanade/backend/data   # must match step 1's DATA_DIR
+export ALGO_KALKEE_DATA_DIR=../../../akanade/backend/data   # must match step 1's DATA_DIR
 export ALGO_ENGINE_BASE_URL=http://localhost:8081        # optional, step 2
 export DASHBOARD_ADMIN_USER=admin DASHBOARD_ADMIN_PASSWORD=admin
 uvicorn app.main:app --port 8020
@@ -144,12 +144,12 @@ npm install && npm run dev   # http://localhost:5175, proxies /api to :8020
 
 Sign in with `DASHBOARD_ADMIN_USER`/`DASHBOARD_ADMIN_PASSWORD` (default
 `admin`/`admin` — change both via env vars for anything beyond a laptop
-demo). Chat with the real app through Algo Akanade's own widget/API and the
+demo). Chat with the real app through Kalkee's own widget/API and the
 dashboard's numbers update on its own 15-second poll.
 
 ## Verified, end to end, on this machine
 
-Not just unit-tested — actually run: Algo Akanade's backend was started
+Not just unit-tested — actually run: Kalkee's backend was started
 against a fresh `DATA_DIR`, logged into as a real seeded user, and sent
 five real chat prompts (`groq-llama-3.3-70b`/`gemini-flash` both actually
 answered — real provider calls, real `optimizationArm` selections, real
@@ -162,7 +162,7 @@ correctly showed `kernel_tier: "pure-go"` live from its `/stats`. The
 frontend's dev server was started and its `/api` proxy confirmed reaching
 the backend (login round-tripped a real JWT through it). Both the Go
 engine's full test suite (`go build`/`go vet`/`go test ./...`, plus the
-`-tags asmkernel` CPU-accelerated build) and Algo Akanade's full Python suite
+`-tags asmkernel` CPU-accelerated build) and Kalkee's full Python suite
 (628 tests) pass after these changes — the router.py instrumentation
 didn't change any existing behavior, only added a durable log write next
 to logging that already happened.
@@ -175,5 +175,5 @@ proven. Ollama wasn't installed in this environment either, so
 `token_optimizer.py`'s tool-schema trimming path (Ollama-only) rode
 along in every test/import but wasn't exercised by a live local-model
 call in this particular run — its own unit tests (`tests/
-test_...optimizer...py` in Algo Akanade's suite, part of the 628 passing)
+test_...optimizer...py` in Kalkee's suite, part of the 628 passing)
 cover that logic directly.

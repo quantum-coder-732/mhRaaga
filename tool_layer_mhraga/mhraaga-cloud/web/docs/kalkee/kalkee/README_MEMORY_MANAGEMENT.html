@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Memory management — conversation memory, model memory, and sizing math · mhRaaga docs</title><meta name="description" content="Memory management — conversation memory, model memory, and sizing math">
+<link rel="stylesheet" href="../../docs.css"></head>
+<body data-root="../../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../../overview.html">Overview</a></li><li><a href="../../system.html">How the system works</a></li><li><a href="../../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../../ARCHITECTURE.html">Architecture</a></li><li><a href="../../API.html">API for developers</a></li><li><a href="../../SOUND.html">Sound</a></li><li><a href="../../VOICE.html">AI voice</a></li><li><a href="../../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../../STUDIO.html">Stories, people, rules</a></li><li><a href="../../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../../components/music-engine.html">Music engine</a></li><li><a href="../../components/android-app.html">Android app</a></li><li><a href="../../components/music-backend.html">Backend prototype</a></li><li><a href="../../components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="../../kalkee/index.html">About these documents</a></li></ul></details><details open><summary>Kalkee</summary><ul><li><a href="../../kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="../../kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="../../kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="../../kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="../../kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="../../kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="../../kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="../../kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="../../kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="../../kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="../../kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="../../kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="../../kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="../../kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="../../kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="../../kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="../../kalkee/kalkee/README_MEMORY_MANAGEMENT.html" class=cur aria-current=page>Memory Management</a></li><li><a href="../../kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="../../kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="../../kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="../../kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="../../kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="../../kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="../../kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="../../kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="../../kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="../../kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="../../kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="../../kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="../../kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="../../kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="../../kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="memory-management-conversation-memory-model-memory-and-sizing-math">Memory management — conversation memory, model memory, and sizing math</h1>
+<p>Two genuinely different kinds of "memory" show up in this codebase, and
+this doc covers both real, grounded facts — not a generic ML-infra
+essay:</p>
+<ol>
+<li><strong>Conversation memory</strong> — what a chat session remembers across many
+   turns, and how it stays bounded instead of growing forever.</li>
+<li><strong>Model/GPU memory</strong> — what it actually costs, in bytes, to run or
+   fine-tune the transformer models this stack talks to (local SLMs via
+   Ollama, the nightly LoRA fine-tune job), and the real techniques
+   (quantization, LoRA/PEFT, mixed precision) already in use here.</li>
+</ol>
+<h2 id="1-conversation-memory-appagentmemorypy-sessionspy">1. Conversation memory — <code>app/agent/memory.py</code> + <code>sessions.py</code></h2>
+<p>Every track (native/langgraph/adk — Claude too, via native's helpers)
+shares the identical mechanism, not three separate implementations:</p>
+<ul>
+<li><code>sessions.save()</code> trims <code>state["messages"]</code> to the last
+  <code>SESSION_WINDOW_TURNS</code> (config.py, default 12) before persisting to
+  the <code>ChatSessions</code> table (see <code>README_DATA_MODEL.md</code>).</li>
+<li>Whatever's about to be trimmed off the front doesn't just vanish —
+  <code>memory.fold_into_summary()</code> compresses it into a running summary
+  string via one more <code>get_llm_client()</code> call (tier <code>"bulk"</code>: background
+  housekeeping, not something the user is waiting on), merged with
+  whatever was already summarized.</li>
+<li>Every track reads <code>state["summary"]</code> back out and prepends it as one
+  system message alongside the normal rolling window — see
+  <code>native_agent.handle_message</code>, <code>langgraph_agent.perceive_intent</code>, and
+  <code>adk_agent._perceive</code>'s <code>summary</code> param.</li>
+<li><strong>Fail-soft, always</strong>: if every LLM provider is down and the fold call
+  bottoms out at the deterministic <code>RuleBased</code> provider, that output is
+  explicitly rejected (it isn't even trying to summarize) — the function
+  returns the previous summary unchanged rather than saving a bogus one.</li>
+</ul>
+<p>This is genuinely how ADK, LangGraph, and the native track ALL get
+"long conversation" memory in this stack — not three different memory
+systems, one shared compression layer every framework adapter reads
+from identically (§6.5 equivalence, same principle applied to memory as
+to everything else in this codebase).</p>
+<h2 id="2-model-memory-the-real-math">2. Model memory — the real math</h2>
+<p><code>app/llm/memory_estimator.py</code> (new) implements the standard transformer
+memory-sizing formulas — real math an operator can use before running
+the nightly LoRA job or pointing <code>OLLAMA_BASE_URL</code> at a bigger local
+model, not a rule of thumb.</p>
+<h3 id="parameter-memory">Parameter memory</h3>
+<p><code>bytes = num_params × bytes_per_element</code>, where the element size depends
+on precision:</p>
+<table>
+<thead>
+<tr>
+<th>dtype</th>
+<th>bytes/param</th>
+<th>Used where in this codebase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fp32</td>
+<td>4</td>
+<td>AdamW's master-weight copy during fine-tuning</td>
+</tr>
+<tr>
+<td>fp16 / bf16</td>
+<td>2</td>
+<td>The base model during inference AND fine-tuning (frozen weights)</td>
+</tr>
+<tr>
+<td>int8</td>
+<td>1</td>
+<td>A more aggressively quantized local model</td>
+</tr>
+<tr>
+<td>int4</td>
+<td>0.5</td>
+<td>Most Ollama GGUF models by default (e.g. <code>Q4_K_M</code>) — see below</td>
+</tr>
+</tbody>
+</table>
+<h3 id="activation-memory-per-transformer-layer">Activation memory (per transformer layer)</h3>
+<div class="hl"><pre><span></span><code>elements = 32 · S · B · H + 4 · A · S² · B
+</code></pre></div>
+
+<p><code>S</code> = sequence length, <code>B</code> = batch size, <code>H</code> = hidden size, <code>A</code> =
+attention heads. The <code>32·S·B·H</code> term covers the self-attention block's
+linear projections/Q·K matrices/softmax output, the MLP block's two
+linear layers + GeLU, and the layer norms; the <code>4·A·S²·B</code> term is the
+attention-score matrix itself — the reason activation memory blows up
+non-linearly with context length, not just linearly (see
+<code>test_memory_estimator.py</code>'s <code>test_inference_activation_memory_grows_quadratically_with_sequence_length</code>
+for this verified as real behavior, not just claimed).</p>
+<p><strong>Inference</strong> only needs ONE layer's activations live at a time
+(<code>inference_memory_estimate()</code>); <strong>fine-tuning</strong> needs EVERY layer's,
+since the backward pass needs them all (<code>lora_finetune_memory_estimate()</code>
+multiplies by <code>num_layers</code>).</p>
+<h3 id="optimizer-memory-why-lorapeft-matters-here-for-real">Optimizer memory — why LoRA/PEFT matters here for real</h3>
+<p>Full fine-tuning with AdamW costs, PER TRAINABLE PARAMETER: two fp32
+moment buffers (8 bytes) + one fp32 master-weight copy (4 bytes) + one
+fp16 gradient (2 bytes) = <strong>14 bytes/trainable-param</strong> — on top of the
+frozen weights themselves. For a 500M-parameter model, that's 7GB just
+for optimizer state if EVERY parameter were trainable.</p>
+<p>This codebase's real nightly fine-tune job
+(<code>scripts/finetune_local_slm.py</code>, README's "PEFT, mechanically" section)
+never does that: LoRA freezes the base model and trains only small
+adapter matrices — <strong>~0.88% of parameters</strong> for the smoke-tested
+checkpoint size (<code>r=8, alpha=16</code> on the attention/MLP projections). Run
+the same 14-bytes/param AdamW cost against ~4.4M trainable params
+instead of ~500M, and optimizer memory drops from ~7GB to ~60MB — a</p>
+<blockquote>
+<p>100× reduction, verified in <code>test_memory_estimator.py</code>'s
+<code>test_lora_finetune_estimate_matches_the_real_nightly_job_shape</code> (asserts
+LoRA's optimizer footprint is under 1/50th of what full fine-tuning of
+the same model would cost). This is WHY the nightly job is CPU-tractable
+at all on ordinary hardware — not a claim, a measured consequence of the
+real technique already in production here.</p>
+</blockquote>
+<h3 id="quantization-what-ollama-already-does-for-you">Quantization — what Ollama already does for you</h3>
+<p>Every local SLM this stack talks to via <code>OLLAMA_BASE_URL</code> is typically
+already a quantized GGUF file (commonly 4-bit, e.g. <code>Q4_K_M</code>) — Ollama
+handles this transparently; <code>memory_estimator.quantization_savings()</code>
+makes the real number concrete: fp16 → int4 is a <strong>75% memory
+reduction</strong> (verified in tests), the difference between a model that
+fits on a laptop's RAM and one that doesn't.</p>
+<h3 id="mixed-precision">Mixed precision</h3>
+<p>The base model already runs in bf16/fp16 throughout this stack (both
+inference and the frozen weights during fine-tuning) rather than fp32 —
+half the memory of full precision with negligible accuracy impact for
+these workloads, the same "mixed precision" technique the wider
+industry uses, applied here by default rather than as an opt-in flag.</p>
+<h3 id="gradient-checkpointing">Gradient checkpointing</h3>
+<p>Not currently used by <code>scripts/finetune_local_slm.py</code> — worth naming
+honestly as a real technique NOT yet applied here, not just omitting
+it: trading recomputation time for memory by not retaining every
+layer's activations, recomputing some during the backward pass instead.
+Given the nightly job already fits comfortably in CPU RAM at LoRA's
+~0.88% trainable-parameter scale (see the worked estimate above), this
+hasn't been necessary — a real, honest reason to skip a technique,
+rather than an oversight.</p>
+<h2 id="worked-example-sizing-the-nightly-job">Worked example — sizing the nightly job</h2>
+<div class="hl"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">app.llm.memory_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">lora_finetune_memory_estimate</span>
+
+<span class="n">estimate</span> <span class="o">=</span> <span class="n">lora_finetune_memory_estimate</span><span class="p">(</span>
+    <span class="n">num_params</span><span class="o">=</span><span class="mi">500_000_000</span><span class="p">,</span> <span class="n">num_layers</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="mi">1536</span><span class="p">,</span>
+    <span class="n">num_heads</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">trainable_fraction</span><span class="o">=</span><span class="mf">0.0088</span><span class="p">,</span> <span class="n">seq_len</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># MemoryEstimate(total_gb=..., breakdown={'base_params_gb': ..., 'trainable_params': 4_400_000,</span>
+<span class="c1">#                                          'optimizer_gb': ..., 'activation_gb': ...})</span>
+</code></pre></div>
+
+<p>Use this BEFORE changing <code>--max-minutes</code>/model size in
+<code>scripts/finetune_local_slm.py</code>, to know whether the target machine's
+RAM can actually hold the job — the same question <code>README.md</code>'s
+"bounded by wall-clock" design note is already implicitly answering by
+trial and error; this makes it a calculation instead.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#1-conversation-memory-appagentmemorypy-sessionspy">1. Conversation memory — app/agent/memory.py + sessions.py</a><a class="l2" href="#2-model-memory-the-real-math">2. Model memory — the real math</a><a class="l3" href="#parameter-memory">Parameter memory</a><a class="l3" href="#activation-memory-per-transformer-layer">Activation memory (per transformer layer)</a><a class="l3" href="#optimizer-memory-why-lorapeft-matters-here-for-real">Optimizer memory — why LoRA/PEFT matters here for real</a><a class="l3" href="#quantization-what-ollama-already-does-for-you">Quantization — what Ollama already does for you</a><a class="l3" href="#mixed-precision">Mixed precision</a><a class="l3" href="#gradient-checkpointing">Gradient checkpointing</a><a class="l2" href="#worked-example-sizing-the-nightly-job">Worked example — sizing the nightly job</a></aside></div>
+<script src="../../docs.js"></script></body></html>

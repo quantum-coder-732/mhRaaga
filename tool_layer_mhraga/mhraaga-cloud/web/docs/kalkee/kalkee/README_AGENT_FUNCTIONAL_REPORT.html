@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Functional Report · mhRaaga docs</title><meta name="description" content="Agent Functional Report">
+<link rel="stylesheet" href="../../docs.css"></head>
+<body data-root="../../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../../overview.html">Overview</a></li><li><a href="../../system.html">How the system works</a></li><li><a href="../../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../../ARCHITECTURE.html">Architecture</a></li><li><a href="../../API.html">API for developers</a></li><li><a href="../../SOUND.html">Sound</a></li><li><a href="../../VOICE.html">AI voice</a></li><li><a href="../../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../../STUDIO.html">Stories, people, rules</a></li><li><a href="../../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../../components/music-engine.html">Music engine</a></li><li><a href="../../components/android-app.html">Android app</a></li><li><a href="../../components/music-backend.html">Backend prototype</a></li><li><a href="../../components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="../../kalkee/index.html">About these documents</a></li></ul></details><details open><summary>Kalkee</summary><ul><li><a href="../../kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="../../kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="../../kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="../../kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="../../kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="../../kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html" class=cur aria-current=page>Agent Functional Report</a></li><li><a href="../../kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="../../kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="../../kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="../../kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="../../kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="../../kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="../../kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="../../kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="../../kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="../../kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="../../kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="../../kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="../../kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="../../kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="../../kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="../../kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="../../kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="../../kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="../../kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="../../kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="../../kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="../../kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="../../kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="../../kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="../../kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="../../kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="agent-functional-report">Agent Functional Report</h1>
+<p>Status of all 9 registered agents (<code>framework/bootstrap.py</code>), combining
+the automated test suite (run fresh this session) with what was
+actually live-verified against production versus what still needs a
+live check once the deploy server (unreachable for the second half of
+this session — SSH timing out) is back.</p>
+<h2 id="automated-test-suite">Automated test suite</h2>
+<p><code>.venv/bin/python3 -m pytest -q</code> — <strong>791 passed, 1 failed</strong> (fresh run).
+The one failure, <code>test_orchestration_execute_real_pm_prompt_end_to_end</code>,
+is a pre-existing, already-documented flake (Thompson Sampling
+occasionally routes to <code>pm-agent-adk</code> instead of <code>pm-agent</code> — confirmed
+via <code>git stash</code> earlier this session to fail 2-3/4 times on completely
+unmodified code, unrelated to anything changed). Not a regression.</p>
+<h2 id="per-agent-status">Per-agent status</h2>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Test files</th>
+<th>Automated tests</th>
+<th>Live-verified this session</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pm-agent</code></td>
+<td>2</td>
+<td>✅ pass</td>
+<td>✅ (multiple real chat turns, PEFT dashboard, provider routing checks)</td>
+<td>Core, most-exercised agent this session</td>
+</tr>
+<tr>
+<td><code>pm-agent-adk</code></td>
+<td>shares pm-agent's tests (framework param)</td>
+<td>✅ pass</td>
+<td>Indirectly (same code path, ADK track)</td>
+<td>The occasional-routing-flake target above — not a defect in the agent itself, a bandit-exploration artifact</td>
+</tr>
+<tr>
+<td><code>openclaw-agent</code></td>
+<td>2</td>
+<td>✅ pass</td>
+<td>⬜ Not exercised this session</td>
+<td>No code touched this session; last known-good state is whatever the test suite covers</td>
+</tr>
+<tr>
+<td><code>coding-agent</code></td>
+<td>3 (+ <code>test_coding_agent_hybrid.py</code>, <code>test_call_provider_directly.py</code>, <code>test_intent_reasoner.py</code> added this session)</td>
+<td>✅ pass</td>
+<td>✅ Extensively — real workspace edits, conversation memory, Auto Hybrid, intent reasoning, 105-prompt suite prepared</td>
+<td>The single most-changed and most-tested agent this session</td>
+</tr>
+<tr>
+<td><code>mcp-utility-agent</code></td>
+<td>1</td>
+<td>✅ pass</td>
+<td>⬜ Not exercised this session</td>
+<td>No code touched</td>
+</tr>
+<tr>
+<td><code>langchain-research-agent</code></td>
+<td>1</td>
+<td>✅ pass</td>
+<td>⬜ Not exercised this session</td>
+<td>No code touched</td>
+</tr>
+<tr>
+<td><code>code-security-agent</code></td>
+<td>3</td>
+<td>✅ pass</td>
+<td>⬜ Not exercised this session</td>
+<td>No code touched</td>
+</tr>
+<tr>
+<td><code>supply-chain-agent</code></td>
+<td>2</td>
+<td>✅ pass</td>
+<td>⬜ Not exercised this session</td>
+<td>No code touched</td>
+</tr>
+<tr>
+<td><code>cloud-config-agent</code></td>
+<td>2</td>
+<td>✅ pass</td>
+<td>⬜ Not exercised this session</td>
+<td>No code touched</td>
+</tr>
+</tbody>
+</table>
+<h2 id="what-live-verified-actually-means-here">What "live-verified" actually means here</h2>
+<p>Not a guess — real HTTP calls against the live production deployment,
+this session, with logged results:</p>
+<ul>
+<li>Real conversation-memory round trip ("remember the number 42" → "you
+  asked me to remember the number 42" in a follow-up call).</li>
+<li>Real Auto Hybrid pick for CodingAgent (<code>ok: true</code> against production).</li>
+<li>Real GLM/Hy4/Gemini/Luna provider visibility check via
+  <code>GET /api/chat/providers</code>.</li>
+<li>Real latency measurements (13.8s cold / 0.2-5.4s warm for
+  <code>ollama-coder</code>; 161ms → 9ms for the auth cache).</li>
+<li>Real nightly-PEFT pipeline run through GGUF conversion, quantization,
+  Ollama tag creation, sanity check, and the regression gate — the gate
+  correctly refused to promote a worse candidate.</li>
+</ul>
+<h2 id="whats-not-yet-verified-and-why">What's NOT yet verified, and why</h2>
+<ul>
+<li><strong>The 105-prompt SLM test suite</strong> (<code>scripts/run_slm_test_suite.py</code>)
+  has not been run for real — needs the deploy server (unreachable this
+  session after a point). Ready to run the moment it's back:
+  <code>docker exec ak-chatbot python -m scripts.run_slm_test_suite --provider ollama-coder</code>.</li>
+<li><strong>5 of 9 agents</strong> (<code>openclaw-agent</code>, <code>mcp-utility-agent</code>,
+  <code>langchain-research-agent</code>, <code>code-security-agent</code>,
+  <code>supply-chain-agent</code>, <code>cloud-config-agent</code>) were not touched by any
+  change this session and were not re-exercised live — their status
+  here is "automated tests pass," not "confirmed working against
+  production this session." No code in this session's diff affects
+  them, so there's no specific reason to suspect a regression, but that
+  is an inference from "nothing changed nearby," not a live check.</li>
+<li><strong>The auto-approval bar UI</strong> (Pause/Approve/Reject/Stop) compiles
+  clean and is wired end-to-end, but wasn't click-tested in a real VS
+  Code window this session (no GUI access from this environment) — see
+  the demo runbook artifact from earlier in this session for the
+  "verify once yourself" flag on this specific feature.</li>
+<li><strong>Mobile app</strong>: code changes verified via <code>flutter analyze</code> (clean)
+  and a release APK builds successfully, but wasn't run on a real
+  device/emulator this session.</li>
+</ul>
+<h2 id="recommendation">Recommendation</h2>
+<p>Before treating this as fully verified end-to-end: reconnect to the
+deploy server, run the 105-prompt suite for real, and do one real
+click-through of the VS Code approval bar and one real mobile app
+session. Everything else in this table already has a real, specific,
+checkable basis for its status — this section exists so "all agents
+verified" isn't overstated for the parts that weren't actually
+re-checked this session.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#automated-test-suite">Automated test suite</a><a class="l2" href="#per-agent-status">Per-agent status</a><a class="l2" href="#what-live-verified-actually-means-here">What &quot;live-verified&quot; actually means here</a><a class="l2" href="#whats-not-yet-verified-and-why">What&#x27;s NOT yet verified, and why</a><a class="l2" href="#recommendation">Recommendation</a></aside></div>
+<script src="../../docs.js"></script></body></html>

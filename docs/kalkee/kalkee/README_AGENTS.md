@@ -1,4 +1,4 @@
-# ALGO AKANADE's agents — what each one is, and how a task actually flows through them
+# Kalkee's agents — what each one is, and how a task actually flows through them
 
 Nine agents ship registered by default (`app/framework/bootstrap.py`).
 This is the catalog: what each one is, exactly what happens in each of
@@ -126,7 +126,7 @@ to a caller building a custom `Workflow` by hand.
 
 ### `pm-agent` — the pre-existing PM chatbot, wrapped
 
-`app/framework/agents/pm_agent.py`. Proves ALGO AKANADE is *additive*, not a
+`app/framework/agents/pm_agent.py`. Proves Kalkee is *additive*, not a
 rewrite: every prompt in `CHAT_PROMPTS.md`, every test in
 `tests/test_agent_flows.py`, still goes through the exact same
 `get_agent(framework).handle_message(...)` call this wrapper delegates
@@ -148,7 +148,7 @@ execute → format) is touched or reimplemented.
 
 Same `PMAgent` class, constructed with `framework="adk"` — Google ADK's
 `Runner`/`LlmAgent` machinery exposed as its OWN independently-routable,
-independently-scored ALGO AKANADE agent, rather than a query-param buried
+independently-scored Kalkee agent, rather than a query-param buried
 inside `pm-agent`. This is what lets the bandit directly compare ADK's
 real-world latency/reliability against native/langgraph's, agent vs.
 agent, instead of only ever seeing "pm-agent" as one blended number.
@@ -217,8 +217,8 @@ source and not a PM-only add-on.
 unused — an actual `RunnableLambda | ChatPromptTemplate | RunnableLambda`
 pipeline, built with real `langchain_core` imports and a real `|` pipe.
 It also builds a genuine `langchain_core.retrievers.BaseRetriever` over
-ALGO AKANADE's own in-memory RAG store (`vector_store_to_retriever`), seeded
-from a tiny 3-fact knowledge base about ALGO AKANADE's own routing math — so
+Kalkee's own in-memory RAG store (`vector_store_to_retriever`), seeded
+from a tiny 3-fact knowledge base about Kalkee's own routing math — so
 retrieval demonstrably changes the answer, not just a decorative
 `BaseRetriever` nobody calls.
 
@@ -229,7 +229,7 @@ retrieval demonstrably changes the answer, not just a decorative
   without touching how this agent is registered or routed.
 - Uses `Agent`'s six-step interface only indirectly; `LangChainRunnableAgent`
   (`agent/langchain_adapter.py`) is the thin bridge that makes a
-  `Runnable.invoke()` satisfy ALGO AKANADE's `execute()` contract.
+  `Runnable.invoke()` satisfy Kalkee's `execute()` contract.
 
 ### `code-security-agent`, `supply-chain-agent`, `cloud-config-agent` — deterministic first, LLM second
 
@@ -282,10 +282,10 @@ above — see `README_NEW_AGENT_GUIDE.md` for the full walkthrough:
    `bootstrap.py` uses for all 9 above. One new line, nothing existing
    touched.
 2. **Runtime, no code deploy** — `POST /api/v1/agents/register` with a
-   `webhook_url`. ALGO AKANADE builds a `RemoteHttpAgent`
+   `webhook_url`. Kalkee builds a `RemoteHttpAgent`
    (`agents/remote_agent.py`) proxy: `execute()` POSTs
    `{task_id, text, session_id, metadata}` to your endpoint and expects
    `{text, ok, confidence}` back. Your agent can be written in any
-   language, hosted anywhere — ALGO AKANADE never needs your source, and it
+   language, hosted anywhere — Kalkee never needs your source, and it
    still gets scored by the identical Thompson Sampling bandit and
    Shapley-attributed reward every in-process agent does.

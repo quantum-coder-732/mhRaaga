@@ -1,6 +1,6 @@
 # Closing three real gaps — policy gate, pre-retrieval RBAC, a coding agent with actual tools
 
-This documents three concrete fixes made after comparing ALGO AKANADE against
+This documents three concrete fixes made after comparing Kalkee against
 an internal architecture note describing a two-tier (Flash/Frontier)
 LLM harness with a policy-gated router, a LiteLLM-style gateway, and
 RAG permissions enforced before retrieval. Most of that note's

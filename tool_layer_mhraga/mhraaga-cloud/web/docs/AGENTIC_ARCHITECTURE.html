@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>mhRaaga agentic architecture · mhRaaga docs</title><meta name="description" content="mhRaaga agentic architecture">
+<link rel="stylesheet" href="docs.css"></head>
+<body data-root="">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="overview.html">Overview</a></li><li><a href="system.html">How the system works</a></li><li><a href="agents.html">All the agents</a></li></ul></details><details open><summary>mhRaaga</summary><ul><li><a href="ARCHITECTURE.html">Architecture</a></li><li><a href="API.html">API for developers</a></li><li><a href="SOUND.html">Sound</a></li><li><a href="VOICE.html">AI voice</a></li><li><a href="TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="STUDIO.html">Stories, people, rules</a></li><li><a href="AGENTIC_ARCHITECTURE.html" class=cur aria-current=page>Song factory agents</a></li><li><a href="DOMAIN.html">Domain and HTTPS</a></li><li><a href="components/music-engine.html">Music engine</a></li><li><a href="components/android-app.html">Android app</a></li><li><a href="components/music-backend.html">Backend prototype</a></li><li><a href="components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="kalkee/index.html">About these documents</a></li></ul></details><details><summary>Kalkee</summary><ul><li><a href="kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="mhraaga-agentic-architecture">mhRaaga agentic architecture</h1>
+<p>Songs are made by a small network of agents that learn from automatic feedback. It reuses two pieces of the Kalkee orchestrator
+(<code>orchestrator_framework_layer_kalkee/.../framework/shapley.py</code> for credit assignment, and its Thompson-sampling routing idea) on top of the raga engine.
+Everything is standard-library Python and runs offline; an LLM is optional.</p>
+<div class="hl"><pre><span></span><code> reference tunes (~/library)            producer agents (Thompson sampling, one Beta posterior per language x agent x arm)
+        |  ffmpeg + Goertzel chroma            raga   : classical | gopi 1-16000 | melakarta
+        v                                      tala   : teental keherwa dadra rupak jhaptal ektal adi
+ library_profiles.json                         tempo  : 54 .. 104 bpm        lead : bansuri harmonium veena
+        |                                      theme  : dawn krishna rain night     tonic : 183 / 233 / 234 Hz
+        |                                          |
+        |                                          v
+        |                                 composer (alap -&gt; gat -&gt; tihai) + lyric bank (7 languages)
+        |                                          |  score JSON
+        v                                          v
+   critic agents  &lt;-------------------------------- review(score, brief)
+   raga_fidelity  cadence  phrase_variety  contour  rhythm  lyrics_fit  library_affinity
+        |  weighted reward R in [0,1]  +  per-critic scores
+        v
+   quality of each producer = mean of the critics that judge its work
+        |
+        v
+   Kalkee Shapley: R split fairly across producers (efficiency: shares sum to R)
+        |
+        v
+   each producer's Beta(a,b) for the arm it chose += its share  -&gt;  next round samples better arms
+        |
+        v
+   catalog (cap 100, per-language quota 15/15/14x5): better song replaces the weakest of its language;
+   the weakest are also re-composed (new seed + one gene re-sampled) and swapped in only if they score higher
+        |
+        v
+   publish_catalog.py -&gt; S3 catalog/ + library/  and  DynamoDB playlist#common  -&gt;  site, API, Android app
+</code></pre></div>
+
+<h2 id="pieces">Pieces</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mhraaga_engine/lyrics_bank.py</code></td>
+<td>native-script couplets for Hindi, Marathi, English, Telugu, Gujarati, Kannada, Tamil, four themes each</td>
+</tr>
+<tr>
+<td><code>mhraaga_engine/agentic/library.py</code></td>
+<td>analyses real recordings into pitch-class (tonic-relative) and tempo profiles</td>
+</tr>
+<tr>
+<td><code>mhraaga_engine/agentic/critics.py</code></td>
+<td>seven critics, each pure and deterministic; <code>review()</code> returns scores, details and the weighted reward</td>
+</tr>
+<tr>
+<td><code>mhraaga_engine/agentic/evolve.py</code></td>
+<td>policy (Thompson), Kalkee credit attribution, catalog with cap and quotas, <code>run()</code></td>
+</tr>
+<tr>
+<td><code>tool_layer_mhraga/mhraaga-cloud/infra/publish_catalog.py</code></td>
+<td>runs the loop, then pushes songs and library tunes to S3 and syncs the shared playlist</td>
+</tr>
+<tr>
+<td><code>tool_layer_mhraga/mhraaga-cloud/tests/test_agentic.py</code></td>
+<td>languages, critic ranges, Shapley efficiency, learning curve, cap</td>
+</tr>
+</tbody>
+</table>
+<h2 id="what-the-critics-check">What the critics check</h2>
+<ul>
+<li><strong>raga_fidelity</strong>: notes inside the raga's scale, vadi given a longer dwell than average, the pakad appearing.</li>
+<li><strong>cadence</strong>: the song ends on Sa, exactly on a tabla sam beat.</li>
+<li><strong>phrase_variety</strong>: distinct 4-note phrases, no long repeats.</li>
+<li><strong>contour</strong>: mostly stepwise motion, a one-to-two octave range, a sensible share of ornaments.</li>
+<li><strong>rhythm</strong>: lead notes on the beat grid, tabla fill, notes per beat, tempo suited to the tala.</li>
+<li><strong>lyrics_fit</strong>: lyrics written in the right script for the language, singable letters per second, lines paced across avartans.</li>
+<li><strong>library_affinity</strong>: cosine similarity of the song's pitch profile to the closest recorded raga in the library, plus tempo closeness.</li>
+</ul>
+<h2 id="spoken-poems-like-the-reference-poem-videos">Spoken poems (like the reference poem videos)</h2>
+<p>The reference files in <code>~/library</code> (<code>Sometimes two people</code>, <code>What if the one you</code>, <code>When messages disappear</code>, <code>The Truth of Radha's Love</code>,
+<code>Loving From Within</code>, <code>बिना प्रेम धीरज</code>) are 2 to 9 minute rhymed spiritual-love poems with soft music, gold italic lines on a purple stage.
+A song with <code>poem: true</code> (the “Spoken poem” tag) is composed to match: 14 to 18 short rhymed lines, about 150 seconds, a long soft alap with the bansurī
+and drone, no tabla, lines spaced evenly across the whole piece, ending on Sa. The <code>poem_form</code> critic scores rhyme, line count and length, duration, pacing and the
+Sa ending; for poems it replaces the tabla-rhythm critic. <code>agentic/make_poems.py</code> writes the poems with the language model (rhyme-gated), <code>poems.py</code> serves them offline.
+<code>tests/test_poems.py</code> checks every language against these rules.</p>
+<h2 id="result-of-the-first-runs">Result of the first runs</h2>
+<p>2 runs, 1,224 candidates scored, 136 replacements. Mean critic reward of the catalog rose from 0.862 to 0.969 across 12 rounds.
+The learned leaders per language are in <code>agentic/data/policy.json</code> and <code>/catalog/report.json</code>.</p>
+<h2 id="limits-said-plainly">Limits, said plainly</h2>
+<ul>
+<li>The critics are rule-based. They measure raga grammar, rhythm and script, not beauty. A high reward means "obeys the rules and resembles the
+  reference tunes", not "a listener loved it". The next critic to add is real listener feedback (plays, likes, skips) fed into the same loop.</li>
+<li>Tempo and tonic estimates from the library recordings are rough (an autocorrelation tempo can be off by 2x; tonic is the strongest pitch class).</li>
+<li>The offline lyric bank is short: 2 couplets per theme per language, combined at random. With an OpenRouter key, the brief planner can write fresh lyrics instead.</li>
+<li>Telugu, Gujarati, Kannada and Tamil lyrics were written without a native-speaker review. Please have them checked before wide release.</li>
+<li>Spoken lyrics depend on the device having a voice for that language; the sung melody does not.</li>
+</ul>
+<h2 id="run-it">Run it</h2>
+<div class="hl"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>mhraaga_engine.agentic.library<span class="w"> </span>~/library<span class="w">                 </span><span class="c1"># (from music_engine_framework_layer) analyse the reference tunes</span>
+<span class="nv">AWS_PROFILE</span><span class="o">=</span>default<span class="w"> </span>python3<span class="w"> </span>tool_layer_mhraga/mhraaga-cloud/infra/publish_catalog.py<span class="w"> </span>--rounds<span class="w"> </span><span class="m">8</span><span class="w">   </span><span class="c1"># evolve, then publish</span>
+python3<span class="w"> </span>tool_layer_mhraga/mhraaga-cloud/tests/test_agentic.py
+</code></pre></div>
+
+<p><code>deploy.sh</code> leaves <code>catalog/</code> and <code>library/</code> alone when it syncs the site.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#pieces">Pieces</a><a class="l2" href="#what-the-critics-check">What the critics check</a><a class="l2" href="#spoken-poems-like-the-reference-poem-videos">Spoken poems (like the reference poem videos)</a><a class="l2" href="#result-of-the-first-runs">Result of the first runs</a><a class="l2" href="#limits-said-plainly">Limits, said plainly</a><a class="l2" href="#run-it">Run it</a></aside></div>
+<script src="docs.js"></script></body></html>

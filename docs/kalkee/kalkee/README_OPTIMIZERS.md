@@ -1,4 +1,4 @@
-# ALGO AKANADE — All Optimizers, One Document
+# Kalkee — All Optimizers, One Document
 
 Every optimization/RL layer in this system, each as its own section with
 its own arrow diagram(s) and technique summary. For the shared math

@@ -1,4 +1,4 @@
-# External API — integrating a third-party app with ALGO AKANADE
+# External API — integrating a third-party app with Kalkee
 
 This is the real, currently-shipping REST surface any external
 application (a React app, an internal tool, a script in an ERP's
@@ -11,7 +11,7 @@ the deployed nginx) for any codegen tool (openapi-generator, Postman,
 
 **Honesty note**: what follows is the same REST surface the web app,
 mobile app, and VS Code extension all call — the one real integration
-path for a third-party system to talk to ALGO AKANADE. A working Tally
+path for a third-party system to talk to Kalkee. A working Tally
 plugin now exists on top of this exact surface —
 [`integrations/tally-connector`](../../integrations/tally-connector) —
 plus the plain client module it's built on,
@@ -181,5 +181,5 @@ curl -s -X POST https://<host>/chatbot/api/chat/message \
 
 That one call is the entire integration surface a React app, a Tally
 add-on script, or any other ERP scripting layer needs to reach every
-agent ALGO AKANADE ships — the same call the official web/mobile/VS Code
+agent Kalkee ships — the same call the official web/mobile/VS Code
 clients make.

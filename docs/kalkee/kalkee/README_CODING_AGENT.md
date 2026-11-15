@@ -1,6 +1,6 @@
 # Coding Agent — real file/execution access, two ways
 
-The third of ALGO AKANADE's three chat-reachable capabilities (alongside the
+The third of Kalkee's three chat-reachable capabilities (alongside the
 PM Tool and the Trading Agent), and the only one with real read/write/
 execute access to a filesystem — either a server-side sandbox, or (via
 the VS Code extension) the user's own real workspace.

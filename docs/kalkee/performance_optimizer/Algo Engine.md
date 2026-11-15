@@ -1,12 +1,12 @@
 <p align="center"><b>🐦 algo-engine</b><br>
-<i>ALGO AKANADE's self-hosted model execution layer, written entirely in Go.</i></p>
+<i>Kalkee's self-hosted model execution layer, written entirely in Go.</i></p>
 
 **Algo Engine** is a laptop-runnable, single-binary model execution runtime.
 It is **not** an MoE-only engine and **not** a GPU-only accelerator — those
 are capabilities inside a broader runtime whose job is: given a model, a
 workload, and the hardware actually available, determine (and keep
 learning) the most efficient way to execute that model while preserving
-exact correctness. ALGO AKANADE decides *what* to run; Algo Engine decides *how*
+exact correctness. Kalkee decides *what* to run; Algo Engine decides *how*
 to run it — across CPU, GPU, or hybrid execution, and across VRAM, RAM, and
 disk as one tiered memory hierarchy, streaming only the weights a given
 token actually needs rather than requiring the whole model resident.

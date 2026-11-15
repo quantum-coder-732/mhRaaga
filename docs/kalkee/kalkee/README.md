@@ -1,4 +1,4 @@
-# ALGO AKANADE — Multi-Agent GenAI Network with Evolving Training and Orchestration
+# Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration
 
 A generic, domain-agnostic multi-agent orchestration framework — agent
 registry, adaptive (Thompson Sampling) routing, Shapley-value credit
@@ -19,7 +19,7 @@ decoding, tensor/pipeline/data parallelism) fit into the model layer —
 all as plain-text arrow diagrams.
 
 **→ [`README_MASTER_GUIDE.md`](README_MASTER_GUIDE.md) is the single
-orientation document** — what ALGO AKANADE is, every layer, RL and the
+orientation document** — what Kalkee is, every layer, RL and the
 Token & Cost Optimizer, security, APIs/integrations, end-to-end
 workflows, a full file/responsibility map, exactly how the web app,
 mobile app, backend, models, and external integrations fit together,
@@ -73,7 +73,7 @@ Four more, specific to this session's work:
   → Domain SLM → Quantization/Pruning → Optimized SLM → RAG + Agents →
   Enterprise Software, with exactly which file owns each stage.
 - **[`README_SLM_ALL.md`](README_SLM_ALL.md)** — the complete
-  Algo-Akanade-SLM deep dive: the full pipeline diagram, PEFT/LoRA/QLoRA
+  Algo-Kalkee-SLM deep dive: the full pipeline diagram, PEFT/LoRA/QLoRA
   explained, the regression-gate safety guarantees, both RL orchestrators
   (Hybrid + Domain mode), and a comparison against hosted-only/RAG-only/
   one-time-fine-tune alternatives.
@@ -119,7 +119,7 @@ Four more, specific to this session's work:
   different, and the security/self-improvement story, for a business
   audience.
 
-The PM (project management) domain below is ALGO AKANADE's *first tenant*, not
+The PM (project management) domain below is Kalkee's *first tenant*, not
 something baked into the framework: a conversational layer over the
 Aksha PM backend — type plain English, the bot resolves it into calls
 against the same API the React frontend uses, **as you**, with your role
@@ -134,7 +134,7 @@ Adding a new domain (Research, Customer Support, Analytics, ...) means
 writing one more `Agent` subclass and registering it — nothing here
 changes.
 
-## ALGO AKANADE's agent framework — the orchestration pipeline, all 9 agents
+## Kalkee's agent framework — the orchestration pipeline, all 9 agents
 
 The full per-task algorithm (`ARCHITECTURE.md` §1's ASCII arrow diagram,
 math and all) in one picture — a task enters once, and every box below
@@ -155,7 +155,7 @@ flowchart TB
         OC["openclaw-agent\ndirect public Anthropic Claude API call,\nno PM tools attached"]
         CODE["coding-agent\ncode generation + a REAL ast.parse\nsyntax check, retried once on failure"]
         MCPA["mcp-utility-agent\ntool set is ENTIRELY MCP-sourced —\nproves MCP is a real capability source"]
-        LC["langchain-research-agent\na real langchain_core Runnable + a real\nBaseRetriever over ALGO AKANADE's own RAG store"]
+        LC["langchain-research-agent\na real langchain_core Runnable + a real\nBaseRetriever over Kalkee's own RAG store"]
         SEC3["code-security-agent · supply-chain-agent ·\ncloud-config-agent — deterministic security\nscans, see the dedicated section below"]
         YOU["&lt;your agent&gt;\nnative Python (Agent subclass) OR a\nRemoteHttpAgent proxying to any webhook"]
     end
@@ -174,13 +174,13 @@ flowchart TB
 
 - **`pm-agent`** (`pm_agent.py`) — wraps the entire pre-existing PM
   chatbot (`native_agent.py`/`langgraph_agent.py`/`adk_agent.py`/
-  `claude_agent.py`, `tools.py`, ...) as ONE ALGO AKANADE agent, zero behavior
+  `claude_agent.py`, `tools.py`, ...) as ONE Kalkee agent, zero behavior
   change: every prompt in `CHAT_PROMPTS.md` and every test in
   `tests/test_agent_flows.py` still goes through the exact same
   `get_agent(framework).handle_message(...)` call this file delegates
   to. Its `understand`/`plan`/`validate` are near-identity because the
   PM chatbot's own 17-step pipeline already does perceive/resolve/
-  confirm/execute/format internally — proof ALGO AKANADE is additive, not a
+  confirm/execute/format internally — proof Kalkee is additive, not a
   rewrite, of the domain logic it wraps.
 - **`pm-agent-adk`** — the identical `PMAgent` class, just constructed
   with `framework="adk"` pinned, so Google ADK's Runner/LlmAgent track
@@ -189,7 +189,7 @@ flowchart TB
 - **`openclaw-agent`** (`openclaw_agent.py`) — a general-purpose agent
   with NO PM tools and no domain logic, built directly on the public
   Anthropic Claude API (`llm/providers.py`'s `AnthropicNative`) —
-  proof ALGO AKANADE's model abstraction layer is just as usable by a plain,
+  proof Kalkee's model abstraction layer is just as usable by a plain,
   tool-free agent as by the PM domain's tool-calling one. Gracefully
   degrades through the normal provider chain if `CLAUDE_API_KEY` isn't
   configured, like every other rung.
@@ -209,9 +209,9 @@ flowchart TB
   (`get_current_datetime`, `days_between`).
 - **`langchain-research-agent`** (`langchain_research_agent.py`) — a
   real, working `langchain_core` `Runnable` (a `ChatPromptTemplate`
-  piped into a `RunnableLambda`) wrapped as a ALGO AKANADE agent via
+  piped into a `RunnableLambda`) wrapped as a Kalkee agent via
   `langchain_adapter.LangChainRunnableAgent`, plus a real
-  `langchain_core.retrievers.BaseRetriever` over ALGO AKANADE's own RAG store
+  `langchain_core.retrievers.BaseRetriever` over Kalkee's own RAG store
   — so both halves of the LangChain+RAG integration are actually
   exercised, not just an unused adapter module. The `RunnableLambda`
   bridges to `llm/router.py`'s own provider chain (not
@@ -222,29 +222,29 @@ flowchart TB
   — deterministic security scans, never an LLM guessing. Full writeup
   in the dedicated "Security agents" section below.
 - **`<your agent>`** — native Python (an `Agent` subclass, see "Building
-  a new agent with ALGO AKANADE" below) or a `RemoteHttpAgent` proxying to
-  any webhook, written in any language, hosted anywhere. ALGO AKANADE never
+  a new agent with Kalkee" below) or a `RemoteHttpAgent` proxying to
+  any webhook, written in any language, hosted anywhere. Kalkee never
   needs to see its source.
 
 Registering a 10th agent never touches this diagram — `registry.register(MyAgent())`
 from wherever that agent's own module lives (or a runtime
 `POST /api/v1/agents/register` call, no redeploy) puts it straight into
 the "Agent execution" box's candidate pool, competing on declared
-capabilities alone. See "Building a new agent with ALGO AKANADE" below for
+capabilities alone. See "Building a new agent with Kalkee" below for
 the full worked example.
 
-## How ALGO AKANADE compares
+## How Kalkee compares
 
 An honest table, not a marketing one — every "No" below is a real,
 verified gap in that product's own documentation as of this writing,
-not a guess, and every "Yes" for ALGO AKANADE points at real, tested code in
+not a guess, and every "Yes" for Kalkee points at real, tested code in
 this repo. Products chosen because they're the ones people actually ask
 "why not just use X instead": OpenWorker (a coding-agent harness that
 recently announced built-in security scanning), OpenRouter and LiteLLM
 (the two most-used LLM API gateways), and CrewAI/AutoGen(AG2)/LangGraph
 Platform (the three leading open-source multi-agent frameworks).
 
-| | OpenWorker | OpenRouter | LiteLLM | CrewAI | AutoGen / AG2 | LangGraph Platform | **ALGO AKANADE** |
+| | OpenWorker | OpenRouter | LiteLLM | CrewAI | AutoGen / AG2 | LangGraph Platform | **Kalkee** |
 |---|---|---|---|---|---|---|---|
 | What it fundamentally is | Coding-agent harness, pick your own model backend | LLM API gateway/marketplace (300+ models) | Open-source LLM gateway/proxy | Multi-agent framework (Crews/Flows) | Multi-agent conversation framework | Graph-based agent orchestration + hosted deploy platform | Multi-agent orchestration framework, PM app as first tenant |
 | Routing that **learns from real outcomes** (RL/bandit, not a fixed rule) | Not documented | No — deterministic price/latency-weighted rules | No — explicit strategies (least-busy, cost-based) | No (RL is an external add-on project, not built in) | No (same external add-on) | No — architectural plan-locking, not learned | **Yes — Thompson Sampling bandit, 9 real optimizers, `README_RL_ALGORITHMS.md`** |
@@ -259,7 +259,7 @@ Platform (the three leading open-source multi-agent frameworks).
 larger communities and more third-party tool integrations today; a
 gateway like OpenRouter or LiteLLM is the simpler, faster choice if all
 you need is "one API key for many models," not a full orchestration
-framework. ALGO AKANADE's bet is specifically on the intersection this table
+framework. Kalkee's bet is specifically on the intersection this table
 maps — adaptive, self-improving routing AND real security scanning AND
 a general agent framework, together, not any one of those alone.
 
@@ -316,7 +316,7 @@ scanner has. Validated for real against this repo's own
 Reference implementation of **AlgoPM ChatBot Technical Design v2.0**
 (AlgoAnalytics internal) for the PM domain specifically: dual-framework
 orchestration (LangGraph default + the framework adapter — see
-ARCHITECTURE.md §2 for how this composes with ALGO AKANADE's own agent-level
+ARCHITECTURE.md §2 for how this composes with Kalkee's own agent-level
 router), the Aug-2026 model-tier directive (Luna/Max/Deepseek/Groq — no
 4o-mini, no Gemini), NetworkX graph retrieval, Chroma vector store,
 guardrails, and the ChatSessions schema.
@@ -476,7 +476,7 @@ flowchart LR
     Mic["🎙 mic tap"] --> STT["On-device speech-to-text\n(web: SpeechRecognition\nmobile: speech_to_text plugin)"]
     STT -- "final transcript" --> Box["Same text input a\nTYPED message would use"]
     Box --> ChatAPI["POST /api/chat/message"]
-    ChatAPI --> Agent["Agent orchestration\n(ALGO AKANADE router → pm-agent → LLM tiers)"]
+    ChatAPI --> Agent["Agent orchestration\n(Kalkee router → pm-agent → LLM tiers)"]
     Agent -- "reply text" --> Render["Rendered in the thread\n(always, voice or not)"]
     Render --> Toggle{"spoken replies\non?"}
     Toggle -- no --> Done["done — text only"]
@@ -647,7 +647,7 @@ LangChain-backed Ollama tier (`OLLAMA_BASE_URL`).
 
 ## The local SLM layer — Hybrid mode, and nightly self-improvement
 
-The one model in the whole tier chain ALGO AKANADE's own process actively
+The one model in the whole tier chain Kalkee's own process actively
 manages, rather than just calling: a per-message routing decision about
 whether to even use it, and — the one loop in this entire system that
 isn't a bandit — a nightly job that rewrites its actual weights from
@@ -943,7 +943,7 @@ verbatim in the chat widget to see the flag/behavior yourself.
 | 14 | Safe prompts that should not be incorrectly flagged | "This deadline feels urgent but let's plan calmly" / "Send the quarterly report to my manager" | 🟢 Safe | No false positive — "urgent" alone, or "send" without a credential/bulk target, doesn't trigger any rule |
 | 15 | Edge case — multiple tools in one request | "Check my calendar for tomorrow, and if I'm free, draft an email to john@work.com about it" | 🟢 Safe | Both tools may run in sequence; `draft_email` still asks for its own confirmation, `list_calendar_events` doesn't |
 
-## Building a new agent with ALGO AKANADE — worked example: a Coding Agent
+## Building a new agent with Kalkee — worked example: a Coding Agent
 
 **Full example-by-example walkthrough moved to
 [`README_NEW_AGENT_GUIDE.md`](README_NEW_AGENT_GUIDE.md)** — a minimal
@@ -1041,10 +1041,10 @@ network.add_agent(MyCodingAgent().metadata)
 ```
 
 Or register it at runtime, no code deploy at all, via
-`POST /api/v1/agents/register` with a `webhook_url` — ALGO AKANADE builds a
+`POST /api/v1/agents/register` with a `webhook_url` — Kalkee builds a
 `RemoteHttpAgent` proxy that POSTs `{task_id, text, session_id,
 metadata}` to your service and expects `{text, ok, confidence}` back.
-Your agent can be written in any language, hosted anywhere; ALGO AKANADE
+Your agent can be written in any language, hosted anywhere; Kalkee
 never needs your source.
 
 **4. That's it — the router finds it on its own.** No if/elif anywhere
@@ -1064,7 +1064,7 @@ POST /api/v1/orchestration/execute
 If both `coding-agent` (the bundled example) and your new agent declare
 `code_generation`, they compete for that traffic exactly the way the
 research design intends (§17) — whichever one actually produces higher
-quality/lower cost/lower latency, per ALGO AKANADE's own measured feedback,
+quality/lower cost/lower latency, per Kalkee's own measured feedback,
 wins more of it over time. You don't pick a winner; the bandit does.
 
 ### Replacing `pm-agent` — repurposing this deployment for a different service
@@ -1086,15 +1086,15 @@ is what "generic and extensible" (§0/§17) means in practice.
 
 **Path 2 — repoint the existing chat widget/mobile app at your agent.**
 The widget's own endpoint, `POST /api/chat/message`
-(`routers/chat.py::chat_message`), is older than ALGO AKANADE and still calls
+(`routers/chat.py::chat_message`), is older than Kalkee and still calls
 `agent/adapter.py`'s `get_agent(framework)` directly — the PM chatbot's
-own native/langgraph/adk/claude tracks, bypassing ALGO AKANADE's
+own native/langgraph/adk/claude tracks, bypassing Kalkee's
 registry/orchestrator entirely. That's the one call site to change if you
 want your new agent to power that *same* UI (same auth, same session/
 history plumbing, same React/Flutter screens) instead of PM:
 
 ```python
-# routers/chat.py — replace the get_agent(...) call with ALGO AKANADE's registry
+# routers/chat.py — replace the get_agent(...) call with Kalkee's registry
 from ..gmaofn.registry import registry
 
 agent = registry.get("my-coding-agent")   # instead of agent.adapter.get_agent(...)
@@ -1106,7 +1106,7 @@ reply = ChatReply(reply=result.text, ...)
 `pm-agent` keeps working (it's still in the registry, still reachable via
 Path 1's generic API) — this only changes what the *widget* talks to. In
 both paths, nothing about PM's own code — `native_agent.py`, `tools.py`,
-`pm_service.py` — is touched or forked; ALGO AKANADE was built so the domain
+`pm_service.py` — is touched or forked; Kalkee was built so the domain
 being served is a routing/config choice, not a source-tree fork.
 
 ## Switching frameworks (§2.2)
@@ -1856,9 +1856,9 @@ pip install "git+https://github.com/algoanalytics-pvt/Algo-Kaizen.git#subdirecto
 ```
 
 ```python
-from gmaofn_client import AKANADEClient
+from gmaofn_client import KALKEEClient
 
-with AKANADEClient("https://your-deploy-host") as client:
+with KALKEEClient("https://your-deploy-host") as client:
     client.login("aniruddha", "demo123")
 
     reply = client.send_message("what is overdue in Compass OS")
@@ -1876,7 +1876,7 @@ with AKANADEClient("https://your-deploy-host") as client:
     print(summary["summary"], "\nsources:", summary["sources_used"])
 ```
 
-Every method on `AKANADEClient` maps to exactly one real endpoint —
+Every method on `KALKEEClient` maps to exactly one real endpoint —
 `client.py`'s own docstrings name the exact route each call hits, and
 `MAGNETError` carries the real HTTP status code + response body for
 anything non-2xx. Full method list, the publish workflow (for

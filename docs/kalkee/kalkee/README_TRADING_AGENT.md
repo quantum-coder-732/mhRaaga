@@ -7,7 +7,7 @@ separate agent-picker, no new endpoint to wire up client-side.
 
 ## Why this shape, not a separate registered "agent"
 
-ALGO AKANADE has a second, separate multi-agent framework
+Kalkee has a second, separate multi-agent framework
 (`app/framework/agents/coding_agent.py` and friends, reached via
 `POST /api/v1/orchestration/execute`) — but investigation found neither
 the web frontend nor the mobile app call that endpoint at all; only the

@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>mhRaaga API (for developers) · mhRaaga docs</title><meta name="description" content="mhRaaga API (for developers)">
+<link rel="stylesheet" href="docs.css"></head>
+<body data-root="">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="overview.html">Overview</a></li><li><a href="system.html">How the system works</a></li><li><a href="agents.html">All the agents</a></li></ul></details><details open><summary>mhRaaga</summary><ul><li><a href="ARCHITECTURE.html">Architecture</a></li><li><a href="API.html" class=cur aria-current=page>API for developers</a></li><li><a href="SOUND.html">Sound</a></li><li><a href="VOICE.html">AI voice</a></li><li><a href="TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="STUDIO.html">Stories, people, rules</a></li><li><a href="AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="DOMAIN.html">Domain and HTTPS</a></li><li><a href="components/music-engine.html">Music engine</a></li><li><a href="components/android-app.html">Android app</a></li><li><a href="components/music-backend.html">Backend prototype</a></li><li><a href="components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="kalkee/index.html">About these documents</a></li></ul></details><details><summary>Kalkee</summary><ul><li><a href="kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="mhraaga-api-for-developers">mhRaaga API (for developers)</h1>
+<p>Base URL: <code>https://www.mhraaga.in/api</code> (the same API the website and the Android app use). JSON in, JSON out.</p>
+<h2 id="read-this-first">Read this first</h2>
+<ul>
+<li><strong>There are no API keys.</strong> Access is by user account. Create an account, sign in, and send the token. Each account has its own
+  quota (30 songs per day), so one developer cannot spend another's.</li>
+<li><strong>Call it from a server, a script or the app, not from another website's JavaScript.</strong> The API sends no CORS headers
+  (<code>connect-src 'self'</code>), so a browser page on another domain is blocked. A backend or mobile client works.</li>
+<li><strong>Be gentle.</strong> The API is throttled (about 20 requests per second overall, 2 per second on sign-in). Eight wrong passwords lock an account
+  for 10 minutes. Use one account per integration and keep the token (it is valid 7 days).</li>
+<li>Songs are created by a hosted language model plus a rule-based composer. It costs money per song, which is why there is a daily cap.</li>
+</ul>
+<h2 id="quick-start">Quick start</h2>
+<div class="hl"><pre><span></span><code><span class="nv">B</span><span class="o">=</span>https://www.mhraaga.in/api
+<span class="c1"># 1. create an account (once), or log in</span>
+<span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$B</span>/auth/signup<span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"name":"My App","email":"me@example.com","password":"a-long-password"}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s1">'import sys,json;print(json.load(sys.stdin)["token"])'</span><span class="k">)</span>
+<span class="c1"># TOKEN=$(curl -s $B/auth/login -d '{"email":"me@example.com","password":"a-long-password"}' ...)</span>
+
+<span class="c1"># 2. compose a song</span>
+curl<span class="w"> </span>-s<span class="w"> </span><span class="nv">$B</span>/compose<span class="w"> </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">"</span><span class="w"> </span>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"prompt":"a calm morning bhajan to Krishna","language":"hindi","duration":120}'</span><span class="w"> </span>&gt;<span class="w"> </span>song.json
+
+<span class="c1"># 3. the score is in song.json (notes, tabla, lyrics); render it with web/synth.js (Web Audio) or lib/synth.dart (Dart)</span>
+</code></pre></div>
+
+<h2 id="endpoints">Endpoints</h2>
+<p><code>Auth</code> = send <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Method and path</th>
+<th>Auth</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /health</code></td>
+<td>no</td>
+<td>Liveness check and the list of talas.</td>
+</tr>
+<tr>
+<td><code>POST /auth/signup</code></td>
+<td>no</td>
+<td><code>{name, email, password(8-128)}</code> -&gt; <code>201 {token, user}</code>. <code>409</code> if the email exists.</td>
+</tr>
+<tr>
+<td><code>POST /auth/login</code></td>
+<td>no</td>
+<td><code>{email, password}</code> -&gt; <code>{token, user}</code>. <code>401</code> wrong, <code>429</code> locked.</td>
+</tr>
+<tr>
+<td><code>GET /me</code></td>
+<td>yes</td>
+<td>Name, email, <code>composed_today</code>, <code>daily_limit</code>.</td>
+</tr>
+<tr>
+<td><code>GET /ragas</code></td>
+<td>no</td>
+<td>The raga catalogue (classical, 72 melakartas, gopi 1-16000).</td>
+</tr>
+<tr>
+<td><code>GET /ragas/{name}</code></td>
+<td>no</td>
+<td>One raga: aroha, avaroha, vadi, samvadi, time, mood.</td>
+</tr>
+<tr>
+<td><code>GET /playlist</code></td>
+<td>no</td>
+<td>The community playlist (summaries).</td>
+</tr>
+<tr>
+<td><code>GET /playlist/{id}</code></td>
+<td>no</td>
+<td>A playlist song with its full score.</td>
+</tr>
+<tr>
+<td><code>POST /playlist/{id}/play</code> or <code>/download</code></td>
+<td>no</td>
+<td>Counts a play or download.</td>
+</tr>
+<tr>
+<td><code>POST /compose</code></td>
+<td>yes</td>
+<td>Make a song (see below). Counts against the daily limit.</td>
+</tr>
+<tr>
+<td><code>GET /songs</code></td>
+<td>yes</td>
+<td>Your songs (latest 100, summaries).</td>
+</tr>
+<tr>
+<td><code>GET /songs/{id}</code></td>
+<td>yes</td>
+<td>One of your songs with the full score.</td>
+</tr>
+<tr>
+<td><code>DELETE /songs/{id}</code></td>
+<td>yes</td>
+<td>Delete one of your songs.</td>
+</tr>
+<tr>
+<td><code>POST /translate</code></td>
+<td>yes</td>
+<td><code>{text, to}</code> -&gt; <code>{text, to}</code>.</td>
+</tr>
+<tr>
+<td><code>POST /tts</code></td>
+<td>yes</td>
+<td>Neural speech: <code>{text(&lt;=320 chars), lang, style, voice}</code> -&gt; <code>{url, seconds, cached}</code>. <code>url</code> is a WAV on the site.</td>
+</tr>
+<tr>
+<td><code>GET /tts/info</code></td>
+<td>no</td>
+<td>Voices, styles and the character limit.</td>
+</tr>
+<tr>
+<td><code>GET/POST /teams</code>, <code>/teams/{id}/...</code></td>
+<td>yes</td>
+<td>Shared studio projects: members, layers, comments, assemble, render.</td>
+</tr>
+<tr>
+<td><code>GET/POST /films</code>, <code>/film/plan</code>, <code>/story/outline</code>, <code>/story/section</code>, <code>/people</code></td>
+<td>yes</td>
+<td>Film, story and voice-profile tools.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="post-compose-body"><code>POST /compose</code> body</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prompt</code></td>
+<td>string, 3-800 chars</td>
+<td>Required. The mood or idea, in any language.</td>
+</tr>
+<tr>
+<td><code>lyrics</code></td>
+<td>string, &lt;=3000</td>
+<td>Optional. Your own words; otherwise the model writes them.</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>string</td>
+<td>hindi, marathi, english, telugu, gujarati, kannada, tamil.</td>
+</tr>
+<tr>
+<td><code>raga</code>, <code>tala</code></td>
+<td>string</td>
+<td>Optional; otherwise chosen from the prompt.</td>
+</tr>
+<tr>
+<td><code>lead</code></td>
+<td><code>bansuri</code> / <code>harmonium</code> / <code>veena</code></td>
+<td>The lead instrument.</td>
+</tr>
+<tr>
+<td><code>tempo</code></td>
+<td>40-180</td>
+<td>Beats per minute.</td>
+</tr>
+<tr>
+<td><code>duration</code></td>
+<td>seconds</td>
+<td>Default 90 (150 for a poem).</td>
+</tr>
+<tr>
+<td><code>poem</code>, <code>instrumental</code></td>
+<td>bool</td>
+<td>A spoken poem over the raga, or no words.</td>
+</tr>
+<tr>
+<td><code>tonic</code></td>
+<td>183, 233 or 234</td>
+<td>The tonic in Hz.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string, &lt;=60</td>
+<td>Optional.</td>
+</tr>
+</tbody>
+</table>
+<p>Response: song summary (<code>id, title, raga, tala, tempo, mood, language, duration, created, source, prompt</code>), <code>brief</code>, and <code>score</code>.</p>
+<h3 id="the-score">The score</h3>
+<div class="hl"><pre><span></span><code>score.sa, score.duration, score.lead_voice ("bansuri"|"harmonium"|"veena")
+score.drone   {sa, second, low_sa, pluck}            the tanpura
+score.lead    [[t, hz, dur, ornament, velocity, glide], ...]   ornament 0 none, 1 meend, 2 kan
+score.tabla   [[t, bol, "left"|"right"|"both", volume], ...]
+score.lyrics  [{t, dur, text, tag}, ...]
+score.sections [{name: alap|gat|tihai, t0, t1}]
+score.meta    raga, tala, tempo, mood, physics (engine, autotune), ...
+</code></pre></div>
+
+<p>A score is plain JSON, so you can render it yourself. <code>web/synth.js</code> (Web Audio) and <code>mhraaga-app/lib/synth.dart</code> are reference renderers.</p>
+<h3 id="errors">Errors</h3>
+<p><code>{"error": "message"}</code> with <code>400</code> bad input, <code>401</code> no or bad token, <code>403</code> not allowed, <code>404</code> unknown, <code>409</code> exists, <code>429</code> limit reached,
+<code>502/503</code> the language or voice service is busy (retry after a moment).</p>
+<h2 id="self-hosting">Self-hosting</h2>
+<p>The whole stack is one CloudFormation template plus <code>infra/deploy.sh</code> (see <a href="DOMAIN.html">DOMAIN.md</a> and the root README). If you need high
+volume or browser-side access from your own domain, deploy your own copy, and add CORS to your API Gateway.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#read-this-first">Read this first</a><a class="l2" href="#quick-start">Quick start</a><a class="l2" href="#endpoints">Endpoints</a><a class="l3" href="#post-compose-body">POST /compose body</a><a class="l3" href="#the-score">The score</a><a class="l3" href="#errors">Errors</a><a class="l2" href="#self-hosting">Self-hosting</a></aside></div>
+<script src="docs.js"></script></body></html>

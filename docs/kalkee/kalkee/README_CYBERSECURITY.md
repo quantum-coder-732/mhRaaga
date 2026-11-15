@@ -15,7 +15,7 @@ LiteLLM ship a built-in security-scanning agent (real SAST, a real
 vulnerability database lookup, cloud-config scanning) or a live
 conversational security-flag layer like the one this file describes —
 verified against each project's own current documentation, not assumed.
-See `README.md`'s "How ALGO AKANADE compares" table for the full,
+See `README.md`'s "How Kalkee compares" table for the full,
 side-by-side breakdown.
 
 ## Two layers, two different jobs

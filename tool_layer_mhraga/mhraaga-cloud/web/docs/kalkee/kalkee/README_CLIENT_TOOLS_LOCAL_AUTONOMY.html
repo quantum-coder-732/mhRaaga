@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CodingAgent &quot;client tools&quot; mode — real local autonomy for the VS Code extension · mhRaaga docs</title><meta name="description" content="CodingAgent &quot;client tools&quot; mode — real local autonomy for the VS Code extension">
+<link rel="stylesheet" href="../../docs.css"></head>
+<body data-root="../../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../../overview.html">Overview</a></li><li><a href="../../system.html">How the system works</a></li><li><a href="../../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../../ARCHITECTURE.html">Architecture</a></li><li><a href="../../API.html">API for developers</a></li><li><a href="../../SOUND.html">Sound</a></li><li><a href="../../VOICE.html">AI voice</a></li><li><a href="../../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../../STUDIO.html">Stories, people, rules</a></li><li><a href="../../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../../components/music-engine.html">Music engine</a></li><li><a href="../../components/android-app.html">Android app</a></li><li><a href="../../components/music-backend.html">Backend prototype</a></li><li><a href="../../components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="../../kalkee/index.html">About these documents</a></li></ul></details><details open><summary>Kalkee</summary><ul><li><a href="../../kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="../../kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="../../kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="../../kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="../../kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="../../kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="../../kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="../../kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html" class=cur aria-current=page>Client Tools Local Autonomy</a></li><li><a href="../../kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="../../kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="../../kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="../../kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="../../kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="../../kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="../../kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="../../kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="../../kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="../../kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="../../kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="../../kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="../../kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="../../kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="../../kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="../../kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="../../kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="../../kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="../../kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="../../kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="../../kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="../../kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="../../kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="../../kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="codingagent-client-tools-mode-real-local-autonomy-for-the-vs-code-extension">CodingAgent "client tools" mode — real local autonomy for the VS Code extension</h1>
+<p><strong>Status: deployed and live.</strong> The "NOT YET DEPLOYED" note below is from
+this feature's original build session — long since shipped and iterated
+on since (see the "Full auto-approve" section right below for the
+latest addition: v0.9.10+).</p>
+<h2 id="full-auto-approve-v0910-work-like-claude-code-until-told-to-stop">Full auto-approve (v0.9.10+) — "work like Claude Code until told to stop"</h2>
+<p>The confirmation-per-call behavior described throughout this doc is
+still the <em>default</em>. On top of it, the header's 🔒/🔓 button
+(<code>AUTO_APPROVE_STATE_KEY</code>, off by default, remembered per workspace)
+lets the user explicitly grant full auto-approve — turning it ON shows
+a real modal acknowledgement first (never a silent toggle, since this
+is "the user granting permission," not an ambient default):</p>
+<ul>
+<li><strong>What changes</strong>: <code>write_file</code>, <code>delete_file</code> (new — see below), and
+  <code>run_code</code> in <code>localTools.ts</code> skip their per-call confirmation
+  entirely while this is on, so a multi-step task (read a file, edit
+  it, run it, fix a failure, run again) proceeds without stopping at
+  every step — the actual "smooth, Claude-Code-like" behavior this was
+  asked for.</li>
+<li><strong>What never changes, on or off</strong>: <code>resolveWithinWorkspace()</code>'s
+  path-jail (nothing outside the open workspace folder is ever
+  reachable) and a new <code>looksDangerous()</code>/<code>isSensitivePath()</code> check —
+  a <code>run_code</code> snippet matching a known-destructive pattern (<code>eval</code>/
+  <code>exec</code>, <code>shell=True</code>, <code>os.system</code>, <code>rm -rf</code>, <code>shutil.rmtree</code>, <code>sudo</code>,
+  <code>os.remove</code>/<code>os.unlink</code>) or a <code>write_file</code>/<code>delete_file</code> path that
+  looks like a credentials file (<code>.env</code>, <code>.ssh/</code>, <code>id_rsa</code>,
+  <code>.aws/credentials</code>, <code>.npmrc</code>, anything under <code>.git/</code>) ALWAYS shows
+  the strongest modal confirmation, auto-approve or not — the "only
+  stopping for a genuine security-sensitive action or scope violation"
+  half of the ask. <code>delete_file</code> also uses <code>useTrash: true</code> (OS
+  trash/recycle bin, not a permanent unlink) as an extra recovery
+  margin under auto-approve.</li>
+<li><strong>New tool</strong>: <code>delete_file(path)</code> — <code>CLIENT_ONLY_TOOL_SCHEMAS</code>
+  (client_tools mode only, same reasoning as <code>list_files</code>/<code>grep</code>: the
+  server has no real workspace of its own to delete from). Dispatches
+  through <code>_handle_tool_call</code>'s existing client_tools branch with zero
+  backend changes needed (it's tool-name-agnostic — every tool call
+  already short-circuits to <code>client_tool_call</code> in this mode).</li>
+<li><strong>Bigger step budget for real continuous work</strong>: the shared
+  <code>_run_agentic_loop</code>'s cap was a flat <code>_MAX_TOOL_STEPS = 4</code> for both
+  modes — plenty for the disposable server sandbox, far too small for
+  "keep working across a real multi-file task." Client tools mode now
+  gets its own <code>_MAX_TOOL_STEPS_CLIENT = 25</code> (each step there is
+  already gated by the caller's own confirmation UX, so a bigger
+  ceiling only bounds how much <em>useful</em> work one task can do, not how
+  many destructive actions slip through unconfirmed); default mode's
+  cap is unchanged. <code>MAX_CLIENT_TOOL_ROUNDS</code> (panel.ts's own client-
+  side loop bound) was raised to match.</li>
+<li><strong>Tests</strong>: <code>tests/test_coding_agent_client_tools.py</code> — <code>delete_file</code>
+  is advertised in client_tools mode and never in default mode; a real
+  6-round chained tool-call sequence proves the bigger client-mode
+  budget applies (would have been cut short at round 4 under the old
+  shared cap).</li>
+</ul>
+<h2 id="the-problem-this-solves">The problem this solves</h2>
+<p>Algo Kodo (the VS Code extension) looked like Claude Code but
+didn't act like it: the coding agent's <code>read_file</code>/<code>write_file</code>/<code>run_code</code>
+tools only ever touched <code>CODING_WORKSPACE_DIR</code>, a disposable sandbox
+<em>on the server</em> — never the user's actual open project. Getting real
+files meant manually <code>@mention</code>-ing them one at a time; a <code>write_file</code>
+landed on the server and had to be read back and copied into the local
+workspace as a separate trick. There was no grep, no autonomous
+multi-file browsing, nothing resembling Claude Code's actual behavior of
+acting on your repo on its own initiative.</p>
+<h2 id="the-design">The design</h2>
+<p>The model still runs server-side (same routing, same policy gate, same
+provider chain, same Kalkee account/login) — only <em>where a tool call
+actually executes</em> moves. When a turn opts into <code>client_tools</code> mode:</p>
+<ol>
+<li><code>CodingAgent</code> decides it wants to call a tool (same as always), but
+   instead of executing it against the sandbox, it pauses the turn and
+   returns <code>{call_id, tool, args}</code> to the caller.</li>
+<li>The caller — the VS Code extension, or anything else implementing the
+   same small protocol — executes that tool for real, against the user's
+   actual machine.</li>
+<li>The caller reports back what happened
+   (<code>POST /api/v1/orchestration/tool_result</code>), and the SAME
+   conversation/tool-budget resumes exactly where it left off.</li>
+</ol>
+<p>This is the same shape as MCP / Claude Code's own client-executed-tools
+loop, built directly into the existing orchestration API rather than as
+a separate protocol.</p>
+<h2 id="backend-changes">Backend changes</h2>
+<ul>
+<li><strong><code>app/framework/agents/coding_agent.py</code></strong> — see its module docstring,
+  "CLIENT TOOLS MODE", for the full design writeup in context. Summary:</li>
+<li><code>task.metadata["client_tools"] = True</code> (set by the router below) is
+    the switch. Every existing default-mode behavior (the sandbox,
+    <code>_PENDING_WRITES</code>, the plain-text yes/no write confirmation) is
+    <strong>completely untouched</strong> when this is absent/False — zero risk to
+    any existing caller (the web PM chat widget, any other integration).</li>
+<li>Two NEW tools, advertised <strong>only</strong> in this mode (the server has
+    nothing to run them against otherwise): <code>list_files(glob)</code>,
+    <code>grep(pattern, glob)</code>.</li>
+<li><code>_run_agentic_loop()</code> — the old <code>execute()</code> loop body, extracted so
+    both a fresh turn and a resumed one share it.</li>
+<li><code>_PENDING_TOOL_CALLS: dict[str, dict]</code> — in-process, keyed by a
+    fresh <code>uuid4</code> <code>call_id</code>, same "resets on restart, just re-propose"
+    convention <code>_PENDING_WRITES</code> already uses. <strong>This assumes the
+    single-process deployment this backend already runs as today</strong> (bare
+    <code>uvicorn app.main:app</code>, confirmed via <code>deploy/update_containers.sh</code> —
+    no gunicorn/multi-worker). If that ever changes, this needs a real
+    shared store (Redis) instead — flagged, not built, since it isn't
+    needed for the current deployment.</li>
+<li>
+<p><code>resume_tool_call(task, call_id, output, error)</code> — the resume entry
+    point; checks <code>task.session_id</code> matches the one the call was stashed
+    under (the actual access control — <code>call_id</code> alone is unguessable
+    but not itself an ownership check).</p>
+</li>
+<li>
+<p><strong><code>app/framework/orchestrator.py</code></strong> — <code>OrchestrationResult.to_dict()</code>
+  now also emits <code>result.pending_tool_call</code> (from <code>AgentResult.raw</code>),
+  always present, <code>null</code> for every non-client-tools turn and every other
+  agent — existing callers see nothing new.</p>
+</li>
+<li>
+<p><strong><code>app/routers/v1/orchestration.py</code></strong>:</p>
+</li>
+<li><code>ExecuteRequest.client_tools: bool = False</code> — new, defaults off.</li>
+<li><code>POST /api/v1/orchestration/tool_result</code> — new endpoint,
+    <code>{session_id, call_id, output, error}</code> → same response shape as
+    <code>/execute</code>. Bypasses the orchestrator's routing (there's no "which
+    agent" decision on a resume) and calls <code>CodingAgent.resume_tool_call</code>
+    directly via the registry.</li>
+</ul>
+<h3 id="tests">Tests</h3>
+<p><code>tests/test_coding_agent_client_tools.py</code> (new, 6 tests, all passing) —
+the first real coverage of CodingAgent's tool-calling loop at all (the
+existing suite only checked routing). Covers: the two client-only tools
+are advertised in client_tools mode and NEVER in default mode; a full
+pending-call → tool_result → final-answer round trip; a resume rejected
+for a mismatched <code>session_id</code>; a resume of an unknown <code>call_id</code> fails
+cleanly; <code>write_file</code> pauses instead of touching the server sandbox in
+this mode. Full suite: <strong>634 passed</strong> (one <code>test_orchestration_then_...</code>
+test in <code>test_gmaofn_api.py</code> is pre-existing flaky — confirmed via
+repeated runs <em>without</em> any of these changes present — Thompson-sampling
+routing randomness occasionally picks <code>pm-agent-adk</code> over <code>pm-agent</code>;
+unrelated to this feature).</p>
+<h2 id="vs-code-extension-changes-v070">VS Code extension changes (v0.7.0)</h2>
+<ul>
+<li><strong><code>src/localTools.ts</code></strong> (new) — the other half. Real
+  <code>read_file</code>/<code>write_file</code>/<code>run_code</code>/<code>list_files</code>/<code>grep</code>, executed
+  against <code>vscode.workspace</code> and a real <code>python3</code> subprocess:</li>
+<li>Every path is resolved against the open workspace folder and
+    <strong>refused</strong> if it would escape it — the same containment
+    <code>resolve_within()</code> already enforces server-side, just applied here
+    since this is where real disk access now happens.</li>
+<li><code>write_file</code> and <code>run_code</code> (the two that touch the user's real
+    machine destructively) each require a blocking <strong>modal</strong>
+    confirmation (<code>vscode.window.showWarningMessage(..., {modal:true})</code>)
+    before doing anything — deliberately a stronger gate than the
+    existing inline chat Yes/No buttons, since this is real local
+    disk/process access, not a server sandbox.</li>
+<li>
+<p><code>run_code</code> shells out to <code>python3</code> on PATH; if it's missing, that
+    comes back as a normal tool error the agent can react to, not a
+    crash.</p>
+</li>
+<li>
+<p><strong><code>src/api.ts</code></strong> — <code>send()</code> takes a <code>clientTools</code> flag (sets
+  <code>client_tools</code> in the request body); new <code>sendToolResult()</code> posts to
+  <code>/tool_result</code>. Both return the same <code>SendResult</code> shape, including the
+  new <code>pendingToolCall</code>.</p>
+</li>
+<li>
+<p><strong><code>src/panel.ts</code></strong> — <code>handleSend()</code> now drives the loop: while a
+  response carries <code>pendingToolCall</code>, it posts a visible <code>tool</code>-type
+  message (<code>🔧 tool(args)…</code>), calls <code>executeLocalTool()</code>, posts the
+  outcome (<code>✅ .../❌ ...</code>), and calls <code>sendToolResult()</code> — repeating
+  (bounded defensively at <code>MAX_CLIENT_TOOL_ROUNDS = 8</code> client-side, on
+  top of the server's own <code>_MAX_TOOL_STEPS = 4</code> per turn) until a final
+  answer arrives. A new header toggle (🤖/☁️, default <strong>on</strong>) lets the
+  user turn this off per workspace and fall back to the old
+  sandbox-only behavior; the old <code>mirrorServerWriteIfAny()</code> trick is
+  skipped entirely in this mode since there's nothing left to mirror —
+  the write already happened directly in the real workspace.</p>
+</li>
+</ul>
+<h3 id="forwardbackward-compatibility">Forward/backward compatibility</h3>
+<p>The extension is now built to send <code>client_tools: true</code> by default. Sent
+to the <strong>currently-deployed</strong> (pre-this-change) backend, that field is
+simply an unrecognized extra key on a Pydantic model — ignored, not
+rejected — so until the backend below is actually deployed, the
+extension behaves EXACTLY like v0.6.0 (no <code>pending_tool_call</code> ever comes
+back, so the loop never triggers). Nothing breaks in the meantime; the
+new capability is simply inert until both halves are live.</p>
+<h2 id="deploying-the-backend-change">Deploying the backend change</h2>
+<p>Nothing here needs a new dependency, a Dockerfile change, or a new
+environment variable — pure application code.</p>
+<div class="hl"><pre><span></span><code>./deploy/build_and_push_chatbot.sh
+</code></pre></div>
+
+<p>builds <code>dockerhubalgo/algo-kaizen-chatbot</code> (both <code>:latest</code> and a
+<code>:&lt;git-sha&gt;</code> rollback tag) and pushes it. Auth: either <code>docker login</code>
+yourself first, or <code>export DOCKERHUB_PASSWORD=...</code> before running it —
+it does <strong>not</strong> hardcode a password the way
+<code>deploy/update_containers.sh</code>/<code>deploy/deploy_all_in_one.sh</code> currently do
+(a real, separate, pre-existing issue worth rotating/fixing — that
+plaintext DockerHub password is committed to this repo in cleartext;
+flagged here, not touched, since fixing it wasn't part of this task).</p>
+<p>Then, <strong>on the server</strong>:</p>
+<div class="hl"><pre><span></span><code>./deploy/update_containers.sh
+</code></pre></div>
+
+<p>— already pulls <code>dockerhubalgo/algo-kaizen-chatbot:latest</code> and restarts
+<code>ak-chatbot</code> with the same env/volumes; no edits needed there. Verify
+with <code>curl &lt;chatbot base url&gt;/api/health</code> afterward.</p>
+<p>Rollback, if needed: re-run <code>update_containers.sh</code> after re-tagging a
+previous <code>:&lt;git-sha&gt;</code> image as <code>:latest</code> and pushing that instead.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#full-auto-approve-v0910-work-like-claude-code-until-told-to-stop">Full auto-approve (v0.9.10+) — &quot;work like Claude Code until told to stop&quot;</a><a class="l2" href="#the-problem-this-solves">The problem this solves</a><a class="l2" href="#the-design">The design</a><a class="l2" href="#backend-changes">Backend changes</a><a class="l3" href="#tests">Tests</a><a class="l2" href="#vs-code-extension-changes-v070">VS Code extension changes (v0.7.0)</a><a class="l3" href="#forwardbackward-compatibility">Forward/backward compatibility</a><a class="l2" href="#deploying-the-backend-change">Deploying the backend change</a></aside></div>
+<script src="../../docs.js"></script></body></html>

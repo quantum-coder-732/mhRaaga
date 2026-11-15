@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How the plugin framework +  tier were built · mhRaaga docs</title><meta name="description" content="How the plugin framework +  tier were built">
+<link rel="stylesheet" href="../../docs.css"></head>
+<body data-root="../../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../../overview.html">Overview</a></li><li><a href="../../system.html">How the system works</a></li><li><a href="../../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../../ARCHITECTURE.html">Architecture</a></li><li><a href="../../API.html">API for developers</a></li><li><a href="../../SOUND.html">Sound</a></li><li><a href="../../VOICE.html">AI voice</a></li><li><a href="../../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../../STUDIO.html">Stories, people, rules</a></li><li><a href="../../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../../components/music-engine.html">Music engine</a></li><li><a href="../../components/android-app.html">Android app</a></li><li><a href="../../components/music-backend.html">Backend prototype</a></li><li><a href="../../components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="../../kalkee/index.html">About these documents</a></li></ul></details><details open><summary>Kalkee</summary><ul><li><a href="../../kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="../../kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="../../kalkee/kalkee/HOW_IT_WAS_BUILT.html" class=cur aria-current=page>How the plugin framework +  tier were built</a></li><li><a href="../../kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="../../kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="../../kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="../../kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="../../kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="../../kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="../../kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="../../kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="../../kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="../../kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="../../kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="../../kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="../../kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="../../kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="../../kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="../../kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="../../kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="../../kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="../../kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="../../kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="../../kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="../../kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="../../kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="../../kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="../../kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="../../kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="../../kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="../../kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="../../kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="how-the-plugin-framework-tier-were-built">How the plugin framework +  tier were built</h1>
+<p>A build log, not a reference — <code>README.md</code>, <code>backend/app/llm/README.md</code>, and
+<code>backend/app/plugins.d/README.md</code> document <em>what</em> exists and <em>how to use
+it</em>; this is <em>why it's shaped the way it is</em> and the order it was built in,
+for anyone extending it later.</p>
+<h2 id="the-ask">The ask</h2>
+<p>Two things, bundled: "the underlying [model] layer, like , can run
+this" (wire a local MoE inference engine in as a model provider) and "make
+it editable framework using JSONs" (the bot's PM actions shouldn't require
+a Python change to extend). Both landed as one commit because they turned
+out to validate each other — see "Why  was easy" below.</p>
+<h2 id="step-0-read-before-writing">Step 0 — read before writing</h2>
+<p>Before touching anything, <code>github.com/JustVugg/</code>'s README was
+fetched and read. It turned out to be an inference <em>runtime</em> (weight
+streaming across VRAM/RAM/NVMe for MoE models too big for a single GPU),
+not a chatbot framework — and critically, <code>./coli serve</code> exposes an
+<strong>OpenAI-compatible endpoint</strong>. That one fact removed an entire class of
+work: no new HTTP client, no new auth handling, no new response parsing.
+It's the existing <code>OpenAICompatible</code> class (already used for Luna/Max/
+Deepseek/Groq) pointed at a different <code>base_url</code>. Confirming this <em>before</em>
+writing code is why the  half of this commit is ~15 lines across
+<code>config.py</code> and <code>router.py</code>, not a new provider class.</p>
+<h2 id="step-1-figure-out-where-the-plugin-registry-can-live">Step 1 — figure out where the plugin registry can live</h2>
+<p>The interesting design problem wasn't the JSON schema — it was <strong>import
+direction</strong>. The plugin registry needs to be visible from two places that
+don't currently know about each other:</p>
+<ul>
+<li><code>agent/tools.py</code> — needs it to merge plugin schemas into <code>TOOL_SCHEMAS</code>
+  and to resolve/execute plugin calls.</li>
+<li><code>llm/providers.py</code> (<code>RuleBased</code>) — needs it so the offline floor can
+  <em>trigger</em> a plugin from a typed phrase, not just a real LLM's
+  tool-calling.</li>
+</ul>
+<p>Checking the existing import graph first: <code>agent/native_agent.py</code> already
+imports <code>from ..llm.router import get_llm_client</code> and
+<code>from ..llm.guardrails import input_guard</code>. So <strong>agent depends on llm</strong>,
+established and one-directional. If the plugin registry lived inside
+<code>agent/</code> (the obvious first instinct — it's about tools), <code>llm/
+providers.py</code> importing it would create <code>llm → agent → llm</code>, a cycle.</p>
+<p>Resolution: put the registry in a new <strong>sibling</strong> module,
+<code>app/plugins.py</code>, at the same level as <code>agent/</code> and <code>llm/</code>, depending only
+on <code>services/pm_service.py</code> (already confirmed to be a true leaf — it
+imports <code>db</code>, <code>models</code>, <code>auth</code>, nothing from <code>agent/</code> or <code>llm/</code>). Both
+<code>agent/tools.py</code> and <code>llm/providers.py</code> import <em>down</em> into <code>plugins.py</code>;
+neither imports the other any more than before. No cycle, and it was
+verified by literally running the test suite immediately after wiring the
+imports (see Step 5) rather than reasoning about it and hoping.</p>
+<p>The JSON files themselves went in <code>app/plugins.d/</code> — a <code>.d</code>-directory
+(the <code>/etc/foo.d/</code> convention) rather than reusing the module name, since
+<code>plugins.py</code> (module) and <code>plugins/</code> (package) can't coexist.</p>
+<h2 id="step-2-design-the-json-shape-around-what-already-exists-not-from-scratch">Step 2 — design the JSON shape around what already exists, not from scratch</h2>
+<p>The temptation with "make it JSON-configurable" is to invent a generic
+scripting mini-language. That was deliberately avoided. Instead, the JSON
+schema was designed to be a thin, safe <em>wiring</em> layer over machinery that
+already existed and was already tested:</p>
+<ul>
+<li><strong>Entity resolution</strong> — <code>resolve_project</code>/<code>resolve_task</code>/<code>resolve_user</code>/
+  <code>resolve_sprint</code> already existed in <code>agent/tools.py</code>, already fuzzy-match
+  via <code>rapidfuzz</code>, already return <code>Resolution(id=..., ambiguous=..., 
+  missing=...)</code>. A plugin's <code>"resolve"</code> field just says <em>which</em> of these to
+  call and what to name the result — <code>resolve_plugin_arguments()</code> in
+  <code>tools.py</code> is ~15 lines because it's dispatch, not new resolution logic.</li>
+<li><strong>Execution safety</strong> — rather than let a JSON file name any Python
+  callable (a real code-execution risk — a JSON file could then call
+  <code>os.system</code> if the wrong attribute lookup snuck in), <code>service_call.method</code>
+  is checked against <code>SERVICE_METHOD_REGISTRY</code>, a fixed dict populated by
+  hand in <code>plugins.py</code>. This mirrors <code>agent/tools.py</code>'s own
+  <code>DESTRUCTIVE: frozenset[str]</code> pattern one file over — "a fixed, hard-coded
+  set, never the LLM's judgement" (§6.1 step 9's comment) applied to <em>which
+  functions chat can reach at all</em>, not just which ones need confirmation.</li>
+<li><strong>Response text</strong> — <code>str.format(**fields)</code>, not an expression language.
+  <code>fields</code> is a plain dict (resolved values + whatever the service call
+  returned); <code>.format()</code> can only substitute named placeholders, it can't
+  execute anything.</li>
+</ul>
+<p>Net effect: a plugin author can wire a <em>new phrase</em> to an <em>already-reviewed,
+already-role-gated</em> action. They cannot make the bot do anything a human
+engineer hasn't already decided is safe to expose to chat.</p>
+<h2 id="step-3-one-worked-example-not-a-spec-with-no-implementation">Step 3 — one worked example, not a spec with no implementation</h2>
+<p><code>rename_project</code> was picked as the demo because it needed a genuinely new
+<code>pm_service</code> method (proving the whole path, not just re-wiring an
+existing tool) while being low-risk (rename isn't destructive, no
+cascading side effects like <code>complete_sprint</code>'s backlog-reassignment
+logic). <code>pm_service.rename_project()</code> was written first, by hand, using
+the exact same pattern as its neighbor <code>archive_project()</code> — same
+<code>_need(user, "Manager")</code> role gate, same <code>get_project</code> / mutate / <code>put</code> /
+<code>_fire_hooks</code> shape. Only <em>after</em> that existed did <code>rename_project.json</code>
+get written to call it.</p>
+<h2 id="step-4-wire-the-dispatch-points-smallest-diff-at-each">Step 4 — wire the dispatch points, smallest diff at each</h2>
+<p>In order, each verified to still pass the existing test suite before
+moving to the next:</p>
+<ol>
+<li><code>agent/tools.py</code>: import <code>PLUGINS</code>, merge <code>{name: p.schema for ...}</code>
+   into <code>TOOL_SCHEMAS</code>, add <code>resolve_plugin_arguments()</code> +
+   <code>execute_plugin()</code>, add one <code>if name in PLUGINS:</code> line at the top of
+   <code>execute()</code>. <code>DESTRUCTIVE</code> became a set union so a plugin marking
+   itself <code>"destructive": true</code> gets the confirm gate for free.</li>
+<li><code>agent/native_agent.py</code>: one <code>if name in PLUGINS:</code> line at the top of
+   <code>resolve_arguments()</code>, delegating to the function from step 1. Also
+   fixed <code>confirm_prompt_for()</code>'s hard-coded <code>verbs[name]</code> dict lookup —
+   it would <code>KeyError</code> for a plugin-declared destructive tool not in that
+   dict — to fall back to the plugin's own <code>description</code>.
+   <code>langgraph_agent.py</code> needed <strong>zero changes</strong>: it already imports
+   <code>resolve_arguments</code>/<code>confirm_prompt_for</code>/<code>format_result</code> from
+   <code>native_agent.py</code> rather than duplicating them (that sharing was already
+   the point of §6.5's "both tracks trace the same path" design), so
+   fixing the shared functions once fixed both tracks.</li>
+<li><code>llm/providers.py</code> (<code>RuleBased.chat()</code>): one loop over
+   <code>PLUGINS.values()</code>, trying each plugin's compiled <code>trigger_patterns</code>
+   <em>after</em> every hand-written pattern (so a plugin regex can never shadow
+   a built-in phrasing) and <em>before</em> the final "here's what I can do"
+   fallback text. Named regex groups (<code>(?P&lt;project&gt;...)</code>) map straight to
+   <code>m.groupdict()</code> — no positional-group bookkeeping to keep in sync with
+   the JSON, unlike the hand-written patterns' <code>m.group(1)</code>/<code>m.group(2)</code>.</li>
+<li><code>agent/state.py</code> (<code>format_result()</code>): one <code>if k == "plugin_result":
+   return result["text"]</code> branch — the plugin already rendered its own
+   text via <code>response_template</code>, so the formatter's only job is to not
+   need to know anything about the specific plugin.</li>
+</ol>
+<h2 id="step-5-verify-dont-assume">Step 5 — verify, don't assume</h2>
+<p>Each claim above was checked, not asserted:</p>
+<ul>
+<li><strong>No import cycle</strong>: <code>python -m pytest tests/ -q</code> immediately after
+  adding the three new <code>from ..plugins import ...</code> lines — an
+  <code>ImportError</code> would have surfaced instantly at collection time. It
+  didn't; 49→58 tests passed as functionality was added.</li>
+<li><strong>Both agent tracks actually behave identically</strong>: rather than trust
+  the "langgraph reuses native_agent's functions" claim, both were hit
+  directly —
+  <code>POST /api/chat/message?framework=native</code> and the default <code>langgraph</code> —
+  with the same phrase, same result.</li>
+<li><strong>The offline floor really triggers it, no API keys</strong>: live <code>curl</code>
+  against a running <code>uvicorn</code> process (no <code>LUNA_API_KEY</code>/etc. set) —
+  <code>tier_log</code> in the response confirmed <code>"provider": "rule-based"</code> served
+  the rename, not a fallback pretending to.</li>
+<li><strong>The clarify path doesn't silently guess</strong>: tried <code>rename project
+  zzznonexistentzzz to Whatever</code> — got "I couldn't find a project
+  matching..." back, not a crash or a wrong rename.</li>
+<li><strong>The role gate holds</strong>: a <code>member_token</code> user got a 403-shaped refusal
+  from the same phrase an <code>exec_token</code>/Admin user succeeded with —
+  <code>pm_service.rename_project</code>'s own <code>_need(user, "Manager")</code> fired exactly
+  as it does for the REST route, because the plugin calls the <em>same</em>
+  function, not a copy.</li>
+<li><strong>Malformed config doesn't take the bot down</strong>: <code>tests/test_plugins.py</code>
+  writes intentionally-broken JSON (invalid syntax, an unregistered
+  <code>service_call.method</code>, missing required keys) to a temp dir and confirms
+  <code>load_plugins()</code> returns nothing for those files rather than raising —
+  mirroring <code>EXTRA_LLM_PROVIDERS</code>' existing "optional config, a typo isn't
+  an outage" behavior.</li>
+</ul>
+<p>All of the above became permanent tests in <code>tests/test_plugins.py</code> and the
+new cases in <code>tests/test_retrieval_and_router.py</code> ('s <code>available()</code>
+gating, the <code>LLMProvider</code> Protocol still holding for every registered
+provider) — the live <code>curl</code> checks were how the design was <em>proven</em> during
+development; the test suite is what keeps it proven afterward.</p>
+<h2 id="what-this-pattern-is-for-and-what-it-isnt">What this pattern is for, and what it isn't</h2>
+<p><strong>Good fit</strong>: a new PM action that's fundamentally "resolve some entities,
+call one already-safe service function, say what happened" — renames,
+status flips, simple CRUD-shaped actions. <strong>Not a fit</strong>: anything needing
+multi-step logic, a new confirmation UX, or a new kind of side effect
+(a genuinely new mutation <em>shape</em>, not just a new <em>name</em> for an existing
+one) — that still means writing a <code>pm_service</code> function and registering it
+by hand in <code>SERVICE_METHOD_REGISTRY</code>, the one deliberate, reviewed,
+Python-side step the framework never tries to eliminate.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#the-ask">The ask</a><a class="l2" href="#step-0-read-before-writing">Step 0 — read before writing</a><a class="l2" href="#step-1-figure-out-where-the-plugin-registry-can-live">Step 1 — figure out where the plugin registry can live</a><a class="l2" href="#step-2-design-the-json-shape-around-what-already-exists-not-from-scratch">Step 2 — design the JSON shape around what already exists, not from scratch</a><a class="l2" href="#step-3-one-worked-example-not-a-spec-with-no-implementation">Step 3 — one worked example, not a spec with no implementation</a><a class="l2" href="#step-4-wire-the-dispatch-points-smallest-diff-at-each">Step 4 — wire the dispatch points, smallest diff at each</a><a class="l2" href="#step-5-verify-dont-assume">Step 5 — verify, don&#x27;t assume</a><a class="l2" href="#what-this-pattern-is-for-and-what-it-isnt">What this pattern is for, and what it isn&#x27;t</a></aside></div>
+<script src="../../docs.js"></script></body></html>

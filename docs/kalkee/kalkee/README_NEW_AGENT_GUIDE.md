@@ -1,4 +1,4 @@
-# Building a new agent with ALGO AKANADE — example by example
+# Building a new agent with Kalkee — example by example
 
 This is the whole point of the framework: a new domain is one file, not
 a fork of the PM logic. `app/framework/agents/coding_agent.py` is a
@@ -150,10 +150,10 @@ network.add_agent(MyCodingAgent().metadata)
 ```
 
 Or register it at runtime, no code deploy at all, via
-`POST /api/v1/agents/register` with a `webhook_url` — ALGO AKANADE builds a
+`POST /api/v1/agents/register` with a `webhook_url` — Kalkee builds a
 `RemoteHttpAgent` proxy that POSTs `{task_id, text, session_id,
 metadata}` to your service and expects `{text, ok, confidence}` back.
-Your agent can be written in any language, hosted anywhere; ALGO AKANADE
+Your agent can be written in any language, hosted anywhere; Kalkee
 never needs your source.
 
 **4. That's it — the router finds it on its own.** No if/elif anywhere
@@ -173,7 +173,7 @@ POST /api/v1/orchestration/execute
 If both `coding-agent` (the bundled example) and your new agent declare
 `code_generation`, they compete for that traffic exactly as intended —
 whichever one actually produces higher quality/lower cost/lower latency,
-per ALGO AKANADE's own measured feedback, wins more of it over time. You
+per Kalkee's own measured feedback, wins more of it over time. You
 don't pick a winner; the bandit does.
 
 ## Example 3 — replacing `pm-agent` entirely
@@ -195,15 +195,15 @@ is what "generic and extensible" means in practice.
 
 **Path 2 — repoint the existing chat widget/mobile app at your agent.**
 The widget's own endpoint, `POST /api/chat/message`
-(`routers/chat.py::chat_message`), is older than ALGO AKANADE and still calls
+(`routers/chat.py::chat_message`), is older than Kalkee and still calls
 `agent/adapter.py`'s `get_agent(framework)` directly — the PM chatbot's
-own native/langgraph/adk/claude tracks, bypassing ALGO AKANADE's
+own native/langgraph/adk/claude tracks, bypassing Kalkee's
 registry/orchestrator entirely. That's the one call site to change if you
 want your new agent to power that *same* UI (same auth, same session/
 history plumbing, same React/Flutter screens) instead of PM:
 
 ```python
-# routers/chat.py — replace the get_agent(...) call with ALGO AKANADE's registry
+# routers/chat.py — replace the get_agent(...) call with Kalkee's registry
 from ..framework.registry import registry
 
 agent = registry.get("my-coding-agent")   # instead of agent.adapter.get_agent(...)
@@ -216,7 +216,7 @@ reply = ChatReply(reply=result.text, ...)
 Path 1's generic API) — this only changes what the *widget* talks to. In
 all three examples above, nothing about PM's own code —
 `native_agent.py`, `tools.py`, `pm_service.py` — is touched or forked;
-ALGO AKANADE was built so the domain being served is a routing/config
+Kalkee was built so the domain being served is a routing/config
 choice, not a source-tree fork.
 
 ## Adding a security-relevant capability the same way

@@ -1,4 +1,4 @@
-# ALGO AKANADE — RL Algorithms, Flow, and the Math
+# Kalkee — RL Algorithms, Flow, and the Math
 
 Every learning loop in this system, with the actual formulas each one
 computes. This complements `README_ARROW_DIAGRAMS.md` (pictures, no
@@ -12,7 +12,7 @@ posterior that updates from real outcomes the way every algorithm below
 does. CrewAI and AutoGen/AG2 have no built-in adaptive routing either
 (the "RL" that turns up searching either one is a separate external
 training project, not a native routing capability). See `README.md`'s
-"How ALGO AKANADE compares" table for the full picture.
+"How Kalkee compares" table for the full picture.
 
 ## 0. The formal objective everything below approximates
 

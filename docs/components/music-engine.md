@@ -4,14 +4,14 @@
 
 Pecova is the backend engine behind Algo aKANADE's **integrations** — external
 products (starting with [Outreach-Ai](https://github.com/algoanalytics-pvt/Outreach-Ai))
-that call Akanade's APIs to get model access, routing, and (eventually) their
+that call Kalkee's APIs to get model access, routing, and (eventually) their
 own spawned agents, without needing their own LLM infrastructure.
 
 ```
-Outreach-Ai  →  AI integration layer (API + cache)  →  Akanade APIs  →  Pecova
+Outreach-Ai  →  AI integration layer (API + cache)  →  Kalkee APIs  →  Pecova
 ```
 
-Akanade is the backend. Pecova is the backend **engine**: the thing that
+Kalkee is the backend. Pecova is the backend **engine**: the thing that
 actually decides which model answers a given request, and — for integrations
 that opt into it — runs and tracks the agents doing the work.
 
@@ -39,7 +39,7 @@ pecova/
   backend/    the routing service itself (FastAPI) — Option 1
   engine/     the SLM inference engine (Go) — Option 2's model runtime
   dashboard/  engine monitoring (optional, not the integration-approval UI —
-              that lives in Akanade's own admin console, see ARCHITECTURE.md)
+              that lives in Kalkee's own admin console, see ARCHITECTURE.md)
 ```
 
 ## Running it locally
@@ -58,7 +58,7 @@ is set, same as the rest of Algo aKANADE.
 
 ## Deploying
 
-Pecova runs as its own container, alongside Akanade's existing ones — see
+Pecova runs as its own container, alongside Kalkee's existing ones — see
 [deploy/ec2/README_PECOVA.md](../../deploy/ec2/README_PECOVA.md) (next to
 Algo aKANADE's own deploy scripts) for the docker-compose service and how
 it's wired into the same deployment.

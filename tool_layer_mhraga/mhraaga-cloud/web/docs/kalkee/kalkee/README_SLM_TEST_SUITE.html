@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SLM Coding Test Suite · mhRaaga docs</title><meta name="description" content="SLM Coding Test Suite">
+<link rel="stylesheet" href="../../docs.css"></head>
+<body data-root="../../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../../overview.html">Overview</a></li><li><a href="../../system.html">How the system works</a></li><li><a href="../../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../../ARCHITECTURE.html">Architecture</a></li><li><a href="../../API.html">API for developers</a></li><li><a href="../../SOUND.html">Sound</a></li><li><a href="../../VOICE.html">AI voice</a></li><li><a href="../../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../../STUDIO.html">Stories, people, rules</a></li><li><a href="../../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../../components/music-engine.html">Music engine</a></li><li><a href="../../components/android-app.html">Android app</a></li><li><a href="../../components/music-backend.html">Backend prototype</a></li><li><a href="../../components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="../../kalkee/index.html">About these documents</a></li></ul></details><details open><summary>Kalkee</summary><ul><li><a href="../../kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="../../kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="../../kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="../../kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="../../kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="../../kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="../../kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="../../kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="../../kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="../../kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="../../kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="../../kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="../../kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="../../kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="../../kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="../../kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="../../kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="../../kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="../../kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="../../kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="../../kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="../../kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="../../kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="../../kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_TEST_SUITE.html" class=cur aria-current=page>Slm Test Suite</a></li><li><a href="../../kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="../../kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="../../kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="../../kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="../../kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="../../kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="../../kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="../../kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="slm-coding-test-suite">SLM Coding Test Suite</h1>
+<p><code>scripts/run_slm_test_suite.py</code> — 105 real coding prompts run against a
+named provider (default <code>ollama-coder</code>), each scored for pass/fail,
+latency, token usage, and a set of cheap deterministic quality checks.</p>
+<h2 id="categories">Categories</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Count</th>
+<th>What it exercises</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>generate</code></td>
+<td>30</td>
+<td>New code from scratch — functions, classes, a FastAPI endpoint, a Dockerfile, an async fetcher</td>
+</tr>
+<tr>
+<td><code>debug</code></td>
+<td>25</td>
+<td>Real, specific bugs (race conditions, off-by-one, mutable defaults, silent exception swallowing, a multi-symptom incident)</td>
+</tr>
+<tr>
+<td><code>refactor</code></td>
+<td>15</td>
+<td>Structural changes required to preserve exact behavior</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>15</td>
+<td>Writing tests, including edge cases and mocking</td>
+</tr>
+<tr>
+<td><code>repo_analysis</code></td>
+<td>10</td>
+<td>Repository-wide questions (TODOs, env vars, security review across a whole codebase)</td>
+</tr>
+<tr>
+<td><code>general_coding</code></td>
+<td>10</td>
+<td>Plain knowledge/reasoning questions, deliberately NOT keyword-matched by the intent reasoner — the fallback bucket needs its own coverage too</td>
+</tr>
+</tbody>
+</table>
+<p>These are the same six categories <code>llm/intent_reasoner.py</code> classifies
+into (see <code>README_SLM_REASONING_LAYER.md</code>) — the suite and the
+reasoning layer share one taxonomy on purpose.</p>
+<h2 id="the-full-prompt-list">The full prompt list</h2>
+<p>The source of truth is <code>PROMPTS</code> at the top of
+<code>scripts/run_slm_test_suite.py</code> — this is a generated, exact listing of
+it, not a separately hand-maintained copy.</p>
+<h3 id="generate-30">Generate (30)</h3>
+<ul>
+<li><strong>GEN-01</strong> — Write a Python function that reverses a string.</li>
+<li><strong>GEN-02</strong> — Write a Python function that checks whether a number is prime.</li>
+<li><strong>GEN-03</strong> — Write a function that returns the nth Fibonacci number iteratively.</li>
+<li><strong>GEN-04</strong> — Write a Python function to flatten a nested list of arbitrary depth.</li>
+<li><strong>GEN-05</strong> — Write a function that merges two sorted lists into one sorted list.</li>
+<li><strong>GEN-06</strong> — Write a Python decorator that times how long a function takes to run.</li>
+<li><strong>GEN-07</strong> — Write a context manager that temporarily changes the working directory.</li>
+<li><strong>GEN-08</strong> — Write a function that validates whether a string is a valid email address.</li>
+<li><strong>GEN-09</strong> — Write a Python class representing a simple stack with push/pop/peek.</li>
+<li><strong>GEN-10</strong> — Write a binary search function over a sorted list.</li>
+<li><strong>GEN-11</strong> — Write a function that counts word frequency in a block of text.</li>
+<li><strong>GEN-12</strong> — Write a FastAPI endpoint that accepts a POST with a JSON body and echoes it back.</li>
+<li><strong>GEN-13</strong> — Write a Dockerfile for a Python 3.12 service served by uvicorn on port 8000.</li>
+<li><strong>GEN-14</strong> — Write a bash script that rotates and gzips log files older than 30 days.</li>
+<li><strong>GEN-15</strong> — Write a Python script that reads a CSV and prints the row and column counts.</li>
+<li><strong>GEN-16</strong> — Implement a thread-safe LRU cache in Python supporting concurrent reads and writes.</li>
+<li><strong>GEN-17</strong> — Write a Python function that computes the SHA-256 hash of a file's contents.</li>
+<li><strong>GEN-18</strong> — Write a generator function that yields prime numbers indefinitely.</li>
+<li><strong>GEN-19</strong> — Write a function that deep-merges two Python dictionaries.</li>
+<li><strong>GEN-20</strong> — Write a simple token-bucket rate limiter class in Python.</li>
+<li><strong>GEN-21</strong> — Write a Python function that converts a snake_case string to camelCase.</li>
+<li><strong>GEN-22</strong> — Write a retry decorator with exponential backoff for a flaky function.</li>
+<li><strong>GEN-23</strong> — Write a Python function that parses a simple INI-style config string into a dict.</li>
+<li><strong>GEN-24</strong> — Write a function that finds the longest common prefix among a list of strings.</li>
+<li><strong>GEN-25</strong> — Write a Python class for a min-heap supporting push and pop-min.</li>
+<li><strong>GEN-26</strong> — Write a function that validates balanced parentheses/brackets/braces in a string.</li>
+<li><strong>GEN-27</strong> — Write a Python async function that fetches multiple URLs concurrently and returns their status codes.</li>
+<li><strong>GEN-28</strong> — Write a function that computes the edit distance (Levenshtein) between two strings.</li>
+<li><strong>GEN-29</strong> — Write a simple event emitter class supporting on/off/emit.</li>
+<li><strong>GEN-30</strong> — Write a Python function that paginates a list into chunks of a given size.</li>
+</ul>
+<h3 id="debug-25">Debug (25)</h3>
+<ul>
+<li><strong>DBG-01</strong> — This function should return the max of a list but returns the wrong value for negative numbers (mutated-default-style bug); fix it.</li>
+<li><strong>DBG-02</strong> — Debug why this Kafka consumer keeps rebalancing every few seconds.</li>
+<li><strong>DBG-03</strong> — Find and fix a race condition in a Python asyncio producer-consumer system.</li>
+<li><strong>DBG-04</strong> — This recursive factorial function causes a RecursionError for n=0. Why, and how do you fix it?</li>
+<li><strong>DBG-05</strong> — Debug "MongoServerError: $changeStream only supported on replica sets."</li>
+<li><strong>DBG-06</strong> — Why does this loop never terminate (a <code>continue</code> before the increment)?</li>
+<li><strong>DBG-07</strong> — This Python dict comprehension raises "unhashable type: list" — why, and what's the fix?</li>
+<li><strong>DBG-08</strong> — Debug why two batch pods land on the same node despite anti-affinity.</li>
+<li><strong>DBG-09</strong> — This function leaks file handles under load — find the bug.</li>
+<li><strong>DBG-10</strong> — Fix this Kubernetes Deployment YAML — the readiness probe never passes.</li>
+<li><strong>DBG-11</strong> — This binary search has an off-by-one bug causing an infinite loop. Find and fix it.</li>
+<li><strong>DBG-12</strong> — Diagnose a multi-symptom incident: Kafka consumer lag climbing, a TRT engine stalled, rising false positives — likely root cause and fix order?</li>
+<li><strong>DBG-13</strong> — This Python service's memory grows continuously over hours — likely causes, and how to confirm which one?</li>
+<li><strong>DBG-14</strong> — This mutable-default-argument bug causes state to leak between calls — find it.</li>
+<li><strong>DBG-15</strong> — Fix a PostgreSQL transaction bug causing duplicate financial transactions under concurrent requests.</li>
+<li><strong>DBG-16</strong> — This async function never actually awaits its coroutine — find the bug.</li>
+<li><strong>DBG-17</strong> — Why would AUROC of 0.91 offline and deployed precision of only 0.18 both be true at once?</li>
+<li><strong>DBG-18</strong> — This code silently swallows every exception with a bare <code>except: pass</code> — find and fix it.</li>
+<li><strong>DBG-19</strong> — Analyze and fix a database deadlock involving multiple concurrent workers.</li>
+<li><strong>DBG-20</strong> — This regex-based email validator rejects valid addresses with a "+" — why, and fix it.</li>
+<li><strong>DBG-21</strong> — 35% of served responses still use the old model after a deployment meant to fully switch over — likely causes?</li>
+<li><strong>DBG-22</strong> — This function compares floats with <code>==</code> and fails intermittently — find the bug.</li>
+<li><strong>DBG-23</strong> — Given failing logs showing a connection-pool-exhausted error under load, identify the root cause and minimal production-safe fix.</li>
+<li><strong>DBG-24</strong> — This code mutates a list while iterating over it, skipping elements — find the bug.</li>
+<li><strong>DBG-25</strong> — Profile a slow API and describe how you'd determine whether the bottleneck is CPU, database, network, or serialization.</li>
+</ul>
+<h3 id="refactor-15">Refactor (15)</h3>
+<ul>
+<li><strong>REF-01</strong> — Refactor this 400-line function into smaller modules without changing behavior.</li>
+<li><strong>REF-02</strong> — Refactor this nested-if chain into a cleaner form, preserving exact behavior.</li>
+<li><strong>REF-03</strong> — Refactor this repeated try/except block into a reusable decorator without changing what it catches.</li>
+<li><strong>REF-04</strong> — Extract the duplicated validation logic in three functions into one shared helper.</li>
+<li><strong>REF-05</strong> — Refactor this class to use dataclasses instead of a hand-written <code>__init__</code>/<code>__repr__</code>.</li>
+<li><strong>REF-06</strong> — Rewrite this callback-based function using async/await, preserving external behavior exactly.</li>
+<li><strong>REF-07</strong> — Refactor this global-mutable-state counter into a proper class, without changing any caller's code.</li>
+<li><strong>REF-08</strong> — Simplify this deeply nested list comprehension into clearer, equivalent code.</li>
+<li><strong>REF-09</strong> — Refactor a function that returns different types depending on a flag into two clearly-named functions.</li>
+<li><strong>REF-10</strong> — Rename and reorganize a poorly-named <code>utils.py</code>'s functions into cohesive groups without breaking imports.</li>
+<li><strong>REF-11</strong> — Remove magic numbers, replacing them with named constants.</li>
+<li><strong>REF-12</strong> — Refactor a synchronous file-processing loop to process files concurrently, preserving output order.</li>
+<li><strong>REF-13</strong> — Convert a class-based singleton into a simpler module-level singleton, without changing its public API.</li>
+<li><strong>REF-14</strong> — Refactor a SQL query built via string concatenation into a parameterized query, without changing results.</li>
+<li><strong>REF-15</strong> — De-duplicate a pair of near-identical functions into one, parameterized by their one real difference.</li>
+</ul>
+<h3 id="test-15">Test (15)</h3>
+<ul>
+<li><strong>TST-01</strong> — Write unit tests for this alert-rule cooldown logic.</li>
+<li><strong>TST-02</strong> — Write pytest tests for a function that returns precision, recall, and F1 without zero-division errors.</li>
+<li><strong>TST-03</strong> — Write a test that reproduces a parser bug (crashes on empty input) before fixing it.</li>
+<li><strong>TST-04</strong> — Write unit tests covering edge cases (empty list, single element, duplicates) for binary search.</li>
+<li><strong>TST-05</strong> — Write comprehensive pytest tests for a FastAPI service including failures, concurrency, and edge cases.</li>
+<li><strong>TST-06</strong> — Write a test that mocks an external HTTP call and asserts the function retries on a 500.</li>
+<li><strong>TST-07</strong> — Write tests for a rate limiter verifying it allows exactly N requests per window and rejects N+1.</li>
+<li><strong>TST-08</strong> — Write a parametrized pytest test for an <code>is_prime</code> function (positive/negative/zero).</li>
+<li><strong>TST-09</strong> — Write a test asserting a thread-safe counter produces the correct total under concurrent increments.</li>
+<li><strong>TST-10</strong> — Write tests for a CSV parser handling quoted commas and missing trailing newlines.</li>
+<li><strong>TST-11</strong> — Write a test verifying a cache eviction policy actually evicts the least-recently-used entry.</li>
+<li><strong>TST-12</strong> — Write tests asserting a JSON schema validator rejects a payload missing a required field.</li>
+<li><strong>TST-13</strong> — Write a test verifying a decorator preserves the wrapped function's name and docstring.</li>
+<li><strong>TST-14</strong> — Write tests for a function that should raise <code>ValueError</code> on negative input, not silently clamp it.</li>
+<li><strong>TST-15</strong> — Write a test suite for a stack class covering push, pop-on-empty, and peek-on-empty.</li>
+</ul>
+<h3 id="repository-analysis-10">Repository Analysis (10)</h3>
+<ul>
+<li><strong>REPO-01</strong> — Find every TODO/FIXME in this codebase with file and line number.</li>
+<li><strong>REPO-02</strong> — Extract all API endpoints and their HTTP methods from this FastAPI project.</li>
+<li><strong>REPO-03</strong> — List every environment variable referenced anywhere in this repository.</li>
+<li><strong>REPO-04</strong> — Find all Kafka topic names used across this repository.</li>
+<li><strong>REPO-05</strong> — Review this entire codebase for obvious security issues.</li>
+<li><strong>REPO-06</strong> — Identify every place that reads an environment variable without a default value.</li>
+<li><strong>REPO-07</strong> — Find all functions in this repository longer than 100 lines, by file.</li>
+<li><strong>REPO-08</strong> — Reconcile <code>requirements.txt</code> against what's actually imported anywhere in the codebase.</li>
+<li><strong>REPO-09</strong> — Find every place this project catches a bare <code>except:</code> with no specific exception type.</li>
+<li><strong>REPO-10</strong> — Identify which modules in this repository have no corresponding test file.</li>
+</ul>
+<h3 id="general-coding-reasoning-10">General Coding / Reasoning (10)</h3>
+<ul>
+<li><strong>GEN-REASON-01</strong> — What's the difference between a Kubernetes Deployment and a StatefulSet?</li>
+<li><strong>GEN-REASON-02</strong> — Compare vLLM vs. TGI vs. Ollama for self-hosting a 13B model on one GPU box.</li>
+<li><strong>GEN-REASON-03</strong> — What is the purpose of a nodeSelector vs. a taint/toleration in Kubernetes?</li>
+<li><strong>GEN-REASON-04</strong> — Explain the tradeoff between polling a database vs. change streams for a live dashboard.</li>
+<li><strong>GEN-REASON-05</strong> — When would you choose AWQ over GGUF quantization for a self-hosted model?</li>
+<li><strong>GEN-REASON-06</strong> — Explain what a Kafka consumer group is and why a service would use one.</li>
+<li><strong>GEN-REASON-07</strong> — Difference between at-least-once and exactly-once delivery, and why it matters for payments.</li>
+<li><strong>GEN-REASON-08</strong> — Compare a rules engine vs. a small language model for structured decisions on latency/determinism.</li>
+<li><strong>GEN-REASON-09</strong> — Explain why adding more retrieved chunks to a RAG pipeline can make answers worse.</li>
+<li><strong>GEN-REASON-10</strong> — Give a decision framework for one large model vs. a router with several small specialist models.</li>
+</ul>
+<h2 id="running-it">Running it</h2>
+<p>Needs a reachable provider — run inside <code>ak-chatbot</code> (has the real
+network path to <code>ak-ollama</code> and every hosted provider's API keys):</p>
+<div class="hl"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ak-chatbot<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>scripts.run_slm_test_suite<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--provider<span class="w"> </span>ollama-coder<span class="w"> </span>--domain<span class="w"> </span>coding<span class="w"> </span>--out<span class="w"> </span>/srv/data/slm_test_report.json
+</code></pre></div>
+
+<ul>
+<li><code>--provider</code> — any provider key from <code>llm/router.py</code> (default
+  <code>ollama-coder</code>). Point it at a hosted model instead to get a
+  comparison baseline.</li>
+<li><code>--timeout</code> — per-prompt timeout in seconds (default 90 — several of
+  these prompts genuinely ask for long, detailed answers; see
+  <code>README_COMPLEX_EXAMPLE_TRAINING.md</code>'s own note on this).</li>
+<li><code>--out</code> — where to write the JSON report.</li>
+</ul>
+<p>Calls <code>llm.router.call_provider_directly()</code> — the SAME "bypass every
+tier/chain/bandit, get the NAMED provider's own real answer or a clear
+error" mechanism <code>scripts/log_complex_ground_truth.py</code> uses, for the
+identical reason: a silent substitute from <code>TierClient</code>'s own fallback
+chain would make this "the SLM's own test report" in name only.</p>
+<h2 id="how-passfail-is-decided">How pass/fail is decided</h2>
+<p>A prompt <strong>passes</strong> when: the call didn't error, the response is
+non-empty, and (if it contains a fenced code block) that code parses as
+valid Python. This is a real, reproducible, mechanical check — not a
+judgment call — and it is <strong>not</strong> a claim that the code is <em>correct</em>,
+only that it <em>exists and parses</em>. Reading <code>response_preview</code> (the first
+400 characters of each answer, in the JSON report) is still how you'd
+judge whether an answer is actually good.</p>
+<h2 id="what-the-report-contains">What the report contains</h2>
+<div class="hl"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ollama-coder"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"total_prompts"</span><span class="p">:</span><span class="w"> </span><span class="mi">105</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"passed"</span><span class="p">:</span><span class="w"> </span><span class="mi">91</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"pass_rate"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.867</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"avg_latency_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">4820.3</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"p95_latency_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">21400.0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"intent_reasoner_accuracy"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.94</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"by_category"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"generate"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="nt">"passed"</span><span class="p">:</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span><span class="w"> </span><span class="nt">"avg_latency_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">3900.1</span><span class="p">},</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GEN-01"</span><span class="p">,</span><span class="w"> </span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"generate"</span><span class="p">,</span><span class="w"> </span><span class="nt">"passed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">"latency_ms"</span><span class="p">:</span><span class="w"> </span><span class="mf">210.4</span><span class="p">,</span><span class="w"> </span><span class="nt">"prompt_tokens"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w"> </span><span class="nt">"completion_tokens"</span><span class="p">:</span><span class="w"> </span><span class="mi">88</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">"response_preview"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"quality_notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><code>intent_reasoner_accuracy</code> is a live check that
+<code>llm/intent_reasoner.py</code>'s classifier agrees with this suite's own
+human-assigned category for each prompt (excluding <code>general_coding</code>,
+which is the deliberate fallback bucket, not something the classifier
+is expected to "detect").</p>
+<h2 id="honest-limits">Honest limits</h2>
+<ul>
+<li>The quality check is deterministic and cheap, not a judge model — it
+  catches "didn't answer" and "the code doesn't parse," not "the code
+  is wrong in a way that still parses." Real quality assessment still
+  needs a human (or a real LLM-judge pass, not built here) reading
+  <code>response_preview</code>/the full response.</li>
+<li>Results depend on server load, network conditions, and (for a local
+  SLM) whether the model was already warm (see <code>providers.py</code>'s
+  <code>OLLAMA_KEEP_ALIVE</code>) — a report run cold will show materially worse
+  <code>avg_latency_ms</code> than one run warm. Compare reports run under the
+  same warmth conditions, not a cold run against a warm one.</li>
+<li>This tests ONE provider's raw answers via <code>call_provider_directly</code> —
+  it does not exercise CodingAgent's tool-calling loop (<code>read_file</code>/
+  <code>write_file</code>/<code>run_code</code>), Auto Hybrid's routing decision, or the
+  approval-bar UI. It answers "can this model produce a good ANSWER to
+  these prompts," not "does the whole agent pipeline work end to end"
+  — that's what a live, manual demo run (or a browser/VS-Code-driven
+  integration test) is for.</li>
+</ul></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#categories">Categories</a><a class="l2" href="#the-full-prompt-list">The full prompt list</a><a class="l3" href="#generate-30">Generate (30)</a><a class="l3" href="#debug-25">Debug (25)</a><a class="l3" href="#refactor-15">Refactor (15)</a><a class="l3" href="#test-15">Test (15)</a><a class="l3" href="#repository-analysis-10">Repository Analysis (10)</a><a class="l3" href="#general-coding-reasoning-10">General Coding / Reasoning (10)</a><a class="l2" href="#running-it">Running it</a><a class="l2" href="#how-passfail-is-decided">How pass/fail is decided</a><a class="l2" href="#what-the-report-contains">What the report contains</a><a class="l2" href="#honest-limits">Honest limits</a></aside></div>
+<script src="../../docs.js"></script></body></html>

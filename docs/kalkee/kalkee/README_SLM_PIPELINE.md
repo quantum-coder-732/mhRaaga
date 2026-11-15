@@ -11,7 +11,7 @@ this doc is specifically the training/data side.
 
 ```
    ╔══════════════════════════════════════════════════════════════════╗
-   ║   ALGO AKANADE runtime — every live chat turn passes through here,      ║
+   ║   Kalkee runtime — every live chat turn passes through here,      ║
    ║   producing the "real chat usage" this pipeline trains on          ║
    ╚══════════════════════════════════════════╤═════════════════════╝
                                               │ orchestrator.py routes to
@@ -62,7 +62,7 @@ this doc is specifically the training/data side.
                           │              torch.nn.utils.prune (real,
                           ▼              opt-in, honest limitation)
                   ┌───────────────────┐
-                  │  Algo-Akanade-SLM │  scripts/convert_and_
+                  │  Algo-Kalkee-SLM │  scripts/convert_and_
                   │  (4-bit, your own │  register_ollama_model.sh
                   │  branded model)   │  tag: algo-akanade-slm:<date>
                   └─────────┬─────────┘
@@ -76,7 +76,7 @@ this doc is specifically the training/data side.
               └───────────┬────────────┘
                           ▼
                   Enterprise Software
-              (the PM chatbot / ALGO AKANADE's
+              (the PM chatbot / Kalkee's
                     /api/v1/* surface)
                           │
                           │ POST /api/admin/providers registers the new
@@ -84,16 +84,16 @@ this doc is specifically the training/data side.
                           │ uses it on the very next message, no restart
                           ▼
    ╔══════════════════════════════════════════════════════════════════╗
-   ║   ...back to the SAME ALGO AKANADE runtime box at the top — this is a   ║
+   ║   ...back to the SAME Kalkee runtime box at the top — this is a   ║
    ║   CLOSED LOOP, not a one-shot pipeline. See the next section for   ║
-   ║   exactly which ALGO AKANADE components sit on which side of it.        ║
+   ║   exactly which Kalkee components sit on which side of it.        ║
    ╚══════════════════════════════════════════════════════════════════╝
 ```
 
-## How ALGO AKANADE fits around this pipeline — the closed loop
+## How Kalkee fits around this pipeline — the closed loop
 
 Everything above is the TRAINING side. It doesn't run in isolation —
-it's one half of a loop that closes through ALGO AKANADE's actual runtime
+it's one half of a loop that closes through Kalkee's actual runtime
 components (`README_AGENTS.md`, `README_RL_ALGORITHMS.md`), each of
 which is a SEPARATE bandit/mechanism from the ones this doc already
 covers — worth being explicit about which is which, since three
@@ -102,7 +102,7 @@ conflating them is an easy mistake:
 
 ```mermaid
 flowchart TD
-    subgraph RUNTIME["ALGO AKANADE runtime — every live chat turn"]
+    subgraph RUNTIME["Kalkee runtime — every live chat turn"]
         U["A user message arrives\n(PM chat widget, mobile app, or\nan external MCP/ACP caller)"]
         O["orchestrator.py routes to one of the\n9 default agents (README_AGENTS.md) —\nits OWN Thompson Sampling bandit,\nseparate from the two below"]
         H["hybrid_router.py — a SECOND, independent\nbandit: local Ollama vs. a hosted model,\nfor THIS message (README_OPTIMIZERS.md §4)"]
@@ -362,7 +362,7 @@ learned from this deployment's own real usage.
   transform without a proven inference-time win through *this* serving
   path yet, which is exactly why it defaults off.
 
-### 7. Algo-Akanade-SLM
+### 7. Algo-Kalkee-SLM
 
 `scripts/convert_and_register_ollama_model.sh` — GGUF conversion,
 quantization, then an **export step**: the quantized GGUF + the
@@ -390,13 +390,13 @@ downstream of "which Ollama tag answers" changes:
 - **RAG** (`framework/rag.py`) — RL-picked store × algorithm retrieval,
   now also fed by CSV/PDF-ingested enterprise documents (step 1) via
   the same `VectorStoreAdapter` every other content source uses.
-- **Agents** — ALGO AKANADE's 9 default agents (`README_AGENTS.md`), any of
+- **Agents** — Kalkee's 9 default agents (`README_AGENTS.md`), any of
   which can be routed to `get_llm_client(...)`'s local Ollama rung the
   same way `pm-agent` already is.
 
 ### 9. Enterprise Software
 
-The PM chatbot and ALGO AKANADE's `/api/v1/*` orchestration API — the actual
+The PM chatbot and Kalkee's `/api/v1/*` orchestration API — the actual
 consuming application every stage above exists to serve.
 
 ## Trying it locally

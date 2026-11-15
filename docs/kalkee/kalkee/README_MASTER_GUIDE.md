@@ -1,4 +1,4 @@
-# ALGO AKANADE — Complete System Guide
+# Kalkee — Complete System Guide
 
 One orientation document for the whole system — what it is, every
 layer, the RL that makes it self-improving, the cost layer that keeps
@@ -10,14 +10,14 @@ tables, line-by-line prose) — this file's job is to be the map, not to
 duplicate any of those.
 
 **Who this is for**: a new engineer joining the project, or an external
-developer integrating with ALGO AKANADE's REST API, who wants the whole
+developer integrating with Kalkee's REST API, who wants the whole
 picture before diving into any one file.
 
 ---
 
 ## Table of contents
 
-- [Part 1 — What ALGO AKANADE is](#part-1--what-akanade-is)
+- [Part 1 — What Kalkee is](#part-1--what-akanade-is)
 - [Part 2 — Architecture layers](#part-2--architecture-layers)
 - [Part 3 — RL components, and how they actually work](#part-3--rl-components-and-how-they-actually-work)
 - [Part 4 — Token optimization and cost prediction](#part-4--token-optimization-and-cost-prediction)
@@ -30,9 +30,9 @@ picture before diving into any one file.
 
 ---
 
-## Part 1 — What ALGO AKANADE is
+## Part 1 — What Kalkee is
 
-**ALGO AKANADE** (Multi-Agent GenAI Network with Evolving Training and
+**Kalkee** (Multi-Agent GenAI Network with Evolving Training and
 Orchestration) is a domain-agnostic multi-agent orchestration framework
 with a real production tenant (Aksha PM, a project-management app)
 running on top of it. Three things make it different from "just call an
@@ -57,7 +57,7 @@ LLM":
    classes (credential exfiltration, prompt injection embedded in
    fetched content) before any tool runs.
 
-ALGO AKANADE ships as one FastAPI backend (`orchestrator_framework_layer/akanade/backend`)
+Kalkee ships as one FastAPI backend (`orchestrator_framework_layer/akanade/backend`)
 with three real clients: a React web app, a Flutter mobile app (both in
 `tool_layer_akanade/`), and a VS Code extension (`tool_layer_coding/`).
 A generic external integration surface (`README_EXTERNAL_API.md`) lets
@@ -87,7 +87,7 @@ flowchart TB
         NGX["/api/*  → ak-backend  (real PM app, Node + DynamoDB)\n/chatbot/* → ak-chatbot (this repo's FastAPI app)"]
     end
 
-    subgraph ALGO AKANADE["ak-chatbot — the ALGO AKANADE backend (FastAPI)"]
+    subgraph Kalkee["ak-chatbot — the Kalkee backend (FastAPI)"]
         direction TB
         GUARD["Query refinement + input security precheck\ngmaofn/query_refinement.py, security_guard.py"]
         AGENTFW["Agent framework (app/framework/)\nregistry → Thompson-Sampling router →\nworkflow engine → Shapley credit → reward"]
@@ -111,7 +111,7 @@ flowchart TB
         STOOQ["Stooq (free market data, Trading Agent)"]
     end
 
-    CLIENTS --> NGX --> ALGO AKANADE
+    CLIENTS --> NGX --> Kalkee
     GUARD --> AGENTFW --> PM
     PM --> LLML
     LLML --> MODELS
@@ -547,7 +547,7 @@ flowchart TB
 
     subgraph AKCHATBOT["ak-chatbot (this repo, FastAPI)"]
         CHATAUTH["auth.py — forwards token validation\nto ak-backend's /api/users/me"]
-        ALGOAKANADECORE["Everything in Parts 2-7:\nagents, RL routing, cost optimizer,\nsecurity, RAG, nightly PEFT"]
+        ALGOKALKEECORE["Everything in Parts 2-7:\nagents, RL routing, cost optimizer,\nsecurity, RAG, nightly PEFT"]
     end
 
     subgraph MODELSVC["Model layer"]
@@ -565,8 +565,8 @@ flowchart TB
     NGX -- "/chatbot/*" --> AKCHATBOT
 
     CHATAUTH -. "validates every token against" .-> REALAUTH
-    ALGOAKANADECORE -- "PM tool calls, as the real calling user" --> PMDATA
-    ALGOAKANADECORE --> MODELSVC
+    ALGOKALKEECORE -- "PM tool calls, as the real calling user" --> PMDATA
+    ALGOKALKEECORE --> MODELSVC
 
     EXT["External integration\n(Tally, a script, another app)"] -- "same /chatbot/* API,\nno special-casing" --> NGX
 ```
@@ -575,7 +575,7 @@ flowchart TB
 - A login is always against `ak-backend` — even a chat-only interaction
   needs a real, valid Aksha PM user token, because `ak-chatbot` never
   maintains its own competing user identity in this deployment mode.
-- Every PM tool call ALGO AKANADE's agents make (create a task, look up a
+- Every PM tool call Kalkee's agents make (create a task, look up a
   user, etc.) hits `ak-backend`'s own real data, as the actual calling
   user — never an elevated bot credential, never a shadow copy of PM
   data inside `ak-chatbot`.

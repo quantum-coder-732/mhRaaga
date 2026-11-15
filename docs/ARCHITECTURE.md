@@ -61,7 +61,7 @@ https://www.mhraaga.in/developers.html. How to call the API from outside: [API.m
 Up to 150 members and 300 layers per project; roles; optimistic locking; polling. `api/team.py`, `web/team.js`. Details: [TEAM_AND_PHYSICS.md](TEAM_AND_PHYSICS.md).
 
 ## 6. Kalkee <a id="kalkee"></a>
-**Kalkee (ALGO AKANADE)** is a separate orchestrator product in `orchestrator_framework_layer_kalkee/`: adaptive routing of tasks to agents by Thompson sampling, fair credit across agents with the Shapley value, a reward loop, SLM and PEFT layers. Its documents are in [kalkee/](kalkee/README.md).
+**Kalkee** is a separate orchestrator product in `orchestrator_framework_layer_kalkee/`: adaptive routing of tasks to agents by Thompson sampling, fair credit across agents with the Shapley value, a reward loop, SLM and PEFT layers. Its documents are in [kalkee/](kalkee/README.md).
 
 **What mhRaaga actually uses from it: one function.** `mhraaga_engine/agentic/evolve.py` loads
 `orchestrator_framework_layer_kalkee/orchestrator_framework_layer/akanade/backend/app/framework/shapley.py` (`attribute_reward`) and uses it to split each song's quality score fairly among the producer agents (raga, tala, tempo, lead, theme, tonic, form). If that file is missing, a proportional split is used and the run records `local-fallback`.

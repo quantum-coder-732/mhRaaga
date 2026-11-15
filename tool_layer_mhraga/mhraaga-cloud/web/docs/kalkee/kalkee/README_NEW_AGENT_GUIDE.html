@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Building a new agent with Kalkee — example by example · mhRaaga docs</title><meta name="description" content="Building a new agent with Kalkee — example by example">
+<link rel="stylesheet" href="../../docs.css"></head>
+<body data-root="../../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../../overview.html">Overview</a></li><li><a href="../../system.html">How the system works</a></li><li><a href="../../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../../ARCHITECTURE.html">Architecture</a></li><li><a href="../../API.html">API for developers</a></li><li><a href="../../SOUND.html">Sound</a></li><li><a href="../../VOICE.html">AI voice</a></li><li><a href="../../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../../STUDIO.html">Stories, people, rules</a></li><li><a href="../../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../../components/music-engine.html">Music engine</a></li><li><a href="../../components/android-app.html">Android app</a></li><li><a href="../../components/music-backend.html">Backend prototype</a></li><li><a href="../../components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="../../kalkee/index.html">About these documents</a></li></ul></details><details open><summary>Kalkee</summary><ul><li><a href="../../kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="../../kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="../../kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="../../kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="../../kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="../../kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="../../kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="../../kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="../../kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="../../kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="../../kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="../../kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="../../kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="../../kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="../../kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="../../kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="../../kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="../../kalkee/kalkee/README_NEW_AGENT_GUIDE.html" class=cur aria-current=page>New Agent Guide</a></li><li><a href="../../kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="../../kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="../../kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="../../kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="../../kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="../../kalkee/kalkee/README_SLM_REASONING_LAYER.html">Slm Reasoning Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="../../kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="../../kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="../../kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="../../kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="../../kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="../../kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="../../kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="../../kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="building-a-new-agent-with-kalkee-example-by-example">Building a new agent with Kalkee — example by example</h1>
+<p>This is the whole point of the framework: a new domain is one file, not
+a fork of the PM logic. <code>app/framework/agents/coding_agent.py</code> is a
+real, already-registered example — walk through it to build your own.
+This file is the standalone, expanded version of the walkthrough in the
+main <code>README.md</code>; start here for the full worked path from "empty file"
+to "replaces <code>pm-agent</code> as the primary service." For what already
+exists — a catalog of all 9 default agents and exactly what each one
+does in every pipeline step — see <code>README_AGENTS.md</code> instead; this file
+is the "how to add your own" companion to that "what's already here" one.</p>
+<h2 id="example-1-the-minimal-agent-five-lines-that-actually-run">Example 1 — the minimal agent (five lines that actually run)</h2>
+<p>Before the real Coding Agent example below, the smallest possible agent
+— proves the six-step interface (<code>app/framework/agent_base.py</code>) doesn't
+require any real logic to be valid and registrable:</p>
+<div class="hl"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">app.framework.agent_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">AgentMetadata</span><span class="p">,</span> <span class="n">AgentResult</span><span class="p">,</span> <span class="n">AgentStatus</span><span class="p">,</span> <span class="n">LatencyProfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.framework.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span><span class="p">,</span> <span class="n">TaskType</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EchoAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">AgentMetadata</span><span class="p">(</span>
+            <span class="n">agent_id</span><span class="o">=</span><span class="s2">"echo-agent"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Echo Agent"</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"Echoes the task text back — a template, not a real capability."</span><span class="p">,</span>
+            <span class="n">capabilities</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">({</span><span class="s2">"echo"</span><span class="p">}),</span> <span class="n">supported_tasks</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">({</span><span class="n">TaskType</span><span class="o">.</span><span class="n">GENERIC</span><span class="p">}),</span>
+            <span class="n">cost_per_call_usd</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">latency_profile</span><span class="o">=</span><span class="n">LatencyProfile</span><span class="p">(</span><span class="n">p50_ms</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">p95_ms</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+            <span class="n">reliability_score</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">AgentStatus</span><span class="o">.</span><span class="n">ACTIVE</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">understand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"text"</span><span class="p">:</span> <span class="n">task</span><span class="o">.</span><span class="n">text</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">understanding</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">understanding</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">plan</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"echo"</span><span class="p">:</span> <span class="n">plan</span><span class="p">[</span><span class="s2">"text"</span><span class="p">]}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">respond</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">validated</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentResult</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">AgentResult</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">validated</span><span class="p">[</span><span class="s2">"echo"</span><span class="p">],</span> <span class="n">ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Register it (<code>app/framework/bootstrap.py</code>), and it's a real, callable
+agent — <code>POST /api/v1/orchestration/execute</code> with
+<code>required_capabilities: ["echo"]</code> reaches it, gets scored by the same
+Thompson Sampling bandit as every other agent, and starts collecting
+real feedback from its first call. Nothing here talks to an LLM — a
+capability doesn't have to.</p>
+<h2 id="example-2-a-real-one-the-coding-agent">Example 2 — a real one: the Coding Agent</h2>
+<p><strong>1. Subclass <code>Agent</code> and fill in the six-step interface.</strong> Only
+<code>execute()</code> and <code>validate()</code> need to do interesting work for most
+agents — <code>understand()</code>/<code>plan()</code> can be near-identity if there's no
+multi-stage reasoning to capture:</p>
+<div class="hl"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">app.framework.agent_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">AgentMetadata</span><span class="p">,</span> <span class="n">AgentResult</span><span class="p">,</span> <span class="n">AgentStatus</span><span class="p">,</span> <span class="n">LatencyProfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.framework.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span><span class="p">,</span> <span class="n">TaskType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.llm.router</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_llm_client</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyCodingAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">AgentMetadata</span><span class="p">(</span>
+            <span class="n">agent_id</span><span class="o">=</span><span class="s2">"my-coding-agent"</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"My Coding Agent"</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"Generates and reviews code in &lt;language&gt;."</span><span class="p">,</span>
+            <span class="n">capabilities</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">({</span><span class="s2">"code_generation"</span><span class="p">,</span> <span class="s2">"code_review"</span><span class="p">}),</span>
+            <span class="n">supported_tasks</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">({</span><span class="n">TaskType</span><span class="o">.</span><span class="n">CODE_GENERATION</span><span class="p">,</span> <span class="n">TaskType</span><span class="o">.</span><span class="n">CODE_REVIEW</span><span class="p">}),</span>
+            <span class="n">cost_per_call_usd</span><span class="o">=</span><span class="mf">0.004</span><span class="p">,</span>
+            <span class="n">latency_profile</span><span class="o">=</span><span class="n">LatencyProfile</span><span class="p">(</span><span class="n">p50_ms</span><span class="o">=</span><span class="mi">1200</span><span class="p">,</span> <span class="n">p95_ms</span><span class="o">=</span><span class="mi">4000</span><span class="p">),</span>
+            <span class="n">reliability_score</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>  <span class="c1"># the router's cold-start prior, before any real feedback</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">AgentStatus</span><span class="o">.</span><span class="n">ACTIVE</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">understand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"text"</span><span class="p">:</span> <span class="n">task</span><span class="o">.</span><span class="n">text</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">plan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">understanding</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"messages"</span><span class="p">:</span> <span class="p">[{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"system"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"You write correct code."</span><span class="p">},</span>
+                             <span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">understanding</span><span class="p">[</span><span class="s2">"text"</span><span class="p">]}]}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">plan</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">get_llm_client</span><span class="p">(</span><span class="s2">"delay_ok"</span><span class="p">,</span> <span class="n">preferred</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"preferred_provider"</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"result"</span><span class="p">:</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span><span class="s2">"my_agent_generate"</span><span class="p">,</span> <span class="n">plan</span><span class="p">[</span><span class="s2">"messages"</span><span class="p">])}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span>  <span class="c1"># coding_agent.py's real version runs ast.parse here — see below</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">respond</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">validated</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentResult</span><span class="p">:</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="n">validated</span><span class="p">[</span><span class="s2">"result"</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">AgentResult</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">raw</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">ok</span><span class="o">=</span><span class="ow">not</span> <span class="n">raw</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.8</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">raw</span><span class="o">.</span><span class="n">error</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Note <code>execute()</code> goes through <code>get_llm_client()</code> (<code>llm/router.py</code>) — the
+SAME model abstraction layer/fallback chain every other agent uses. Your
+agent never talks to an SDK directly, so it inherits every provider
+(Luna/Groq/Claude/HuggingFace/a custom local model) and the per-call
+generation-params bandit for free — see <code>README_REINFORCEMENT_LEARNING.md</code>.</p>
+<p><strong>2. Do REAL validation, not a stub.</strong> <code>coding_agent.py</code>'s actual
+<code>validate()</code> extracts every fenced <code>```python</code> block from the reply and
+runs it through <code>ast.parse</code> — a genuine syntax check — retrying the
+model once with the parse error appended if it fails:</p>
+<div class="hl"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">_extract_python_blocks</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"result"</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">_first_syntax_error</span><span class="p">(</span><span class="n">blocks</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">"syntax_ok"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="n">retried</span> <span class="o">=</span> <span class="n">get_llm_client</span><span class="p">(</span><span class="s2">"delay_ok"</span><span class="p">)</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span>
+        <span class="s2">"coding_generate(retry)"</span><span class="p">,</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">"messages"</span><span class="p">]</span> <span class="o">+</span> <span class="p">[{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"system"</span><span class="p">,</span>
+                               <span class="s2">"content"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Syntax error: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">. Regenerate it, fixed."</span><span class="p">}])</span>
+    <span class="n">result</span><span class="p">[</span><span class="s2">"result"</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s2">"syntax_ok"</span><span class="p">]</span> <span class="o">=</span> <span class="n">retried</span><span class="p">,</span> <span class="ow">not</span> <span class="n">retried</span><span class="o">.</span><span class="n">error</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+
+<p>Whatever your domain is, put its REAL correctness check here — a test
+run, a schema validation, a linter — not just a confidence number the
+model made up about itself.</p>
+<p>The real <code>coding_agent.py</code> now goes further than this template shows —
+it has actual LLM-callable tools (<code>run_code</code> executes a snippet for
+real in a sandboxed subprocess, <code>read_file</code>/<code>write_file</code> are scoped to
+a workspace directory, and <code>write_file</code> requires an explicit
+confirmation round-trip before anything is written) instead of pure
+text generation. See
+<a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html"><code>README_POLICY_GATE_AND_CODING_AGENT.md</code></a>
+for the full walkthrough — the same tool-calling shape (<code>tools=</code> on
+<code>client.chat()</code>, reading <code>result.tool_call</code>) is the pattern to copy for
+any agent that needs to do more than talk.</p>
+<p><strong>3. Register it.</strong> <code>app/framework/bootstrap.py</code> is the only place that
+needs to change, and only to ADD a line — nothing existing is touched:</p>
+<div class="hl"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.agents.my_coding_agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">MyCodingAgent</span>
+<span class="c1"># inside bootstrap_default_agents():</span>
+<span class="n">registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">MyCodingAgent</span><span class="p">())</span>
+<span class="n">network</span><span class="o">.</span><span class="n">add_agent</span><span class="p">(</span><span class="n">MyCodingAgent</span><span class="p">()</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Or register it at runtime, no code deploy at all, via
+<code>POST /api/v1/agents/register</code> with a <code>webhook_url</code> — Kalkee builds a
+<code>RemoteHttpAgent</code> proxy that POSTs <code>{task_id, text, session_id,
+metadata}</code> to your service and expects <code>{text, ok, confidence}</code> back.
+Your agent can be written in any language, hosted anywhere; Kalkee
+never needs your source.</p>
+<p><strong>4. That's it — the router finds it on its own.</strong> No if/elif anywhere
+names <code>"my-coding-agent"</code>. The next task whose <code>required_capabilities</code>
+includes <code>"code_generation"</code> will have your agent in the candidate pool
+(<code>orchestrator.py</code>'s capability pre-filter), scored by the same Thompson
+Sampling bandit as <code>pm-agent</code>/<code>coding-agent</code>/<code>openclaw-agent</code>, and it
+starts collecting its own feedback-driven posterior from its very first
+real task:</p>
+<div class="hl"><pre><span></span><code>POST /api/v1/orchestration/execute
+{"task": "Write a function that validates an email address",
+ "context": {"task_type": "code_generation", "required_capabilities": ["code_generation"]}}
+</code></pre></div>
+
+<p>If both <code>coding-agent</code> (the bundled example) and your new agent declare
+<code>code_generation</code>, they compete for that traffic exactly as intended —
+whichever one actually produces higher quality/lower cost/lower latency,
+per Kalkee's own measured feedback, wins more of it over time. You
+don't pick a winner; the bandit does.</p>
+<h2 id="example-3-replacing-pm-agent-entirely">Example 3 — replacing <code>pm-agent</code> entirely</h2>
+<p>Everything above ADDS an agent alongside <code>pm-agent</code>. To make a different
+agent — <code>coding-agent</code>, or your own — the <em>primary</em> service instead, two
+integration surfaces exist, and which one you touch depends on whether
+you're keeping the PM chat widget's UI or not:</p>
+<p><strong>Path 1 — use the generic API, touch nothing PM-related (recommended).</strong>
+<code>POST /api/v1/orchestration/execute</code> (<code>routers/v1/orchestration.py</code>) never
+mentions <code>pm-agent</code> anywhere — it routes purely by declared capabilities
+through <code>orchestrator.py</code>'s Thompson Sampling bandit. Point a new client
+at it with <code>required_capabilities: ["code_generation"]</code> and it's already
+a fully working "coding service": <code>pm-agent</code> simply never enters the
+candidate pool for that task type, because it doesn't declare
+<code>code_generation</code> in its <code>supported_tasks</code>. No file changes at all — this
+is what "generic and extensible" means in practice.</p>
+<p><strong>Path 2 — repoint the existing chat widget/mobile app at your agent.</strong>
+The widget's own endpoint, <code>POST /api/chat/message</code>
+(<code>routers/chat.py::chat_message</code>), is older than Kalkee and still calls
+<code>agent/adapter.py</code>'s <code>get_agent(framework)</code> directly — the PM chatbot's
+own native/langgraph/adk/claude tracks, bypassing Kalkee's
+registry/orchestrator entirely. That's the one call site to change if you
+want your new agent to power that <em>same</em> UI (same auth, same session/
+history plumbing, same React/Flutter screens) instead of PM:</p>
+<div class="hl"><pre><span></span><code><span class="c1"># routers/chat.py — replace the get_agent(...) call with Kalkee's registry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..framework.registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">registry</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"my-coding-agent"</span><span class="p">)</span>   <span class="c1"># instead of agent.adapter.get_agent(...)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Task</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">body</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">TaskContext</span><span class="p">(),</span>
+                        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">"user"</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span> <span class="s2">"preferred_provider"</span><span class="p">:</span> <span class="o">...</span><span class="p">}))</span>
+<span class="n">reply</span> <span class="o">=</span> <span class="n">ChatReply</span><span class="p">(</span><span class="n">reply</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</code></pre></div>
+
+<p><code>pm-agent</code> keeps working (it's still in the registry, still reachable via
+Path 1's generic API) — this only changes what the <em>widget</em> talks to. In
+all three examples above, nothing about PM's own code —
+<code>native_agent.py</code>, <code>tools.py</code>, <code>pm_service.py</code> — is touched or forked;
+Kalkee was built so the domain being served is a routing/config
+choice, not a source-tree fork.</p>
+<h2 id="adding-a-security-relevant-capability-the-same-way">Adding a security-relevant capability the same way</h2>
+<p>If your new agent (or a new tool on an existing one) touches an
+external system — sends anything, reads anything sensitive — follow the
+pattern <code>google_tools.py</code>/<code>user_mcp_client.py</code> already establish rather
+than inventing a new one:</p>
+<ol>
+<li>Every WRITE action needs an entry in <code>native_agent.requires_confirmation()</code>'s
+   check (or reuse <code>tools.DESTRUCTIVE</code> if it's PM-domain-shaped).</li>
+<li><code>confirm_prompt_for()</code> should show the exact arguments, never a
+   paraphrase.</li>
+<li>If the action reads content FROM the external system, run it through
+   <code>security_guard.classify(..., source=...)</code> before it reaches the
+   user — see <code>README_CYBERSECURITY.md</code>.</li>
+</ol>
+<p>This is what makes a new agent's write capability get the SAME "review
+before approving" guarantee every existing write action already has,
+for free, rather than a bespoke and possibly-forgotten check.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#example-1-the-minimal-agent-five-lines-that-actually-run">Example 1 — the minimal agent (five lines that actually run)</a><a class="l2" href="#example-2-a-real-one-the-coding-agent">Example 2 — a real one: the Coding Agent</a><a class="l2" href="#example-3-replacing-pm-agent-entirely">Example 3 — replacing pm-agent entirely</a><a class="l2" href="#adding-a-security-relevant-capability-the-same-way">Adding a security-relevant capability the same way</a></aside></div>
+<script src="../../docs.js"></script></body></html>

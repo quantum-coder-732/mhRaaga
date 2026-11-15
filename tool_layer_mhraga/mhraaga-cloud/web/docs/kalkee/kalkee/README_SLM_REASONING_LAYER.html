@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SLM Reasoning &amp; Intent Layer · mhRaaga docs</title><meta name="description" content="SLM Reasoning &amp; Intent Layer">
+<link rel="stylesheet" href="../../docs.css"></head>
+<body data-root="../../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../../overview.html">Overview</a></li><li><a href="../../system.html">How the system works</a></li><li><a href="../../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../../ARCHITECTURE.html">Architecture</a></li><li><a href="../../API.html">API for developers</a></li><li><a href="../../SOUND.html">Sound</a></li><li><a href="../../VOICE.html">AI voice</a></li><li><a href="../../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../../STUDIO.html">Stories, people, rules</a></li><li><a href="../../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../../components/music-engine.html">Music engine</a></li><li><a href="../../components/android-app.html">Android app</a></li><li><a href="../../components/music-backend.html">Backend prototype</a></li><li><a href="../../components/music-mobile.html">Mobile prototype</a></li></ul></details><details><summary>About Kalkee</summary><ul><li><a href="../../kalkee/index.html">About these documents</a></li></ul></details><details open><summary>Kalkee</summary><ul><li><a href="../../kalkee/kalkee/ARCHITECTURE.html">Kalkee Architecture — layers, algorithms, and the math behind them</a></li><li><a href="../../kalkee/kalkee/CHAT_PROMPTS.html">Complete Chat Bot User Journey — All Prompts</a></li><li><a href="../../kalkee/kalkee/HOW_IT_WAS_BUILT.html">How the plugin framework +  tier were built</a></li><li><a href="../../kalkee/kalkee/README.html">Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration</a></li><li><a href="../../kalkee/kalkee/README_AGENTS.html">Agents</a></li><li><a href="../../kalkee/kalkee/README_AGENT_FUNCTIONAL_REPORT.html">Agent Functional Report</a></li><li><a href="../../kalkee/kalkee/README_ARROW_DIAGRAMS.html">Arrow Diagrams</a></li><li><a href="../../kalkee/kalkee/README_CLIENT_TOOLS_LOCAL_AUTONOMY.html">Client Tools Local Autonomy</a></li><li><a href="../../kalkee/kalkee/README_CODING_AGENT.html">Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_COMPLEX_EXAMPLE_TRAINING.html">Complex Example Training</a></li><li><a href="../../kalkee/kalkee/README_CYBERSECURITY.html">Cybersecurity</a></li><li><a href="../../kalkee/kalkee/README_DASHBOARDS.html">Dashboards</a></li><li><a href="../../kalkee/kalkee/README_DATA_MODEL.html">Data Model</a></li><li><a href="../../kalkee/kalkee/README_EXPLAINED.html">Explained</a></li><li><a href="../../kalkee/kalkee/README_EXTERNAL_API.html">External Api</a></li><li><a href="../../kalkee/kalkee/README_FUTURE_ROADMAP.html">Future Roadmap</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT.html">Live Prompt Test Report</a></li><li><a href="../../kalkee/kalkee/README_LIVE_PROMPT_TEST_REPORT_2026-08-29.html">Live Prompt Test Report 2026-08-29</a></li><li><a href="../../kalkee/kalkee/README_MASTER_GUIDE.html">Master Guide</a></li><li><a href="../../kalkee/kalkee/README_MEMORY_MANAGEMENT.html">Memory Management</a></li><li><a href="../../kalkee/kalkee/README_NEW_AGENT_GUIDE.html">New Agent Guide</a></li><li><a href="../../kalkee/kalkee/README_OPTIMIZERS.html">Optimizers</a></li><li><a href="../../kalkee/kalkee/README_PEFT_ANALYZER.html">Peft Analyzer</a></li><li><a href="../../kalkee/kalkee/README_POLICY_GATE_AND_CODING_AGENT.html">Policy Gate And Coding Agent</a></li><li><a href="../../kalkee/kalkee/README_PROVIDER_BUDGETS.html">Provider Budgets</a></li><li><a href="../../kalkee/kalkee/README_RL_ALGORITHMS.html">Rl Algorithms</a></li><li><a href="../../kalkee/kalkee/README_SLM_ALL.html">Slm All</a></li><li><a href="../../kalkee/kalkee/README_SLM_GENERATION_LAYER.html">Slm Generation Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_PIPELINE.html">Slm Pipeline</a></li><li><a href="../../kalkee/kalkee/README_SLM_REASONING_LAYER.html" class=cur aria-current=page>Slm Reasoning Layer</a></li><li><a href="../../kalkee/kalkee/README_SLM_TEST_SUITE.html">Slm Test Suite</a></li><li><a href="../../kalkee/kalkee/README_SLM_VALIDATION_PROMPTS_2026-08-30.html">Slm Validation Prompts 2026-08-30</a></li><li><a href="../../kalkee/kalkee/README_TECH_DOC.html">Tech Doc</a></li><li><a href="../../kalkee/kalkee/README_TOKEN_COST_OPTIMIZER.html">Token Cost Optimizer</a></li><li><a href="../../kalkee/kalkee/README_TRADING_AGENT.html">Trading Agent</a></li><li><a href="../../kalkee/kalkee/README_UNIFIED_AGENT_TESTING.html">Unified Agent Testing</a></li><li><a href="../../kalkee/kalkee/README_VECTOR_EMBEDDING_TABLES.html">Vector Embedding Tables</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT.html">The Kalkee Journey — Video Script &amp; Deep-Dive Companion</a></li><li><a href="../../kalkee/kalkee/VIDEO_SCRIPT_EXECUTIVE.html">Kalkee — Executive Overview (Video Script)</a></li></ul></details><details><summary>Kalkee performance optimizer</summary><ul><li><a href="../../kalkee/performance_optimizer/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details><details><summary>Kalkee optimizer (standalone copy)</summary><ul><li><a href="../../kalkee/performance_optimizer_standalone/Algo Engine.html">1. build the binary</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Arhitecture_Opitimization.html">Algo Engine — architecture overview and block diagrams</a></li><li><a href="../../kalkee/performance_optimizer_standalone/Complete_README.html">performanceoptimizer</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_OPTIMIZATION_DASHBOARD.html">Optimization Dashboard</a></li><li><a href="../../kalkee/performance_optimizer_standalone/README_SLM_LATENCY_INVESTIGATION.html">Slm Latency Investigation</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="slm-reasoning-intent-layer">SLM Reasoning &amp; Intent Layer</h1>
+<h2 id="why-this-exists">Why this exists</h2>
+<p>Live-tested this session: the local SLM (<code>ollama-coder</code>, Qwen2.5-Coder
+1.5B) gave a structurally-correct-but-shallow answer to a genuinely
+complex prompt — it named the right concepts but missed the actual hard
+parts a senior engineer would flag. Small models are more sensitive
+than large ones to HOW a prompt is framed: an explicit statement of
+what <em>kind</em> of task this is, and what specifically goes wrong for that
+kind of task, measurably improves how well a small model follows
+through, without touching the model's own weights.</p>
+<p>That's what this layer is. It is <strong>not</strong>:</p>
+<ul>
+<li>A second model call. An SLM is already the latency-sensitive path
+  (see <code>providers.py</code>'s <code>OLLAMA_KEEP_ALIVE</code> comment,
+  <code>hybrid_router.py</code>'s <code>LOCAL_TIMEOUT_SECONDS</code>) — adding a "let me
+  think about your intent first" round trip in front of every SLM
+  generation would directly fight the whole reason this layer exists.
+  It runs in the same single generation call, as prompt conditioning.</li>
+<li>A neural intent classifier. It's a regex/keyword heuristic — the same
+  order of technique <code>llm/hybrid_router.py</code>'s own
+  <code>_complexity_features()</code> already uses for its cheap, non-LLM
+  complexity estimate. Cheap, fast (microseconds), and fully
+  deterministic/testable, at the cost of being a heuristic rather than
+  a learned classifier — a real, disclosed tradeoff, not a limitation
+  hidden behind an impressive-sounding name.</li>
+<li>A substitute for capability. It does not make a 1.5B model reason
+  like a 70B one. See <code>README_COMPLEX_EXAMPLE_TRAINING.md</code> for the
+  companion honesty note on training's own limits here — the two
+  documents make the same point from different angles (prompting vs.
+  fine-tuning), because it's true from both angles.</li>
+</ul>
+<h2 id="architecture">Architecture</h2>
+<div class="hl"><pre><span></span><code>User message
+     │
+     ▼
+classify_intent(text)   ← app/llm/intent_reasoner.py
+     │                     regex/keyword match against a fixed set of
+     │                     coding-task intents, first match wins
+     ▼
+one of: debug | refactor | test | repo_analysis | generate | general_coding
+     │
+     ▼
+guidance_for(intent)    ← a short, imperative instruction specific to
+     │                     what actually goes wrong for THIS intent
+     ▼
+appended to CodingAgent.SYSTEM_PROMPT's content
+(coding_agent.py's plan())
+     │
+     ▼
+ONE generation call to the SLM (or whichever provider Auto Hybrid/an
+explicit pick resolved to) — the intent guidance is baked into the
+SAME system prompt that call already sends, not a separate call
+     │
+     ▼
+AgentResult.raw["intent"] — the classified intent is surfaced back to
+the caller (used by scripts/run_slm_test_suite.py to verify the
+classifier agrees with the test suite's own human-assigned category)
+</code></pre></div>
+
+<h2 id="the-six-intents">The six intents</h2>
+<p>Deliberately the same six categories the 100-prompt test suite
+(<code>scripts/run_slm_test_suite.py</code>) is organized by — the reasoning layer
+and the eval harness use one shared taxonomy, not two that could drift
+apart.</p>
+<table>
+<thead>
+<tr>
+<th>Intent</th>
+<th>Triggers on</th>
+<th>Guidance injected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>debug</code></td>
+<td>fix/error/bug/crash/exception/traceback/race condition/deadlock/memory leak/hangs/regression</td>
+<td>Find the real root cause before proposing a fix — read the file or run the code rather than guessing from the description alone.</td>
+</tr>
+<tr>
+<td><code>refactor</code></td>
+<td>refactor/clean up/simplify/reorganize/extract/rename/restructure/de-duplicate</td>
+<td>Preserve existing behavior exactly; change structure/clarity only unless a behavior change was explicitly asked for.</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>unit tests/pytest/test coverage/assert/mock/edge cases</td>
+<td>Cover real edge cases (empty input, boundaries, error paths), not just the happy path.</td>
+</tr>
+<tr>
+<td><code>repo_analysis</code></td>
+<td>repository/codebase/across the repo/entire project/every file</td>
+<td>Use <code>list_files</code>/<code>grep</code> to look at real files — never answer from assumptions about what the codebase probably contains.</td>
+</tr>
+<tr>
+<td><code>generate</code></td>
+<td>write/create/implement/generate/build/add/design</td>
+<td>Return code that's syntactically complete and directly runnable, not a sketch.</td>
+</tr>
+<tr>
+<td><code>general_coding</code></td>
+<td>none of the above matched</td>
+<td>No extra guidance — a plain knowledge question doesn't need debug/refactor/test framing bolted on.</td>
+</tr>
+</tbody>
+</table>
+<p><code>debug</code>/<code>refactor</code>/<code>test</code>/<code>repo_analysis</code> are checked <strong>before</strong>
+<code>generate</code>, because a prompt like <em>"write a test that reproduces this
+bug"</em> mentions a generate-shaped verb ("write") but the more specific,
+more actionable intent is <code>debug</code> — order matters and is covered by
+<code>test_debug_wins_over_generate_when_both_verbs_present</code> in
+<code>tests/test_intent_reasoner.py</code>.</p>
+<h2 id="where-it-plugs-in">Where it plugs in</h2>
+<p><code>app/framework/agents/coding_agent.py</code>'s <code>plan()</code>:</p>
+<div class="hl"><pre><span></span><code><span class="n">intent</span> <span class="o">=</span> <span class="n">classify_intent</span><span class="p">(</span><span class="n">understanding</span><span class="p">[</span><span class="s2">"text"</span><span class="p">])</span>
+<span class="n">content</span> <span class="o">+=</span> <span class="n">guidance_for</span><span class="p">(</span><span class="n">intent</span><span class="p">)</span>
+<span class="n">system</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">SYSTEM_PROMPT</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">content</span><span class="p">}</span>
+</code></pre></div>
+
+<p>This runs for every CodingAgent turn — client-tools mode (VS Code) and
+the default server-sandbox mode alike — before the first model call is
+ever made, and before Auto Hybrid's own local-vs-hosted routing
+decision (<code>hybrid_router.choose()</code>), which is a separate, complementary
+signal (complexity, not intent — see <code>README_COMPLEX_EXAMPLE_TRAINING.md</code>'s
+discussion of what training actually changes about complexity handling).
+The intent classification does not currently feed the routing decision
+itself; it only conditions the prompt. Feeding intent into routing too
+(e.g. always escalating <code>repo_analysis</code> to a hosted model, since that
+needs more context-window headroom than a 1.5B model's SLM context
+typically affords) is a natural next step, not yet built.</p>
+<h2 id="testing-it">Testing it</h2>
+<p><code>tests/test_intent_reasoner.py</code> — 15 cases covering all six intents
+individually, the debug-wins-over-generate ordering rule, and the
+general-bucket empty-guidance invariant.</p>
+<p><code>scripts/run_slm_test_suite.py</code>'s 100-prompt run additionally reports,
+per prompt, whether the intent layer's classification matches the
+category the prompt was written under — a live check that the
+heuristic actually agrees with a human's own categorization, not just
+that it runs without crashing.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#why-this-exists">Why this exists</a><a class="l2" href="#architecture">Architecture</a><a class="l2" href="#the-six-intents">The six intents</a><a class="l2" href="#where-it-plugs-in">Where it plugs in</a><a class="l2" href="#testing-it">Testing it</a></aside></div>
+<script src="../../docs.js"></script></body></html>
