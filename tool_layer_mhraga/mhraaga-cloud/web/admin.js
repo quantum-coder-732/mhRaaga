@@ -193,6 +193,6 @@ async function start() {
   $("cost-refresh").onclick = async () => { try { await costs(true); } catch (e) { toast(e.message); } };
   $("r-copy").onclick = () => copy($("r-pw").textContent); $("r-copy2").onclick = () => copy(tmpMail); $("r-close").onclick = () => $("rdlg").close();
   api("/admin/requests").then((d) => { $("req-n").hidden = !d.pending; $("req-n").textContent = d.pending; if (d.pending && !location.hash) show("requests"); }).catch(() => {});
-  const t = location.hash.slice(1); show(["overview", "requests", "users", "columns", "costs", "singer"].includes(t) ? t : "overview");
+  const t = location.hash.slice(1); show(["overview", "requests", "users", "columns", "costs", "singer"].includes(t) ? t : "users");
 }
 start();

@@ -29,12 +29,12 @@ if (authed) {
   document.body.classList.add("authed");
   const nav = $("appnav"); nav.hidden = false;
   const logo = document.createElement("a"); logo.className = "logo"; logo.href = "#home"; logo.innerHTML = '<span class="om">ॐ</span><b>mhRaaga</b>'; nav.append(logo);
-  for (const [v, ic, label] of NAV) { const a = document.createElement("a"); a.className = "l"; a.href = "#" + v; a.dataset.v = v; const i = document.createElement("span"); i.className = "ic"; i.textContent = ic; a.append(i, label); nav.append(a); const top = document.createElement("a"); top.className = "btn"; top.href = "admin.html"; top.textContent = "🛠 Admin · Users"; $("sign").before(top); }
+  for (const [v, ic, label] of NAV) { const a = document.createElement("a"); a.className = "l"; a.href = "#" + v; a.dataset.v = v; const i = document.createElement("span"); i.className = "ic"; i.textContent = ic; a.append(i, label); nav.append(a); }
   nav.addEventListener("click", (e) => { const a = e.target.closest("a.l"); if (!a) return; e.preventDefault(); show(a.dataset.v); });
   logo.onclick = (e) => { e.preventDefault(); show("home"); };
   window.addEventListener("hashchange", () => show(location.hash.slice(1), false));
   // administrators get one more entry; the server checks the role again on every admin call
-  try { const t = localStorage.getItem("mh_token"); if (t) fetch("/api/me", { headers: { Authorization: "Bearer " + t } }).then((r) => r.json()).then((m) => { if (m && m.admin) { const a = document.createElement("a"); a.className = "l"; a.href = "admin.html"; const i = document.createElement("span"); i.className = "ic"; i.textContent = "🛠"; a.append(i, "Admin"); nav.append(a); } }).catch(() => {}); } catch {}
+  try { const t = localStorage.getItem("mh_token"); if (t) fetch("/api/me", { headers: { Authorization: "Bearer " + t } }).then((r) => r.json()).then((m) => { if (m && m.admin) { const a = document.createElement("a"); a.className = "l"; a.href = "admin.html"; const i = document.createElement("span"); i.className = "ic"; i.textContent = "👤"; a.append(i, "Users & cost"); nav.append(a); } }).catch(() => {}); } catch {}
 }
 
 // frames: load when near the viewport, then follow their content height (same origin, so we can read it)
