@@ -55,7 +55,7 @@ $("dform").onsubmit = (e) => {
   const q = new URLSearchParams({ prompt: t }); if (picked.has("krishna")) q.set("style", "krishna"); else if (picked.has("poem")) q.set("style", "poem");
   const f = document.querySelector("#create iframe"); f.dataset.loaded = ""; f.dataset.src = "app.html?" + q; show("create"); load(f);
 };
-try { const p = JSON.parse(sessionStorage.getItem("mh_prompt") || "null"); if (p && authed) { sessionStorage.removeItem("mh_prompt"); $("dtext").value = p.t; (p.s || []).forEach((s) => document.querySelector(`#dchips [data-s="${s}"]`)?.click()); } } catch {}
+try { const p = JSON.parse(sessionStorage.getItem("mh_prompt") || "null"); if (p && authed) { sessionStorage.removeItem("mh_prompt"); $("dtext").value = p.t; (p.s || []).forEach((s) => document.querySelector(`#dchips [data-s="${s}"]`)?.click()); $("dform").requestSubmit(); } } catch {}
 window.addEventListener("message", (e) => {
   if (e.origin !== location.origin || !e.data || typeof e.data.compose !== "string" || !/^app\.html(\?[\w=&%.:+-]*)?$/.test(e.data.compose)) return;
   const f = document.querySelector("#create iframe"); f.dataset.loaded = ""; f.dataset.src = e.data.compose; show("create"); load(f);
