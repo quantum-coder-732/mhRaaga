@@ -54,5 +54,22 @@ class Styles(unittest.TestCase):
         self.assertEqual((sc["meta"]["style"], sc["meta"]["ensemble"]), ("sufi qawwali", ["dholak", "clap"]))
 
 
+class Projection(unittest.TestCase):
+    """Regression: `style` is a DynamoDB reserved word, so naming it bare in a ProjectionExpression made /songs and /playlist fail with a 500."""
+    RESERVED = {"style", "language", "source", "duration", "status", "name", "role", "limit", "type", "time", "date", "user", "key", "value", "data", "comment", "count", "order"}
+
+    def test_list_songs_projection_has_no_bare_reserved_words(self):
+        seen = {}
+        class Rec(Fake):
+            def query(self, **kw):
+                seen.update(kw); return super().query(**kw)
+        h._songs = Rec(("owner", "id")); h._users = Fake(("email",)); boss = mk("boss@example.com", "Boss")
+        h.list_songs({"headers": {}}, "boss@example.com")
+        names = seen["ProjectionExpression"].replace(" ", "").split(",")
+        bare = [n for n in names if not n.startswith("#") and n.lower() in self.RESERVED]
+        self.assertEqual(bare, [], f"bare reserved words in the projection: {bare}")
+        self.assertEqual(seen["ExpressionAttributeNames"]["#y"], "style")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=0)

@@ -269,8 +269,8 @@ PLAYLIST_OWNER = "playlist#common"   # the shared, read-only playlist everybody 
 def list_songs(event, owner=None):
     owner = owner or user_from(event)["email"]
     r = _songs.query(KeyConditionExpression=Key("owner").eq(owner), ScanIndexForward=False, Limit=100,
-                     ProjectionExpression="id,title,raga,tala,tempo,mood,#l,#d,created,#s,prompt,plays,downloads,style",
-                     ExpressionAttributeNames={"#l": "language", "#s": "source", "#d": "duration"})
+                     ProjectionExpression="id,title,raga,tala,tempo,mood,#l,#d,created,#s,prompt,plays,downloads,#y",      # "style" is a DynamoDB reserved word
+                     ExpressionAttributeNames={"#l": "language", "#s": "source", "#d": "duration", "#y": "style"})
     return 200, {"songs": r["Items"]}
 
 
