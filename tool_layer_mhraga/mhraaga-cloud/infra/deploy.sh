@@ -15,7 +15,7 @@ ORIGIN=$(aws ssm get-parameter --name /mhraaga/origin_secret --with-decryption -
 
 # 2. Lambda package = API handler + the music engine layer
 rm -rf "$HERE/build"; mkdir -p "$HERE/build/lambda"
-cp "$HERE/api/handler.py" "$HERE/api/studio.py" "$HERE/api/team.py" "$HERE/api/voice.py" "$HERE/api/admin.py" "$HERE/api/jobs.py" "$HERE/build/lambda/"
+cp "$HERE/api/handler.py" "$HERE/api/studio.py" "$HERE/api/team.py" "$HERE/api/voice.py" "$HERE/api/admin.py" "$HERE/api/jobs.py" "$HERE/api/lyria.py" "$HERE/build/lambda/"
 cp -r "$HERE/../singer" "$HERE/build/lambda/singer" && rm -rf "$HERE/build/lambda/singer/__pycache__" "$HERE/build/lambda/singer/examples" "$HERE/build/lambda/singer/colab_singer.ipynb"
 cp -r "$ROOT/music_engine_framework_layer/mhraaga_engine" "$HERE/build/lambda/"
 rm -rf "$HERE/build/lambda/mhraaga_engine/agentic/data" "$HERE/build/lambda/mhraaga_engine/agentic"   # offline tooling, not needed at runtime
@@ -35,7 +35,7 @@ out() { aws cloudformation describe-stacks --stack-name $STACK --query "Stacks[0
 SITE=$(out SiteUrl); BUCKET=$(out SiteBucketName); DIST=$(out DistributionId); DIRECT=$(out ApiDirectUrl)
 
 # 4. website
-aws s3 sync "$HERE/web" "s3://$BUCKET" --delete --cache-control "public,max-age=300" --exclude ".DS_Store" --exclude "catalog/*" --exclude "library/*" --exclude "rules/*" --exclude "samples/*" --exclude "tts/*" --exclude "yue/*" >/dev/null
+aws s3 sync "$HERE/web" "s3://$BUCKET" --delete --cache-control "public,max-age=300" --exclude ".DS_Store" --exclude "catalog/*" --exclude "library/*" --exclude "rules/*" --exclude "samples/*" --exclude "tts/*" --exclude "lyria/*" --exclude "yue/*" >/dev/null
 # /docs and /docs/ (no file name) have no object of their own, so S3 answered Access Denied. Give both a tiny page that opens the docs.
 mkdir -p "$HERE/build"
 printf '%s' '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=/docs/index.html"><title>mhRaaga docs</title><p><a href="/docs/index.html">Open the documentation</a></p>' > "$HERE/build/docs-redirect.html"

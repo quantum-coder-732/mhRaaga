@@ -100,6 +100,25 @@
     <details><summary>Lyrics</summary><pre id="lyrics-out"></pre></details>
   </section>
 
+  <section class="card lycard" id="ly" hidden>
+    <div class="lyhead"><h2>Make a song with a singer</h2><span class="pill" id="ly-left-pill"></span></div>
+    <p class="muted">Pick how it is made. The free one is the raga engine above. The other two use Google's Lyria 3 music model: a real sung voice and instruments, but they cost money, so each person gets <b id="ly-per">3</b> a day.</p>
+    <div class="models" id="ly-models" role="radiogroup" aria-label="Music model">
+      <label class="model on" data-m="free"><input type="radio" name="lym" value="free" checked><span class="mt">Raga engine</span><b class="price free">Free</b><span class="md">Instant, in your browser. Spoken-style voice. Use the form above.</span></label>
+      <label class="model" data-m="clip"><input type="radio" name="lym" value="clip"><span class="mt">Lyria 3 Clip</span><b class="price">$0.04</b><span class="md">30-second sung clip. The cheap way to try an idea.</span></label>
+      <label class="model" data-m="pro"><input type="radio" name="lym" value="pro"><span class="mt">Lyria 3 Pro</span><b class="price">$0.08</b><span class="md">Full song, about 2 minutes, with verses and a chorus.</span></label>
+    </div>
+    <div id="ly-form" hidden>
+      <div class="fields"><label class="field"><span>Title</span><input id="ly-title" maxlength="80" placeholder="Mere man ke mohan"></label>
+        <label class="field"><span>Style</span><input id="ly-style" maxlength="200" placeholder="devotional bhajan, harmonium, bansuri, tabla, warm male vocal"></label></div>
+      <div class="chips" id="ly-chips"></div>
+      <label class="field"><span>Lyrics <em>(tag parts like [Verse] and [Chorus]; leave empty and the model writes them)</em></span><textarea id="ly-lyrics" rows="7" maxlength="1800"></textarea></label>
+      <div class="actions"><button type="button" id="ly-go" class="primary">Make the song</button><span id="ly-status" role="status" class="muted"></span></div>
+      <div class="lybar" id="ly-bar" hidden><i id="ly-fill"></i></div>
+    </div>
+    <audio id="ly-audio" controls preload="none" hidden></audio>
+  </section>
+
   <section class="card library"><h2>Community playlist</h2><ul id="plist"></ul><p id="pempty" class="muted">Loading…</p></section>
 
   <section class="card library" id="library"><h2>Your songs</h2><ul id="songs"></ul><p id="empty" class="muted">Nothing yet. Compose your first raga.</p></section>
@@ -107,7 +126,7 @@
 
 <div id="toast" class="toast" role="status" hidden></div>
 <script src="lame.min.js"></script><script type="module" src="site.js"></script>
-<script type="module" src="app.js"></script>
+<script type="module" src="app.js"></script><script type="module" src="lyria.js"></script>
 <script type="module" src="speech.js"></script>
 </body>
 </html>

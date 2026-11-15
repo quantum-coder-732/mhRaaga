@@ -3,6 +3,7 @@ Description: mhRaaga - raga music studio (S3 + CloudFront site, API Gateway + La
 Parameters:
   OriginSecret: {Type: String, NoEcho: true, MinLength: 16, Description: Shared secret CloudFront sends so the API only answers through the site}
   DailyComposeLimit: {Type: Number, Default: 30}
+  Lyria: {Type: String, Default: "on", AllowedValues: ["on", "off"], Description: "Full AI songs with a sung voice (Google Lyria 3 through OpenRouter, about $0.08 each, limited per user and per day)."}
   GpuEngine: {Type: String, Default: "off", AllowedValues: ["on", "off"], Description: "Accept AI-singer (YuE2) jobs. A GPU worker must also be running."}
   SignupOpen: {Type: String, Default: "true", AllowedValues: ["true", "false"]}
   DomainName: {Type: String, Default: "", Description: "Custom domain such as mhraaga.in (leave empty to use the CloudFront address)"}
@@ -56,12 +57,15 @@ Resources:
                 Action: s3:ListBucket
                 Resource: !Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}"
                 Condition: {StringLike: {"s3:prefix": ["tts/*"]}}
+              - Effect: Allow   # a full-AI-song request starts this same function again in the background
+                Action: lambda:InvokeFunction
+                Resource: !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:mhraaga-api
               - Effect: Allow
                 Action: ssm:GetParameter
                 Resource: !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/mhraaga/*
               - Effect: Allow   # AI rules, voice samples and cached neural-voice audio live in the site bucket, only under these prefixes
                 Action: [s3:GetObject, s3:PutObject, s3:DeleteObject]
-                Resource: [!Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/rules/*", !Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/samples/*", !Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/tts/*"]
+                Resource: [!Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/rules/*", !Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/samples/*", !Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/tts/*", !Sub "arn:${AWS::Partition}:s3:::mhraaga-site-${AWS::AccountId}-${AWS::Region}/lyria/*"]
   ApiLogs:
     Type: AWS::Logs::LogGroup
     Properties: {LogGroupName: /aws/lambda/mhraaga-api, RetentionInDays: 30}
@@ -74,7 +78,7 @@ Resources:
       Architectures: [x86_64]   # the Box2D wheel is built for x86_64
       Handler: handler.handler
       MemorySize: 512
-      Timeout: 28
+      Timeout: 150
       Role: !GetAtt ApiRole.Arn
       Code: ../build/lambda
       Environment:
@@ -86,6 +90,7 @@ Resources:
           SIGNUP_OPEN: !Ref SignupOpen
           ORIGIN_SECRET: !Ref OriginSecret
           SITE_BUCKET: !Sub mhraaga-site-${AWS::AccountId}-${AWS::Region}
+          LYRIA: !Ref Lyria
           ADMIN_EMAILS: keshav.velhal@gmail.com
           GPU_ENGINE: !Ref GpuEngine
 

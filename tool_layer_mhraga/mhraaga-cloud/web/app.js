@@ -95,13 +95,17 @@ async function refreshPlaylist() {
       li.append(b); ul.append(li); }
   } catch { $("pempty").textContent = "Playlist unavailable."; }
 }
+window.addEventListener("mh-refresh", () => refreshLibrary());
 async function refreshLibrary() {
   const { songs } = await api("/songs"); const ul = $("songs"); ul.replaceChildren(); $("empty").hidden = songs.length > 0;
   for (const s of songs) {
     const li = document.createElement("li"); if (song && song.id === s.id) li.className = "on";
     const b = document.createElement("button"); const l = document.createElement("span"), r = document.createElement("small");
     b.className = "srow"; l.textContent = s.title; r.textContent = `${s.raga} · ${s.tala} · ${fmt(s.duration)}${s.style ? " · " + s.style : ""}`; b.append(thumb(s), textBox(l, r));
-    b.onclick = async () => { try { song = await api("/songs/" + s.id); await show(song); await play(); } catch (e) { toast(e.message); } };
+    if (s.audio) {                                                      // a full AI song (Lyria): plays from its MP3, not from a score
+      r.textContent = s.status === "pending" ? "Making your song…" : s.status === "failed" ? "Did not work" : `AI singer · ${fmt(s.duration || 0)}${s.style ? " · " + s.style : ""}`;
+      b.onclick = () => (s.status === "done" || !s.status ? window.dispatchEvent(new CustomEvent("mh-audio", { detail: s })) : toast(r.textContent));
+    } else b.onclick = async () => { try { song = await api("/songs/" + s.id); await show(song); await play(); } catch (e) { toast(e.message); } };
     li.append(b); ul.append(li);
   }
 }

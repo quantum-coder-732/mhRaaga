@@ -38,3 +38,13 @@ A GPU machine such as an AWS `g5.xlarge` (24 GB) costs about **$1.21 an hour** i
 
 ## Licence
 YuE2 code: Apache-2.0. **Weights: free for personal use, creators and musicians (including monetising what you make) and for non-commercial work; companies need a licence from the authors.** See [THIRD_PARTY.md](THIRD_PARTY.md).
+
+## Full AI songs with Lyria 3 (the hosted route)
+
+The free routes above are either not built for Hindi singing (YuE2, needs a GPU) or only sing speech (the CPU prototype `tool_layer_mhraga/singer/cpu_sing.py`). The route that is switched on in the app is **Google Lyria 3 through OpenRouter**: about $0.08 for a full song, no GPU of ours.
+
+- **Create page, "Full AI song with a singer"**: title, style, lyrics (or leave empty and the model writes them). `POST /api/lyria`, then `GET /api/lyria/{id}` until `status` is `done`; `GET /api/lyria/info` tells how many tries are left today.
+- **Why two calls:** a song takes 20 to 60 seconds, longer than a web request may last. The request saves a row and starts the same Lambda again in the background; that run calls the model, saves the MP3 under `lyria/<random>.mp3` in the site bucket and marks the row done. It then shows in *My songs* (`source: "lyria"`, with an `audio` link and no score).
+- **Limits (it costs money):** `LYRIA_USER_DAILY` (3) songs per user per day and `LYRIA_SITE_DAILY_USD` ($2) for the whole site per day. A failed song is not counted. Switch it off with the stack parameter `Lyria=off`.
+- **Honest limits:** not driven by our raga engine; Hindi words are mostly sung right but some blur; the Android app lists these songs but cannot open them yet.
+- **Code:** `api/lyria.py`, `web/lyria.js`, tests in `tests/test_lyria.py`.

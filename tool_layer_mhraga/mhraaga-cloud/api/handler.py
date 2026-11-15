@@ -36,6 +36,7 @@ import studio
 from mhraaga_engine import styles
 import team
 import voice
+import lyria
 
 USERS = os.environ.get("USERS_TABLE", "mhraaga-users")
 SONGS = os.environ.get("SONGS_TABLE", "mhraaga-songs")
@@ -303,8 +304,8 @@ PLAYLIST_OWNER = "playlist#common"   # the shared, read-only playlist everybody 
 def list_songs(event, owner=None):
     owner = owner or user_from(event)["email"]
     r = _songs.query(KeyConditionExpression=Key("owner").eq(owner), ScanIndexForward=False, Limit=100,
-                     ProjectionExpression="id,title,raga,tala,tempo,mood,#l,#d,created,#s,prompt,plays,downloads,#y",      # "style" is a DynamoDB reserved word
-                     ExpressionAttributeNames={"#l": "language", "#s": "source", "#d": "duration", "#y": "style"})
+                     ProjectionExpression="id,title,raga,tala,tempo,mood,#l,#d,created,#s,prompt,plays,downloads,#y,audio,#t",      # "style", "status" are DynamoDB reserved words
+                     ExpressionAttributeNames={"#l": "language", "#s": "source", "#d": "duration", "#y": "style", "#t": "status"})
     return 200, {"songs": r["Items"]}
 
 
@@ -314,6 +315,9 @@ def get_song(event, sid, owner=None):
     if not it:
         raise ApiError(404, "Song not found.")
     it.pop("owner", None)
+    if it.get("source") == "lyria":                  # a full AI song: audio only, no score
+        it.pop("lyrics", None)
+        return 200, it
     it["score"], it["brief"] = json.loads(it["score"]), json.loads(it["brief"])
     return 200, it
 
@@ -368,6 +372,8 @@ def team_route(method: str, path: str, event: dict):
 
 
 def handler(event, context=None):
+    if "lyria_job" in event:                      # the background half of a full-AI-song request (see lyria.py)
+        return lyria.run(event["lyria_job"])
     method = event.get("requestContext", {}).get("http", {}).get("method", "GET")
     path = (event.get("rawPath") or "/").rstrip("/") or "/"
     if path.startswith("/api"):
@@ -474,6 +480,12 @@ def handler(event, context=None):
             status, out = (studio.film_get(u, fid) if method == "GET" else studio.film_save(u, fid, body_of(event, 400000)) if method == "PUT" else studio.film_delete(u, fid))
         elif (method, path) == ("GET", "/tts/info"):
             status, out = voice.info()
+        elif (method, path) == ("GET", "/lyria/info"):
+            status, out = lyria.info(user_from(event))
+        elif (method, path) == ("POST", "/lyria"):
+            status, out = lyria.create(user_from(event), body_of(event, 6000), (context.function_name if context else "mhraaga-api"))
+        elif method == "GET" and path.startswith("/lyria/"):
+            status, out = lyria.status(user_from(event), path[7:])
         elif (method, path) == ("POST", "/tts"):
             status, out = voice.speak(user_from(event), body_of(event, 4000))
         elif path == "/teams" or path.startswith("/teams/"):

@@ -30,7 +30,7 @@ if (authed) {
   const nav = $("appnav"); nav.hidden = false;
   const logo = document.createElement("a"); logo.className = "logo"; logo.href = "#home"; logo.innerHTML = '<span class="om">ॐ</span><b>mhRaaga</b>'; nav.append(logo);
   for (const [v, ic, label] of NAV) { const a = document.createElement("a"); a.className = "l"; a.href = "#" + v; a.dataset.v = v; const i = document.createElement("span"); i.className = "ic"; i.textContent = ic; a.append(i, label); nav.append(a); }
-  nav.addEventListener("click", (e) => { const a = e.target.closest("a.l"); if (!a) return; e.preventDefault(); show(a.dataset.v); });
+  nav.addEventListener("click", (e) => { const a = e.target.closest("a.l"); if (!a || !a.dataset.v) return; e.preventDefault(); show(a.dataset.v); });
   logo.onclick = (e) => { e.preventDefault(); show("home"); };
   window.addEventListener("hashchange", () => show(location.hash.slice(1), false));
   // administrators get one more entry; the server checks the role again on every admin call
