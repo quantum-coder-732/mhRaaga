@@ -157,9 +157,21 @@ function mixVoice(c, m, startCtxTime, from) {   // schedule the prepared voice o
   return scheduleVoice(c, m, [...vbufs].map(([i, buf]) => ({ t: song.score.lyrics[i].t, dur: song.score.lyrics[i].dur, buf })), startCtxTime, from);
 }
 
+// Phones only let sound start from a real tap. Opening a song waits on the network first, so the tap is already "used up" by then and the
+// audio context stays muted. So: on every tap, keep one context started and ready, and play() takes it.
+let warm = null;
+const AC = window.AudioContext || window.webkitAudioContext;
+function unlock() {
+  try {
+    if (!AC || (warm && warm.state !== "closed")) { if (warm && warm.state === "suspended") warm.resume(); return; }
+    warm = new AC(); warm.resume();
+    const b = warm.createBufferSource(); b.buffer = warm.createBuffer(1, 1, 22050); b.connect(warm.destination); b.start(0);
+  } catch {}
+}
+["pointerdown", "touchend", "click", "keydown"].forEach((e) => document.addEventListener(e, unlock, { capture: true }));
 async function play() {
   if (!song) return; stop(false); const my = ++playRun;
-  ctx = new (window.AudioContext || window.webkitAudioContext)(); await ctx.resume();
+  ctx = warm && warm.state !== "closed" ? warm : new AC(); warm = null; await ctx.resume();
   $("play").textContent = "…"; await prepareVoice(offset);
   if (my !== playRun || !ctx) return;
   const m = master(ctx, $("vol").value / 100); bus = m.bus; volNode = m.out;
