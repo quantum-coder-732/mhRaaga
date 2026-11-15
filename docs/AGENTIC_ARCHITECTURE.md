@@ -1,7 +1,7 @@
 # mhRaaga agentic architecture
 
-Songs are made by a small network of agents that learn from automatic feedback. It reuses two pieces of the Kalkee orchestrator
-(`orchestrator_framework_layer_kalkee/.../framework/shapley.py` for credit assignment, and its Thompson-sampling routing idea) on top of the raga engine.
+Songs are made by a small network of agents that learn from automatic feedback. It uses one piece of Kalkee,
+the Shapley credit split (see [kalkee/LEARNING.md](kalkee/LEARNING.md)), and re-implements Thompson sampling, on top of the raga engine.
 Everything is standard-library Python and runs offline; an LLM is optional.
 
 ```

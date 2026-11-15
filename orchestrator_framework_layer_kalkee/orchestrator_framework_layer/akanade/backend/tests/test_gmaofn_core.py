@@ -1,11 +1,11 @@
-"""ALGO AKANADE core — the generic multi-agent orchestration framework layered
+"""Kalkee core — the generic multi-agent orchestration framework layered
 on top of the PM domain (see tests/test_claude_mcp_acp.py for the PM
 domain's own agent-framework tests, and tests/test_gmaofn_api.py for the
 REST surface). This file tests the framework's OWN math and mechanics
 with small, fully deterministic fake agents — never the real PM
 chatbot — so these tests say nothing about PM behavior specifically
 (that's what the rest of this suite already covers) and everything about
-whether ALGO AKANADE's routing/workflow/feedback machinery is correct in
+whether Kalkee's routing/workflow/feedback machinery is correct in
 general.
 """
 from __future__ import annotations

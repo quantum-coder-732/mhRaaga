@@ -1,6 +1,6 @@
 # gmaofn-client
 
-A small, standalone Python SDK for calling a **deployed** ALGO AKANADE
+A small, standalone Python SDK for calling a **deployed** Kalkee
 chatbot's REST API from anywhere — a different repo, a notebook, a cron
 script, another service. It has no dependency on this repo's code, only
 on `httpx` — copy the `gmaofn_client/` directory anywhere, or install it
@@ -54,7 +54,7 @@ a newer server field isn't modeled here yet.
 
 Published: **[pypi.org/project/gmaofn-client](https://pypi.org/project/gmaofn-client/)**
 (package/import name kept stable across the framework's GMAOFN →
-ALGO AKANADE rename; the exported class names now match the current name).
+Kalkee rename; the exported class names now match the current name).
 6 smoke tests (`test_gmaofn_client.py`, `httpx.MockTransport` — no live
 server needed) cover request shape and response parsing; no live-server
 round trip has been run yet, so validate against a real deploy before

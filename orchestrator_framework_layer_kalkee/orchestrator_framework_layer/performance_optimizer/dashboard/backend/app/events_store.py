@@ -1,9 +1,9 @@
-"""Reads Algo Akanade's durable optimization-metrics files directly off disk —
-the SAME app/db.py LocalStore JSON files Algo Akanade's own backend writes
+"""Reads Kalkee's durable optimization-metrics files directly off disk —
+the SAME app/db.py LocalStore JSON files Kalkee's own backend writes
 (no shared Python import between the two processes/services; just the
 one on-disk contract: `{"PK||SK": {...row..., "PK":..., "SK":...}}`, the
 same shape LocalStore.put() has always stamped). This is what lets the
-dashboard show real numbers even when Algo Akanade's own process isn't
+dashboard show real numbers even when Kalkee's own process isn't
 running right now — see README_OPTIMIZATION_DASHBOARD.md § Architecture.
 
 Two tables it reads:
@@ -13,7 +13,7 @@ Two tables it reads:
                        posterior (framework/bandit_persistence.py).
                        Only provider_optimizer opts into this today —
                        optimization_router/token_optimizer are in-memory-
-                       only in this Algo Akanade version, so their live
+                       only in this Kalkee version, so their live
                        arm/reward numbers come from the event log above,
                        not from this file (see rl_state.py's docstring).
 """
@@ -53,7 +53,7 @@ def list_recent_dates(n: int = 14) -> list[str]:
 
 
 def summarize(events: list[dict]) -> dict:
-    """Same aggregation Algo Akanade's own optimization_events.summarize()
+    """Same aggregation Kalkee's own optimization_events.summarize()
     computes — duplicated here (not imported) because this is a
     genuinely separate service/deployment unit; kept in lockstep by
     both reading from the identical row shape logged by

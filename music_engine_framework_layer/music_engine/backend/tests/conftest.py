@@ -1,6 +1,6 @@
 """Sets DATA_DIR/STORAGE_BACKEND BEFORE any `app.*` module is imported —
 `app.config.Settings`'s fields are evaluated once, at class-definition
-(import) time, same pattern Akanade's own app/config.py uses, so a
+(import) time, same pattern Kalkee's own app/config.py uses, so a
 per-test monkeypatch fixture would be too late to matter. One shared
 temp dir for the whole test session is fine here: tests use distinct
 candidate ids and deterministic.order is pure, so there's no shared

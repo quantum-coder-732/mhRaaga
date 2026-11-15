@@ -43,7 +43,7 @@ def _strip_html(text: str) -> str:
 def fetch_url_text(url: str) -> str:
     try:
         r = httpx.get(url, timeout=_REQUEST_TIMEOUT_S, follow_redirects=True,
-                      headers={"User-Agent": "Algo-Akanade-PEFT-Training-Request/1.0"})
+                      headers={"User-Agent": "Algo-Kalkee-PEFT-Training-Request/1.0"})
         r.raise_for_status()
     except httpx.HTTPError as e:
         raise TrainingRequestError(f"Could not fetch {url!r}: {e}") from e

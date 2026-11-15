@@ -104,7 +104,7 @@ def format_example(example):
         {
             "role": "system",
             "content": (
-                "You are Algo-Akanade-SLM, an enterprise "
+                "You are Algo-Kalkee-SLM, an enterprise "
                 "intent classification model."
             )
         },
@@ -218,7 +218,7 @@ trainer = SFTTrainer(
 # 9. Train
 # --------------------------------------------------
 
-print("Starting Algo-Akanade-SLM quickstart training...")
+print("Starting Algo-Kalkee-SLM quickstart training...")
 
 trainer.train()
 

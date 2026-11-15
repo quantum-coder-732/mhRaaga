@@ -1,7 +1,7 @@
 """Request/response shapes for ak-router's /route and /outcome — the
 ONLY contract ak-chatbot's TierClient.chat() needs to know about. No
 session, no auth, no provider credentials cross this boundary; see the
-plan's "Router-service is stateless about Akanade's own session/policy
+plan's "Router-service is stateless about Kalkee's own session/policy
 state."
 """
 from __future__ import annotations
@@ -13,7 +13,7 @@ Strategy = str  # "deterministic" | "thompson_sampling"
 
 class Candidate(BaseModel):
     id: str  # registry key — "groq", "algo-akanade-slm", etc., matched
-              # against Akanade's own provs dict, never a display name.
+              # against Kalkee's own provs dict, never a display name.
     cost_per_1k_tokens: float = 0.0
     p95_latency_ms: float = 2000.0
     capability_tier: float = 0.5  # 0..1, see admin_providers.py's new field

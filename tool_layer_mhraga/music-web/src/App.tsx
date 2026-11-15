@@ -1,5 +1,5 @@
 // aRaaga: discover / create / library with a persistent player. A standalone app: it only talks to the Raaga service,
-// which asks Algo's Pecova music agent (on the Akanade AI platform) to plan each song and then renders it.
+// which asks Kalkee music agent (on the Kalkee AI platform) to plan each song and then renders it.
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Costs as CostsPage } from './Costs';
 import { SIGNED_OUT, audioSrc, countPlay, fetchMe, generate, getJob, getToken, deleteTrack, listTracks, setToken, toggleLike, type Me, type Track } from './api';
@@ -127,7 +127,7 @@ function Details({ t, open, onClose }: { t: Track | null; open: boolean; onClose
             <div style={{ gridColumn: '1 / -1' }}>Instruments<b>{t.instruments.join(', ')}</b></div>
           </div>
           {t.lyrics ? <Lyrics text={t.lyrics} /> : <p className="hint">Instrumental: no lyrics.</p>}
-          <p className="hint" style={{ marginTop: 12 }}>Planned by {t.brief_source === 'akanade' ? 'the Pecova music agent' : 'the offline fallback'}.</p>
+          <p className="hint" style={{ marginTop: 12 }}>Planned by {t.brief_source === 'akanade' ? 'the Kalkee music agent' : 'the offline fallback'}.</p>
         </>
       )}
     </aside>

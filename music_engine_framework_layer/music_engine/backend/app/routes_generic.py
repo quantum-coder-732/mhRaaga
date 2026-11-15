@@ -1,6 +1,6 @@
 """Endpoints for the "GENERIC ARCHITECTURE" comparison arm
 (generic_architecture.py) — kept in a separate router file from
-routes.py's Algo aKANADE endpoints so it's obvious at a glance that
+routes.py's Algo Kalkee endpoints so it's obvious at a glance that
 nothing here is live-traffic routing.
 """
 from __future__ import annotations
@@ -56,9 +56,9 @@ def generic_escalate(payload: GenericRouteRequest = GenericRouteRequest()) -> Ge
 def generic_outcome(payload: GenericOutcome) -> None:
     """Writes into the SAME ModelBenchmarks table Phase 5's eval-harness
     runs write into (see the plan's model_source tagging) — "candidate"
-    here, "ours" for Algo aKANADE's own SLMs/models — so the Model
+    here, "ours" for Algo Kalkee's own SLMs/models — so the Model
     Evaluation dashboard's three-way comparison (Generic Architecture
-    Models / Algo aKANADE SLMs / All Models) reads one table, not two."""
+    Models / Algo Kalkee SLMs / All Models) reads one table, not two."""
     row = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "model": payload.model_name,

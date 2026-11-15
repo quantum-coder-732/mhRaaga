@@ -1,5 +1,5 @@
 """llm/domain_router.py — "Domain" mode: RL-selected choice among
-however many domain-specific Algo-Akanade-SLM variants are currently
+however many domain-specific Algo-Kalkee-SLM variants are currently
 registered, by content (embedding memory), not just complexity. Mirrors
 test_hybrid_router.py's conventions.
 """

@@ -88,6 +88,6 @@ def test_langchain_research_agent_is_a_real_runnable_with_real_retrieval():
     store = InMemoryVectorStoreAdapter()
     store.add_documents([RagDocument(text=t) for t in _KNOWLEDGE_BASE])
     retriever = vector_store_to_retriever(store, k=1)
-    docs = retriever.invoke("How does ALGO AKANADE split credit across multiple agents?")
+    docs = retriever.invoke("How does Kalkee split credit across multiple agents?")
     assert docs
     assert "shapley" in docs[0].page_content.lower()

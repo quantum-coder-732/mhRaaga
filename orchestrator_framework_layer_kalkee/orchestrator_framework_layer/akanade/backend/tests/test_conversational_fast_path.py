@@ -14,7 +14,7 @@ from tests.conftest import auth
 def test_greetings_and_chit_chat_are_recognized():
     from app.agent.native_agent import is_pure_conversational
 
-    for msg in ["hi", "Hi!", "hello", "hey there", "Hello Algo Akanade",
+    for msg in ["hi", "Hi!", "hello", "hey there", "Hello Kalkee",
                "are you up?", "Are you there?", "you up?",
                "how's it going", "what's up", "good morning",
                "thanks!", "thank you so much", "ok", "cool", "got it",

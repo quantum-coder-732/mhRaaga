@@ -133,11 +133,11 @@ $("f-title").oninput = () => (proj.title = $("f-title").value);
 $("f-sec").oninput = () => ($("f-sec-v").textContent = $("f-sec").value + " s");
 
 // ---- projects + AI
-function load(p, id) { stop(); proj = { title: p.title, language: p.language || "english", scenes: p.scenes || [], music: true }; fid = id || null; $("f-title").value = proj.title; tNow = 0; cur = 0; newWorld(); select(0); draw(); }
+function load(p, id) { stop(); proj = { title: p.title, language: p.language || "english", scenes: p.scenes || [], music: true, style: p.style || "" }; fid = id || null; $("f-title").value = proj.title; $("f-style").value = proj.style; tNow = 0; cur = 0; newWorld(); select(0); draw(); }
 async function films() { try { const { films: fs } = await api("/films"); const sel = $("f-open"); sel.replaceChildren(new Option("My films…", "")); for (const f of fs) sel.append(new Option(`${f.title} (${f.nscenes} scenes)`, f.id)); if (fid) sel.value = fid; } catch {} }
 $("f-open").onchange = async () => { const id = $("f-open").value; if (id) { try { load(await api("/films/" + id), id); } catch (e) { toast(e.message); } } };
 $("f-new").onclick = () => load({ title: "Untitled film", scenes: [blank()] }, null);
-$("f-save").onclick = async () => { try { proj.title = $("f-title").value || proj.title; const r = await api(fid ? "/films/" + fid : "/films", { method: fid ? "PUT" : "POST", body: proj }); fid = r.id; toast("Saved."); films(); } catch (e) { toast(e.message); } };
+$("f-save").onclick = async () => { try { proj.title = $("f-title").value || proj.title; proj.style = $("f-style").value.trim(); const r = await api(fid ? "/films/" + fid : "/films", { method: fid ? "PUT" : "POST", body: proj }); fid = r.id; toast("Saved."); films(); } catch (e) { toast(e.message); } };
 $("f-del").onclick = async () => { if (!fid || !confirm("Delete this film permanently?")) return; try { await api("/films/" + fid, { method: "DELETE" }); toast("Deleted."); load({ title: "Untitled film", scenes: [] }, null); films(); } catch (e) { toast(e.message); } };
 $("f-plan").onclick = async () => { const idea = $("f-idea").value.trim(); if (idea.length < 4) return say("Describe the film in a sentence."); $("f-plan").disabled = true; say("Writing the director's brief and storyboard…");
   try { const p = await api("/film/plan", { method: "POST", body: { prompt: idea, style: $("f-style").value, seconds: +$("f-sec").value, language: $("f-lang").value } }); load(p, null); say(`Storyboard ready: ${p.scenes.length} scenes. Edit anything, then Save.`); }

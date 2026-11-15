@@ -1,5 +1,5 @@
 """§14's `/api/v1/tasks` and `/api/v1/evaluations` — looking back at a
-task ALGO AKANADE already orchestrated: what it was evaluated as, and what
+task Kalkee already orchestrated: what it was evaluated as, and what
 reward each contributing agent was attributed (before/after any human
 feedback — see routers/v1/feedback.py)."""
 from __future__ import annotations
@@ -28,7 +28,7 @@ def get_task(task_id: str, _: dict = Depends(current_user)):
 @router.get("/evaluations/{task_id}")
 def get_evaluation(task_id: str, user: dict = Depends(current_user)):
     """Alias of GET /api/v1/tasks/{task_id} under the name §14 lists this
-    concept by — "evaluation" (the outcome ALGO AKANADE scored a task's
+    concept by — "evaluation" (the outcome Kalkee scored a task's
     execution as) and "task" (the record of that execution) are the same
     stored object here, not two different stores."""
     return get_task(task_id, user)

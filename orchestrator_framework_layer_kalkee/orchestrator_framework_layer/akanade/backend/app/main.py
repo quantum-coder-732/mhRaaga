@@ -1,4 +1,4 @@
-"""ALGO AKANADE — Multi-Agent GenAI Network with Evolving Training and Orchestration.
+"""Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration.
 
 The single FastAPI process (§2.1): the generic multi-agent orchestration
 core (app/gmaofn/ — registry, adaptive router, workflow engine, feedback

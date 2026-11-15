@@ -1,7 +1,7 @@
-"""Storage layer — a direct copy of Akanade's app/db.py (same PK/SK
+"""Storage layer — a direct copy of Kalkee's app/db.py (same PK/SK
 document API, same LocalStore/DynamoStore pair) so ak-router reads and
 writes the SAME tables (RouterConfig, RoutingOutcomes, ModelBenchmarks)
-Akanade's own admin endpoints read, without inventing a second storage
+Kalkee's own admin endpoints read, without inventing a second storage
 mechanism. Kept as a literal copy rather than a shared package import —
 this service is deliberately dependency-free from the rest of
 akanade/backend/app (see the plan's Phase 0: "do not depend on the rest of

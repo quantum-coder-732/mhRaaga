@@ -1,5 +1,5 @@
 """Vocal layer, no AWS Polly.
-  English lines    -> Akanade's text-to-speech (POST /api/chat/tts, Piper/Azure) with the caller's Akanade token.
+  English lines    -> Kalkee's text-to-speech (POST /api/chat/tts, Piper/Azure) with the caller's Kalkee token.
   Devanagari lines -> open-source Piper voices run inside this app (free, offline): Hindi -> hi_IN priyamvada,
                       Marathi and Sanskrit -> mr_IN google (Marathi shares Devanagari/phonetics with Sanskrit).
 Licences: mr_IN google = CC BY-SA 4.0 (credit "Google / Piper voices"); hi_IN priyamvada = CC BY-NC-SA 4.0 (NON-COMMERCIAL;
@@ -116,5 +116,5 @@ def synth(lyrics: str, work: Path, token: str = "", language: str = "english", g
             ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(out)]).decode())
         return out, dur, sum(len(l) for l in ls), windows
     except Exception as e:
-        print(f"[voice] Akanade TTS unavailable: {e}")
+        print(f"[voice] Kalkee TTS unavailable: {e}")
         return None

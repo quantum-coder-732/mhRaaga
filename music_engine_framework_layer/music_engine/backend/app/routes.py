@@ -1,7 +1,7 @@
-"""Pecova's core routing endpoints — "given these eligible candidates,
+"""Kalkee's core routing endpoints — "given these eligible candidates,
 what order should the caller try them in." Deliberately no auth here —
 this service is only reachable on the internal Docker network, never
-exposed publicly; the caller (Akanade) does its own auth/role-gating
+exposed publicly; the caller (Kalkee) does its own auth/role-gating
 before it ever gets here.
 
 No exploration/bandit policy of any kind: every decision here is
@@ -57,7 +57,7 @@ def list_routing_outcomes(since: str | None = None, until: str | None = None,
                           limit: int = 2000) -> list[dict]:
     """Raw feed for the Routing dashboard. No auth here — same internal-
     network-only trust boundary as every other route in this file; RBAC
-    happens on the caller's (Akanade's) proxy side."""
+    happens on the caller's (Kalkee's) proxy side."""
     rows = store("RoutingOutcomes").scan(pk_prefix="OUTCOME#")
     if since:
         rows = [r for r in rows if r.get("timestamp", "") >= since]

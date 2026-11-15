@@ -335,7 +335,8 @@ def _clean_project(b: dict) -> dict:
     for s in scenes:
         check(s["title"], s["text"], s["narration"])
     p = {"title": h.text(b.get("title"), 80) or "Untitled film", "language": h.text(b.get("language"), 12) or "english", "scenes": scenes,
-         "music": bool(b.get("music", True)), "size": h.text(b.get("size"), 10) or "16:9"}
+         "music": bool(b.get("music", True)), "size": h.text(b.get("size"), 10) or "16:9", "style": h.text(b.get("style"), 200)}
+    check(p["style"])
     if len(json.dumps(p)) > MAX_PROJECT_BYTES:
         raise h.ApiError(413, "This project is too big to save. Use smaller or fewer images.")
     return p
@@ -382,7 +383,7 @@ def film_plan(u, b):
     """Auto-prompt: expand a short idea into a director's brief, then a storyboard of scenes with effects. Two model calls, both rule-checked."""
     h = H()
     idea, lang = h.text(b.get("prompt"), 500), h.text(b.get("language"), 12).lower() or "english"
-    style = h.text(b.get("style"), 40)
+    style = h.text(b.get("style"), 200)
     secs = max(20, min(600, int(b.get("seconds", 60) or 60)))
     if len(idea) < 4:
         raise h.ApiError(400, "Describe the film in a sentence.")
@@ -397,7 +398,7 @@ def film_plan(u, b):
                f'"effects": subset of {EFFECTS}, "bg": {{"c1": "#rrggbb", "c2": "#rrggbb"}}, "grade": {{"exposure": -0.3..0.3, "contrast": -0.3..0.3, "saturation": -0.5..0.5, "hue": -0.2..0.2}}, "mood": one word}}]}}. '
                "Vary effects across scenes, start gently, build, and end with a fade.", f"Brief:\n{brief}", key, max_tokens=2400, as_json=True, timeout=14.0)
     d = json.loads(out[out.index("{"): out.rindex("}") + 1])
-    proj = _clean_project({"title": d.get("title") or idea[:60], "language": lang, "scenes": d.get("scenes", []), "music": True})
+    proj = _clean_project({"title": d.get("title") or idea[:60], "language": lang, "scenes": d.get("scenes", []), "music": True, "style": style})
     if not proj["scenes"]:
         raise h.ApiError(503, "Could not plan that. Try again.")
     return 200, {**proj, "brief": brief, "calls_left": STORY_DAILY_CALLS - int(u.get("sn", 0))}

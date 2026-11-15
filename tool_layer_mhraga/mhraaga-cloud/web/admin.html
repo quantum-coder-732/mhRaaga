@@ -11,7 +11,7 @@
   <div id="gate" class="card" hidden><h2>Administrators only</h2><p class="muted" id="gate-msg">Sign in with an administrator account.</p><a class="primary btn" href="login.html">Sign in</a></div>
   <div id="app" hidden>
     <div class="tabs" role="tablist" id="tabs">
-      <button role="tab" class="on" data-t="overview">Overview</button><button role="tab" data-t="users">Users</button><button role="tab" data-t="columns">Columns</button><button role="tab" data-t="costs">Cloud cost</button>
+      <button role="tab" class="on" data-t="overview">Overview</button><button role="tab" data-t="users">Users</button><button role="tab" data-t="columns">Columns</button><button role="tab" data-t="costs">Cloud cost</button><button role="tab" data-t="singer">AI singer</button>
     </div>
 
     <section id="t-overview">
@@ -35,6 +35,17 @@
       </div>
     </section>
 
+    <section id="t-singer" hidden>
+      <div class="card"><h3>AI singer (YuE2)</h3>
+        <p class="muted">Real sung songs from lyrics and a style, made by the open YuE2 model on a GPU machine. Jobs wait in a queue until a worker picks them up. <span id="sg-state"></span></p>
+        <div class="fields"><label class="field"><span>Style (genre, mood, instruments, voice)</span><input id="sg-style" maxlength="200" placeholder="Hindi, sufi qawwali, male lead vocal, harmonium, tabla, dholak, handclaps"></label>
+          <label class="field"><span>Title</span><input id="sg-title" maxlength="60"></label></div>
+        <label class="field"><span>Lyrics (tag parts like [verse] and [chorus])</span><textarea id="sg-lyrics" rows="8" maxlength="3000" placeholder="[verse]&#10;..."></textarea></label>
+        <div class="actions"><button id="sg-go" class="primary" type="button">Queue the song</button><span id="sg-status" role="status"></span></div>
+      </div>
+      <div class="card"><h3>Jobs</h3><div id="sg-jobs" class="audit"></div></div>
+    </section>
+
     <section id="t-costs" hidden>
       <div class="toolbar"><span id="cost-age" class="muted"></span><span class="sp"></span><button id="cost-refresh" class="ghost" type="button">Refresh (a paid AWS query)</button></div>
       <div id="cost-err"></div>
@@ -46,7 +57,7 @@
   </div>
 </main>
 
-<dialog id="udlg"><form method="dialog" id="uform"><h3 id="ud-title">Edit user</h3><div class="fields" id="ud-fields"></div><p id="ud-status" role="status" class="muted"></p>
+<dialog id="udlg"><form method="dialog" id="uform"><h3 id="ud-title">Edit user</h3><div class="fields" id="ud-fields"></div><div id="ud-more" class="muted"></div><p id="ud-status" role="status" class="muted"></p>
   <div class="actions"><button type="button" id="ud-save" class="primary">Save</button><button type="button" id="ud-cancel" class="ghost">Close</button><span class="sp"></span><button type="button" id="ud-quota" class="ghost">Reset today's quota</button><button type="button" id="ud-del" class="danger">Delete user</button></div></form></dialog>
 <dialog id="adlg"><form method="dialog"><h3>Add user</h3><div class="fields">
   <label class="field"><span>Name</span><input id="a-name" maxlength="60"></label><label class="field"><span>Email</span><input id="a-email" type="email" maxlength="254"></label>

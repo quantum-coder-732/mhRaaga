@@ -10,7 +10,7 @@ Ships with two real, independent adapters proving that:
 
   ChromaVectorStoreAdapter — wraps the EXISTING PM-domain vector_index
       (retrieval/vectorstore.py, the real chromadb-backed store the
-      `semantic_search` tool already uses) so ALGO AKANADE's generic RAG API
+      `semantic_search` tool already uses) so Kalkee's generic RAG API
       and the PM chatbot's own tool share ONE index, not two competing
       ones.
   InMemoryVectorStoreAdapter — a second, genuinely independent adapter

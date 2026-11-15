@@ -1,9 +1,9 @@
-"""Storage layer — a direct copy of Akanade's app/db.py (same PK/SK
-document API, same LocalStore/DynamoStore pair) so Pecova reads and
+"""Storage layer — a direct copy of Kalkee's app/db.py (same PK/SK
+document API, same LocalStore/DynamoStore pair) so Kalkee reads and
 writes the SAME tables (RouterConfig, RoutingOutcomes, ModelBenchmarks)
-Akanade's own admin endpoints read, without inventing a second storage
+Kalkee's own admin endpoints read, without inventing a second storage
 mechanism. Kept as a literal copy rather than a shared package import —
-Pecova is deliberately dependency-free from the rest of
+Kalkee is deliberately dependency-free from the rest of
 akanade/backend/app, so the two copies drift only if the storage
 contract itself changes, which is rare and easy to keep in sync by eye.
 """

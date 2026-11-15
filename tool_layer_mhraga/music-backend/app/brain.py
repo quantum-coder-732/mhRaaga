@@ -1,6 +1,6 @@
-"""Prompt -> music brief, via the Pecova music agent on the Akanade AI platform.
+"""Prompt -> music brief, via the Kalkee music agent on the Kalkee AI platform.
 
-Akanade routes the request to OpenRouter or its SLM tier. If it is unreachable
+Kalkee routes the request to OpenRouter or its SLM tier. If it is unreachable
 (or no token is configured) a small keyword fallback keeps generation working
 offline; the brief's "source" field records which path produced it.
 """
@@ -65,7 +65,7 @@ def fallback_brief(prompt: str, lyrics: str = "", duration: int = 60, instrument
 
 
 def compose(prompt: str, lyrics: str = "", duration: int = 60, instrumental: bool = False, token: str = "", language: str = "") -> dict:
-    """Ask Akanade's orchestrator (which routes to the registered pecova-music-agent) using the caller's Akanade token."""
+    """Ask Kalkee's orchestrator (which routes to the registered pecova-music-agent) using the caller's Kalkee token."""
     brief, source = None, "fallback"
     token = token or config.AKANADE_TOKEN
     if token:
@@ -81,14 +81,14 @@ def compose(prompt: str, lyrics: str = "", duration: int = 60, instrumental: boo
             if "pecova-music-agent" in (body.get("selected_agents") or []):
                 brief = json.loads(body["result"]["text"])
                 source = "akanade"
-                from .main import store  # real usage/cost recorded by our agent webhook, keyed by Akanade's task id
+                from .main import store  # real usage/cost recorded by our agent webhook, keyed by Kalkee's task id
                 u = store.get("usage", str(body.get("task_id"))) or {}
                 brief["_usage"] = {"in": int(u.get("in", 0)), "out": int(u.get("out", 0)), "estimated": False,
                                    "cost": u.get("cost"), "model": u.get("model", "")}
             else:
-                print(f"[brain] Akanade picked {body.get('selected_agents')}, not the music agent; using fallback")
+                print(f"[brain] Kalkee picked {body.get('selected_agents')}, not the music agent; using fallback")
         except Exception as e:
-            print(f"[brain] Akanade unavailable ({e}); using fallback brief")
+            print(f"[brain] Kalkee unavailable ({e}); using fallback brief")
     if brief is None:
         brief = fallback_brief(prompt, lyrics, duration, instrumental, language)
     if language in templates_langs:

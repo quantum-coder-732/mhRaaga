@@ -179,14 +179,14 @@ def login(body: LoginIn):
     email = body.email.strip().lower()
     auth.throttle(email)
     user = store.get("users", email)
-    sso = auth.akanade_login(email, body.password)  # same credentials as Akanade
+    sso = auth.akanade_login(email, body.password)  # same credentials as Kalkee
     if sso:
         if not user:
             user = {"id": email, "name": sso["name"], "pw": "", "created_at": now(), "sso": True}
-        user["role"] = sso["role"]  # Akanade's role and name decide who may see costs
+        user["role"] = sso["role"]  # Kalkee's role and name decide who may see costs
         user["name"] = sso["name"]
         store.put("users", user)
-        AK_TOKENS[email] = sso["token"]  # the user's own Akanade token, kept in memory only (never stored)
+        AK_TOKENS[email] = sso["token"]  # the user's own Kalkee token, kept in memory only (never stored)
         return _session(user)
     if not user or not user.get("pw") or not auth.verify_password(body.password, user["pw"]):
         auth.record_failure(email)

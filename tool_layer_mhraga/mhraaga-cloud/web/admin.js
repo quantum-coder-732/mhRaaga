@@ -43,17 +43,17 @@ function cell(c, v) {
 }
 function drawUsers() {
   const q = $("u-q").value.trim().toLowerCase(), role = $("u-role").value;
-  const head = ["", "Name", "Email", "Type", "Status", "Songs", "Today", "Voice $", "Joined", "Last sign-in", ...cols.map((c) => c.label)];
+  const head = ["", "Name", "Email", "Type", "Status", "Songs", "Today", "Voice $ today", "Voice $ total", "Joined", "Last sign-in", ...cols.map((c) => c.label)];
   $("utable").tHead.replaceChildren(el("tr", {}, ...head.map((h) => el("th", { textContent: h }))));
   const rows = users.filter((u) => (!role || u.role === role) && (!q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)));
-  $("u-count").textContent = `${rows.length} of ${users.length}`;
+  $("u-count").textContent = `${rows.length} of ${users.length} (all accounts in DynamoDB)`;
   const body = $("utable").tBodies[0]; body.replaceChildren();
   rows.forEach((u) => {
     const type = el("span", { className: "badge " + (u.owner ? "owner" : u.role === "admin" ? "admin" : ""), textContent: u.owner ? "owner" : u.role });
     const st = el("span", { className: "badge " + (u.disabled ? "off" : ""), textContent: u.disabled ? "disabled" : "active" });
     const btn = el("button", { className: "ghost", type: "button", textContent: "Edit" }); btn.onclick = () => openUser(u);
     body.append(el("tr", {}, el("td", { className: "act" }, btn), el("td", { textContent: u.name }), el("td", { textContent: u.email }), el("td", {}, type), el("td", {}, st), el("td", { textContent: u.songs ?? "—" }), el("td", { textContent: `${u.composed_today}/${u.limit}` }),
-      el("td", { textContent: u.voice_usd_today ? usd(u.voice_usd_today, 3) : "—" }), el("td", { textContent: when(u.created) }), el("td", { textContent: when(u.last_login) }), ...cols.map((c) => el("td", { textContent: cell(c, u.extra[c.key]) }))));
+      el("td", { textContent: u.voice_usd_today ? usd(u.voice_usd_today, 3) : "—" }), el("td", { textContent: u.voice_usd_total ? usd(u.voice_usd_total, 3) : "—" }), el("td", { textContent: when(u.created) }), el("td", { textContent: when(u.last_login) }), ...cols.map((c) => el("td", { textContent: cell(c, u.extra[c.key]) }))));
   });
 }
 async function loadUsers() {
@@ -77,6 +77,12 @@ function openUser(u) {
     inp.dataset.col = c.key; f.append(field(c.label, inp));
   });
   $("ud-del").hidden = u.owner || u.email === me.email; $("udlg").showModal();
+  const more = $("ud-more"); more.textContent = "Loading details…";
+  api("/admin/users/" + encodeURIComponent(u.email)).then((d) => {
+    more.replaceChildren(el("b", { textContent: `Joined ${when(u.created)} · last sign-in ${when(u.last_login)} · voice spend ${usd(u.voice_usd_total, 3)} in total` }), el("br"),
+      el("b", { textContent: `Latest songs (${d.songs.length})` }), ...d.songs.map((s) => el("div", { textContent: `${s.title} · ${s.raga} · ${s.language || ""} · ${s.source || ""}${s.style ? " · " + s.style : ""} · ${when(s.created)}` })),
+      ...(d.log.length ? [el("b", { textContent: "Admin actions on this account" }), ...d.log.map((l) => el("div", { textContent: `${when(l.at)} · ${l.what} · ${l.detail} · by ${l.who}` }))] : []));
+  }).catch((e) => (more.textContent = e.message));
 }
 async function saveUser() {
   const u = editing, body = {}; const name = $("e-name").value.trim(), lim = $("e-limit").value;
@@ -124,11 +130,21 @@ async function costs(refresh = false) {
   if (d.voice) st.append(stat("AI voice today", usd(d.voice.today, 3)), stat("AI voice this month", usd(d.voice.month, 2), "counted by the site"));
 }
 
+// ---------------------------------------------------------------- AI singer
+async function singer() {
+  const i = await api("/jobs/info"); $("sg-state").textContent = !i.enabled ? "The queue is switched off (deploy with GpuEngine=on)." : i.worker_alive ? `A GPU worker is alive (${i.worker}).` : "No GPU worker is running, so jobs will wait.";
+  const d = await api("/jobs"), box = $("sg-jobs"); box.replaceChildren();
+  if (!d.jobs.length) box.append(el("span", { className: "muted", textContent: "No jobs yet." }));
+  d.jobs.forEach((j) => { const row = el("div", {}, el("b", { textContent: j.title }), el("span", { className: "badge " + (j.status === "failed" ? "off" : j.status === "done" ? "admin" : ""), textContent: j.status }), el("span", { textContent: j.style }), el("span", { className: "muted", textContent: when(j.created) }));
+    if (j.audio) { const a = el("audio", { controls: true, preload: "none" }); a.src = j.audio; row.append(a); } if (j.error) row.append(el("span", { className: "muted", textContent: j.error })); box.append(row); });
+}
+$("sg-go").onclick = async () => { try { $("sg-status").textContent = "Queuing…"; await api("/jobs", { method: "POST", body: { style: $("sg-style").value, lyrics: $("sg-lyrics").value, title: $("sg-title").value } }); $("sg-status").textContent = "Queued."; await singer(); } catch (e) { $("sg-status").textContent = e.message; } };
+
 // ---------------------------------------------------------------- tabs and start
 async function show(t) {
   document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("on", b.dataset.t === t));
-  ["overview", "users", "columns", "costs"].forEach((x) => ($("t-" + x).hidden = x !== t));
-  try { if (!loaded[t]) { if (t === "overview") await overview(); if (t === "users") await loadUsers(); if (t === "columns") { await loadUsers(); drawCols(); } if (t === "costs") await costs(); loaded[t] = true; } }
+  ["overview", "users", "columns", "costs", "singer"].forEach((x) => ($("t-" + x).hidden = x !== t));
+  try { if (!loaded[t]) { if (t === "overview") await overview(); if (t === "users") await loadUsers(); if (t === "columns") { await loadUsers(); drawCols(); } if (t === "costs") await costs(); if (t === "singer") await singer(); loaded[t] = t !== "singer"; } }
   catch (e) { toast(e.message); }
   history.replaceState(null, "", "#" + t);
 }
@@ -148,6 +164,6 @@ async function start() {
   $("a-save").onclick = async () => { try { await api("/admin/users", { method: "POST", body: { name: $("a-name").value, email: $("a-email").value, password: $("a-pw").value, role: $("a-role").value } }); $("adlg").close(); ["a-name", "a-email", "a-pw"].forEach((i) => ($(i).value = "")); toast("User added."); await loadUsers(); loaded.overview = false; } catch (e) { $("a-status").textContent = e.message; } };
   $("col-add").onclick = () => { const b = $("cols"); if (!b.querySelector(".colrow")) b.replaceChildren(); b.append(colRow()); }; $("col-save").onclick = saveCols;
   $("cost-refresh").onclick = async () => { try { await costs(true); } catch (e) { toast(e.message); } };
-  const t = location.hash.slice(1); show(["overview", "users", "columns", "costs"].includes(t) ? t : "overview");
+  const t = location.hash.slice(1); show(["overview", "users", "columns", "costs", "singer"].includes(t) ? t : "overview");
 }
 start();

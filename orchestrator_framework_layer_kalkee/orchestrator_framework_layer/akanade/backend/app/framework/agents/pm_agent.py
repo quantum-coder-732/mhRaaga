@@ -1,15 +1,15 @@
 """PMAgent — the pre-existing PM chatbot (agent/native_agent.py,
 langgraph_agent.py, adk_agent.py, claude_agent.py, tools.py, ...),
-wrapped as ONE ALGO AKANADE agent. Zero behavior change: every prompt in
+wrapped as ONE Kalkee agent. Zero behavior change: every prompt in
 CHAT_PROMPTS.md, every test in tests/test_agent_flows.py, still goes
 through the exact same `get_agent(framework).handle_message(...)` call
-this file simply delegates to — proving ALGO AKANADE is additive, not a
+this file simply delegates to — proving Kalkee is additive, not a
 rewrite, of the domain logic it wraps.
 
 `understand`/`plan`/`validate` are near-identity here because the PM
 chatbot's OWN internal pipeline (native_agent.handle_message's 17 numbered
 steps) already does perceive/resolve/confirm/execute/format in one call
-— this wrapper's real job is just translating ALGO AKANADE's generic
+— this wrapper's real job is just translating Kalkee's generic
 Task/AgentResult shape at the boundary, not reimplementing anything.
 """
 from __future__ import annotations

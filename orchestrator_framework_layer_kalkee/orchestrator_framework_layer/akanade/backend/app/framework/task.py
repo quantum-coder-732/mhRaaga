@@ -1,8 +1,8 @@
-"""The unit of work ALGO AKANADE routes and executes: a Task, plus the context
+"""The unit of work Kalkee routes and executes: a Task, plus the context
 vector the adaptive router scores candidate agents against.
 
 Deliberately domain-agnostic — nothing here mentions projects, tasks (the
-PM kind), code, or documents. A "task" in ALGO AKANADE is any natural-language
+PM kind), code, or documents. A "task" in Kalkee is any natural-language
 request an application hands to the orchestrator.
 """
 from __future__ import annotations
@@ -70,7 +70,7 @@ class TaskContext:
 
 @dataclass
 class Task:
-    """One unit of work handed to ALGO AKANADE's orchestrator — the `task`
+    """One unit of work handed to Kalkee's orchestrator — the `task`
     field of `POST /api/v1/orchestration/execute`'s request body."""
 
     text: str

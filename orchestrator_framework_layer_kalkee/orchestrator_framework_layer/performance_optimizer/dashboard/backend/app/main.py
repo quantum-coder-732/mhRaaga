@@ -1,11 +1,11 @@
 """The Optimization Dashboard's API — a small, standalone FastAPI service
-(its own login, see auth.py) that turns Algo Akanade's optimization event log
+(its own login, see auth.py) that turns Kalkee's optimization event log
 and the Algo Engine's live stats into the numbers an admin actually wants
 to see: is the RL-driven optimization layer helping, is it getting
 better day over day, and is the GPU tier real. `uvicorn app.main:app`.
 
 See README_OPTIMIZATION_DASHBOARD.md (one level up) for the full
-architecture and how to run this alongside Algo Akanade + Algo Engine.
+architecture and how to run this alongside Kalkee + Algo Engine.
 """
 from __future__ import annotations
 

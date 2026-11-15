@@ -81,7 +81,7 @@ _PROVIDER_FACTORIES: dict[str, Callable[[dict], LLMProvider]] = {
         requires_key=e.get("requires_key", True), extra_body=e.get("extra_body", {})),
     "ollama": lambda e: LangChainOllama(
         e["name"], e["base_url"], e.get("model", "")),
-    # ALGO AKANADE's generic model layer — add ANY Hugging Face model via
+    # Kalkee's generic model layer — add ANY Hugging Face model via
     # EXTRA_LLM_PROVIDERS config alone: {"type":"huggingface","name":...,
     # "model":"meta-llama/Llama-3.1-8B-Instruct","api_key":"hf_...",
     # "extra_body":{...}, "optimization":{...}}.
@@ -135,7 +135,7 @@ def _providers() -> dict[str, LLMProvider]:
                                      s.DEEPSEEK_API_KEY, s.DEEPSEEK_MODEL),
         "groq": OpenAICompatible("groq-llama-3.3-70b", s.GROQ_BASE_URL,
                                  s.GROQ_API_KEY, s.GROQ_MODEL),
-        # Algo Engine (§19) — ALGO AKANADE's own self-hosted model execution
+        # Algo Engine (§19) — Kalkee's own self-hosted model execution
         # layer, OpenAI-compatible via `algo-engine serve`; self-hosted, no
         # auth, so requires_key=False (see providers.py). A real CHAINS rung
         # (delay_ok/bulk), not just a pinnable extra. Model-architecture-
@@ -171,7 +171,7 @@ def _providers() -> dict[str, LLMProvider]:
         # claude_agent.py) so TierClient(preferred="claude") can find it from
         # ANY track, and so it shows up in available_providers() for the UI.
         "claude": AnthropicNative(s.CLAUDE_MODEL, s.CLAUDE_API_KEY, s.CLAUDE_MODEL),
-        # ALGO AKANADE's generic model layer, always present (unconfigured by
+        # Kalkee's generic model layer, always present (unconfigured by
         # default) — same "just another unavailable rung until an
         # operator sets the env vars" story as every provider above.
         "huggingface": HuggingFaceProvider(
@@ -365,7 +365,7 @@ class TierClient:
     _ucb_pick: str | None = None
     # "routellm" when primary_pipeline.py's blue/green switch is set to
     # RouteLLM AND its pick actually had a real registered provider to
-    # prefer this call; "akanade" otherwise (the switch is set to Akanade,
+    # prefer this call; "akanade" otherwise (the switch is set to Kalkee,
     # OR RouteLLM's pick failed over — see primary_pipeline.py's own
     # docstring on automatic failover). Threaded into finetune_log so
     # PEFT training data can be attributed to whichever pipeline

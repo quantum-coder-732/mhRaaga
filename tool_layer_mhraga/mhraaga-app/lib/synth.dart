@@ -70,7 +70,7 @@ class _Synth {
   final double sa;
   final Float64List buf;
   final _Rng rng = _Rng();
-  final banTab = _table(const [1, 0.32, 0.1, 0.045, 0.02]);
+  final banTab = _table(const [1, 0.62, 0.3, 0.16, 0.08, 0.04]);
   final harmTab = _table([for (var n = 1; n <= 22; n++) 1 / m.pow(n, 0.95) * (n.isOdd ? 1.0 : 0.8)]);
 
   // Karplus-Strong plucked string (a delay loop with loss), rendered once per pitch. Gives the tanpura and veena a real
@@ -147,7 +147,7 @@ class _Synth {
     final start = orn == 1 && prev != null ? prev : (orn == 2 ? f * 1.0595 : f * 0.985);
     final glide = orn == 1 ? m.min(0.16, d * 0.45) : (orn == 2 ? 0.07 : 0.05);
     final center = _clamp(f * 2.4, 700, 4200);
-    final hi = _lpA(center * 1.5), lo = _lpA(center * 0.65), tone = _lpA(_clamp(f * 5.5, 1800, 6000));
+    final hi = _lpA(center * 1.5), lo = _lpA(center * 0.65), tone = _lpA(_clamp(f * 6.5, 2200, 6500));
     var ph = 0.0, nh = 0.0, nl = 0.0, lt = 0.0;
     final vr = 4.7 + 0.45 * (rng.next() + 1), dr = 0.4 + 0.25 * (rng.next() + 1);
     final hold = vol * 0.9, relStart = m.max(att + 0.12, d - 0.02);
@@ -224,6 +224,46 @@ class _Synth {
     }
   }
 
+  // Low end that real recordings have: the tanpura's bass string ringing on. The old mix had no energy below 200 Hz and sounded thin.
+  void subBass(double f, double t, double dur, double vol) {
+    final s0 = (t * sr).round(), n = (dur * sr).floor(), a = _lpA(340);
+    var p1 = 0.0, p2 = 0.0, p3 = 0.0, p4 = 0.0, l1 = 0.0, l2 = 0.0;
+    for (var i = 0; i < n; i++) {
+      final idx = s0 + i;
+      if (idx >= buf.length) break;
+      if (idx < 0) continue;
+      final tau = i / sr;
+      final env = vol * m.min(1.0, m.min(tau / 2.5, (dur - tau) / 3.0).clamp(0.0, 1.0));
+      p1 = (p1 + f * 0.9983 / sr) % 1;
+      p2 = (p2 + f * 1.0023 / sr) % 1;
+      p3 = (p3 + 2 * f / sr) % 1;
+      p4 = (p4 + 0.5 * f / sr) % 1;
+      final tri = 4 * ((p1) - 0.5).abs() - 1;
+      final x = 0.6 * tri + 0.7 * m.sin(_twoPi * p2) + 0.18 * m.sin(_twoPi * p3) + 0.35 * m.sin(_twoPi * p4);
+      l1 += a * (x - l1);
+      l2 += a * (l1 - l2);
+      buf[idx] += env * l2;
+    }
+  }
+
+  // Dholak: a deep boom from the bass head on strong beats and a dry slap from the treble head on the others.
+  void dholak(double t, double vol, bool strong) {
+    final bay = _clamp(sa / 2, 70, 140) * 0.9;
+    if (strong) {
+      _tone(t, bay * 1.5, bay, 0.26, 0.3 * vol);
+      _click(t, 700, 0.07, 0.17 * vol);
+    } else {
+      _click(t, 1900, 0.07, 0.27 * vol);
+    }
+  }
+
+  // Hand claps: a few people a hair apart, so it sounds like a room and not a click.
+  void clap(double t, double vol) {
+    for (var k = 0; k < 4; k++) {
+      _click(t + k * 0.006 + (rng.next() + 1) * 0.002, 1300 + (rng.next() + 1) * 350, 0.075, 0.08 * vol);
+    }
+  }
+
   void tabla(String bol, String cls, double t, double vol) {
     final day = _clamp(sa, 150, 300), bay = _clamp(sa / 2, 70, 140), low = bol.toLowerCase();
     t += (rng.next() + 1) * 0.004;
@@ -234,7 +274,7 @@ class _Synth {
         _click(t, 900, 0.05, 0.15 * vol);
         _tone(t, bay * 1.2, bay, 0.07, 0.35 * vol);
       } else {
-        _tone(t, bay * 1.7, bay * 0.92, 0.5, 0.9 * vol);
+        _tone(t, bay * 1.7, bay * 0.92, 0.62, 1.5 * vol);
         _tone(t, bay * 2.6, bay * 1.9, 0.18, 0.18 * vol);
         _click(t, 320, 0.05, 0.11 * vol);
       }
@@ -321,7 +361,7 @@ Uint8List renderScore(Map<String, dynamic> score) {
   final strings = [_num(dr['second']), _num(dr['sa']), _num(dr['sa']), _num(dr['low_sa'])];
   var k = 0;
   for (var t = 0.0; t < duration + 2; k++, t += tp) {
-    sy.tanpura(strings[k % 4], t, k % 4 == 3 ? 0.13 : 0.1, 4.2);
+    sy.tanpura(strings[k % 4], t, k % 4 == 3 ? 0.17 : 0.1, 4.2);
   }
   final voice = score['lead_voice'] as String;
   final secs = (score['sections'] as List?) ?? const [];
@@ -348,8 +388,15 @@ Uint8List renderScore(Map<String, dynamic> score) {
     }
     prev = f;
   }
+  final ens = <String>{for (final e in ((score['meta'] as Map?)?['ensemble'] as List? ?? const [])) e.toString()};
+  sy.subBass(_num(dr['low_sa']), 0.0, duration + 2, ens.contains('dholak') ? 0.03 : 0.075);
+  var bi = 0;
   for (final b in score['tabla'] as List) {
-    sy.tabla(b[1] as String, b[2] as String, _num(b[0]), _num(b[3]) * 0.8 * (0.7 + 0.3 * dyn(_num(b[0]))));
+    final t = _num(b[0]), v = _num(b[3]), cls = b[2] as String, d = 0.7 + 0.3 * dyn(t);
+    sy.tabla(b[1] as String, cls, t, v * 0.8 * d * (ens.contains('dholak') ? 0.7 : 1.0));
+    if (ens.contains('dholak')) sy.dholak(t + 0.004, v * 0.8 * d, v >= 0.7 || cls != 'right');
+    if (ens.contains('clap') && (bi % 2 == 1 || v >= 0.95)) sy.clap(t + 0.002, v * d);
+    bi++;
   }
   return _wav(_reverb(sy.buf));
 }

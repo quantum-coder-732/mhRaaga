@@ -24,7 +24,7 @@ export function Costs() {
         <div><span>LLM tokens (this app)</span><b>{d.totals.llm_tokens.toLocaleString()}</b></div>
         <div><span>Storage / month</span><b>{usd(d.totals.storage_usd_month)}</b></div>
       </div>
-      <h2>OpenRouter credits (shared with Akanade)</h2>
+      <h2>OpenRouter credits (shared with Kalkee)</h2>
       <div className="cost-cards">
         <div><span>Used by aRaaga</span><b>{usd(o.raaga_usd)}</b></div>
         <div><span>Tokens by aRaaga</span><b>{o.raaga_tokens.toLocaleString()}</b></div>
@@ -32,7 +32,7 @@ export function Costs() {
         <div><span>Credits remaining</span><b>{o.account?.remaining != null ? usd(o.account.remaining) : '—'}</b></div>
         <div><span>Raaga share of use</span><b>{o.raaga_share_of_usage != null ? `${(o.raaga_share_of_usage * 100).toFixed(1)}%` : '—'}</b></div>
       </div>
-      {!o.akanade_connected && <p className="cost-note">No OpenRouter model calls recorded yet for this app. Songs use the signed-in person&apos;s own Akanade login; AKANADE_TOKEN on the server is the fallback.</p>}
+      {!o.akanade_connected && <p className="cost-note">No OpenRouter model calls recorded yet for this app. Songs use the signed-in person&apos;s own Kalkee login; AKANADE_TOKEN on the server is the fallback.</p>}
       {!o.account && <p className="cost-note">Account-wide credits need an OpenRouter management key (OPENROUTER_MANAGEMENT_KEY) on the server.</p>}
       <h2>Per user</h2>
       <table><thead><tr><th>User</th><th>Songs</th><th>Create cost</th><th>Voice chars</th><th>LLM tokens</th><th>Plays</th></tr></thead>

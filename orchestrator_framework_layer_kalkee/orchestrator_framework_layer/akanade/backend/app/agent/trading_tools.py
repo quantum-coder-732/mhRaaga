@@ -47,7 +47,7 @@ import matplotlib.pyplot as plt  # noqa: E402  (must follow matplotlib.use())
 
 _CHART_URL = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
 _REQUEST_TIMEOUT_S = 10.0
-_HEADERS = {"User-Agent": "Mozilla/5.0 (Algo-Akanade-Trading-Agent/1.0)"}
+_HEADERS = {"User-Agent": "Mozilla/5.0 (Algo-Kalkee-Trading-Agent/1.0)"}
 _TRADING_DAYS_PER_YEAR = 252
 _DEFAULT_LOOKBACK_YEARS = 10
 

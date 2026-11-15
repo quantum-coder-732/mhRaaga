@@ -3,7 +3,7 @@
 Standalone provider/model-ordering service (`backend/`) plus the admin-controlled
 blue/green switch inside `akanade/backend` that decides which pipeline answers real
 chat traffic. Built per the CEO memo's own instruction: a deterministic, cost-aware
-baseline first, RouteLLM evaluated as a genuine peer to Algo aKANADE's own routing —
+baseline first, RouteLLM evaluated as a genuine peer to Algo Kalkee's own routing —
 not a competitor's product — with Thompson Sampling demoted to an admin-opt-in,
 shadow-mode-first exploration policy, never the default.
 
@@ -21,10 +21,10 @@ shadow-mode-first exploration policy, never the default.
                  ┌─────────────┴─────────────┐
                  │                           │
                  ▼                           ▼
-             PRIMARY                     Algo aKANADE
+             PRIMARY                     Algo Kalkee
                  │                           │
                  ▼                           ▼
-        RouteLLM / Policy Layer        aKANADE Router
+        RouteLLM / Policy Layer        Kalkee Router
                  │                    Routing / Policy
         ┌────────┴────────┐            ┌─────┼─────┐
         ▼                 ▼            ▼     ▼     ▼
@@ -78,7 +78,7 @@ shadow-mode-first exploration policy, never the default.
                                     │
               ┌─────────────────────┼─────────────────────┐
               ▼                     ▼                     ▼
-        PRIMARY MODELS         aKANADE MODELS          ALL MODELS
+        PRIMARY MODELS         Kalkee MODELS          ALL MODELS
         RouteLLM Path          SLMs + Models           Comparison
               │                     │                     │
               └─────────────────────┼─────────────────────┘
@@ -110,7 +110,7 @@ shadow-mode-first exploration policy, never the default.
 | Blue/green switch | `akanade/backend/app/llm/primary_pipeline.py` | Which pipeline answers real traffic — `"routellm"` (primary+secondary, default), `"routellm_only"` (primary only, same failover safety net but every fallback logged as a leak), or `"akanade"` (secondary only, RouteLLM never consulted). |
 | TierClient wiring | `akanade/backend/app/llm/router.py` | Applies the switch UNIFORMLY inside `TierClient.chat()` — every track (PM chat, coding, trading) gets the same treatment regardless of entry point. |
 | Admin controls | `akanade/backend/app/routers/admin_router_config.py`, `AdminAIModels.tsx` | Executive-write / Admin-read RBAC (the real app's Manager2/"Senior Manager" role satisfies Admin-read). Three-way switch in the web UI. |
-| Model evaluation | `admin_model_benchmarks.py`, `ModelEvaluationDashboard.tsx` | Runs the eval harness against registered models (`ours` = Algo aKANADE's own SLMs, `candidate` = Generic Architecture models), writes `ModelBenchmarks` rows, closes the loop by PATCHing each provider's measured `capability_tier`. |
+| Model evaluation | `admin_model_benchmarks.py`, `ModelEvaluationDashboard.tsx` | Runs the eval harness against registered models (`ours` = Algo Kalkee's own SLMs, `candidate` = Generic Architecture models), writes `ModelBenchmarks` rows, closes the loop by PATCHing each provider's measured `capability_tier`. |
 
 ## Why deterministic-first, bandit-deferred
 
@@ -200,7 +200,7 @@ robustness.
 
 `akanade` (lowercase) names the infrastructure/codebase only — folder paths, Docker
 image internals, the wire-level pipeline enum value — never a user-facing label.
-**Algo aKANADE** is the product name shown everywhere else (UI, mobile app, VS Code
+**Algo Kalkee** is the product name shown everywhere else (UI, mobile app, VS Code
 extension, docs). "Generic Architecture" is RouteLLM's own arm — the CEO's reference
 design, evaluated as a peer, not a vendor product.
 

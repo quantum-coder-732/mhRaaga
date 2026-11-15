@@ -38,16 +38,16 @@ def _fake_get_with_extract(extract: str):
 
 
 def test_scrape_topic_writes_a_blob_and_logs_ground_truth(monkeypatch, blob_dir):
-    monkeypatch.setattr(httpx, "get", _fake_get_with_extract("ALGO AKANADE is Algoanalytics' agent platform."))
+    monkeypatch.setattr(httpx, "get", _fake_get_with_extract("Kalkee is Algoanalytics' agent platform."))
     logged = []
     monkeypatch.setattr(peft_analyzer, "log_ground_truth_turn",
                         lambda **kw: logged.append(kw))
 
-    status = peft_analyzer.scrape_topic("ALGO AKANADE", blob_dir=blob_dir, max_bytes=10_000, day="2026-08-30")
+    status = peft_analyzer.scrape_topic("Kalkee", blob_dir=blob_dir, max_bytes=10_000, day="2026-08-30")
     assert status == "scraped"
     assert len(list(blob_dir.glob("*.json"))) == 1
     assert len(logged) == 1
-    assert logged[0]["messages"] == [{"role": "user", "content": "What is ALGO AKANADE?"}]
+    assert logged[0]["messages"] == [{"role": "user", "content": "What is Kalkee?"}]
     assert "Algoanalytics" in logged[0]["reply"]
     assert logged[0]["provider"] == "peft-analyzer"
 

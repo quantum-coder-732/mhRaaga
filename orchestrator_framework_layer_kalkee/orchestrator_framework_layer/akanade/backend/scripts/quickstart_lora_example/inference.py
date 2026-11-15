@@ -71,7 +71,7 @@ messages = [
     {
         "role": "system",
         "content": (
-            "You are Algo-Akanade-SLM, "
+            "You are Algo-Kalkee-SLM, "
             "an enterprise intent classifier."
         ),
     },
@@ -131,5 +131,5 @@ response = tokenizer.decode(
 )
 
 
-print("\nAlgo-Akanade-SLM (quickstart):")
+print("\nAlgo-Kalkee-SLM (quickstart):")
 print(response)

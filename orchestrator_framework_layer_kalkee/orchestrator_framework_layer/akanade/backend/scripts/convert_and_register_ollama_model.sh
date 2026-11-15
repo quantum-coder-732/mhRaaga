@@ -37,7 +37,7 @@
 set -euo pipefail
 
 MERGED_DIR="${1:?Usage: $0 <merged-model-dir> [new-tag]}"
-# "algo-akanade-slm" (Algo-Akanade-SLM), not a base-model-specific name like "qwen2.5-tuned" —
+# "algo-akanade-slm" (Algo-Kalkee-SLM), not a base-model-specific name like "qwen2.5-tuned" —
 # this pipeline supports any small base (Qwen, SmolLM, Llama, ...) via
 # finetune_local_slm.py's own --base-model, so the OUTPUT gets one
 # consistent product name regardless of which base produced it.
@@ -100,7 +100,7 @@ FINETUNE_ENV_FILE="${FINETUNE_ENV_FILE:-$SCRIPT_DIR/../finetune.env}"
 # (deleted by the trap below) and Ollama's own opaque blob store —
 # there was no actual standalone artifact a person could hand to
 # another machine, back up, or load straight into llama.cpp/LM Studio
-# without this exact Ollama install. Every night's Algo-Akanade-SLM
+# without this exact Ollama install. Every night's Algo-Kalkee-SLM
 # candidate gets its own dated subdirectory here — GGUF + Modelfile +
 # a metadata.json recording provenance and whether it actually shipped
 # — regardless of whether the regression gate passed, so a failed
@@ -233,7 +233,7 @@ echo "== 3/7: Exporting the standalone artifact to $EXPORT_DIR =="
 # A real, portable model export — the GGUF + the Modelfile that
 # produced this Ollama tag, saved OUTSIDE both $WORK_DIR (deleted by
 # the trap above on exit) and Ollama's own internal blob store, so
-# Algo-Akanade-SLM can be copied to another machine, backed up, or
+# Algo-Kalkee-SLM can be copied to another machine, backed up, or
 # loaded directly by any GGUF-capable runtime (llama.cpp, LM Studio,
 # `ollama create` elsewhere) without depending on this exact install.
 TAG_DIR_NAME="$(echo "$NEW_TAG" | tr ':/' '__')"

@@ -5,7 +5,7 @@ expects `{"text": str, "ok": bool, "confidence": float}` back. This is
 what makes "register a new agent via API" genuinely mean something for
 an external service/team, not just "call registry.register() from
 Python" — a contributor can stand up any HTTP endpoint, in any language,
-and register it into ALGO AKANADE's routing/workflow/feedback machinery without
+and register it into Kalkee's routing/workflow/feedback machinery without
 touching this repo at all.
 """
 from __future__ import annotations

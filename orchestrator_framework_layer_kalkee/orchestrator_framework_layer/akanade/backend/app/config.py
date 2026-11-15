@@ -54,7 +54,7 @@ def _jwt_secret_from_env() -> str:
 
 class Settings:
     # ── app ──────────────────────────────────────────────────────────
-    APP_NAME = "ALGO AKANADE — Multi-Agent GenAI Network with Evolving Training and Orchestration"
+    APP_NAME = "Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration"
     JWT_SECRET: str = _jwt_secret_from_env()
     JWT_ALG = "HS256"
     JWT_TTL_HOURS = 12
@@ -109,7 +109,7 @@ class Settings:
     # Groq's free-tier model list changes over time; re-check if this 404s.
     GROQ_MODEL: str = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 
-    # Algo Engine (performance_optimizer/algo_optimzer_engine) — ALGO AKANADE's
+    # Algo Engine (performance_optimizer/algo_optimzer_engine) — Kalkee's
     # own self-hosted model execution layer, exposed OpenAI-compatible via
     # `algo-engine serve`. A real rung in llm/router.py's CHAINS (delay_ok/
     # bulk), not just a pinnable extra. Point this at a running instance to
@@ -117,7 +117,7 @@ class Settings:
     # same as every other unconfigured provider. NOT MoE-only and NOT
     # GPU-only: Algo Engine is model-architecture-agnostic (dense/MoE/
     # hybrid) and picks its own execution strategy (Go/CPU, cgo/CPU, CUDA/
-    # GPU, or hybrid across VRAM/RAM/SSD) per model+hardware — ALGO AKANADE
+    # GPU, or hybrid across VRAM/RAM/SSD) per model+hardware — Kalkee
     # decides WHAT to run, Algo Engine decides HOW. See
     # performance_optimizer/Arhitecture_Opitimization.md.
     ALGO_ENGINE_BASE_URL: str = os.getenv("ALGO_ENGINE_BASE_URL", "")
@@ -198,7 +198,7 @@ class Settings:
     CLAUDE_API_KEY: str = os.getenv("CLAUDE_API_KEY", "")
     CLAUDE_MODEL: str = os.getenv("CLAUDE_MODEL", "claude-sonnet-5")
 
-    # ALGO AKANADE's generic model layer — Hugging Face (llm/providers.py's
+    # Kalkee's generic model layer — Hugging Face (llm/providers.py's
     # HuggingFaceProvider, real `huggingface_hub` SDK). Any model on HF
     # Inference Providers works via HUGGINGFACE_MODEL alone; set
     # HUGGINGFACE_ENDPOINT_URL instead to target a dedicated HF
@@ -213,7 +213,7 @@ class Settings:
     HUGGINGFACE_EXTRA_BODY: str = os.getenv("HUGGINGFACE_EXTRA_BODY", "{}")
     HUGGINGFACE_OPTIMIZATION: str = os.getenv("HUGGINGFACE_OPTIMIZATION", "{}")
 
-    # ALGO AKANADE's generic model layer — "any custom or locally-hosted model"
+    # Kalkee's generic model layer — "any custom or locally-hosted model"
     # (llm/providers.py's CustomProvider — an OpenAICompatible alias):
     # vLLM, llama.cpp's server, LM Studio, a hand-rolled inference API,
     # anything that speaks the OpenAI chat-completions wire format.

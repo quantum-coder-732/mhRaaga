@@ -3,6 +3,7 @@ Description: mhRaaga - raga music studio (S3 + CloudFront site, API Gateway + La
 Parameters:
   OriginSecret: {Type: String, NoEcho: true, MinLength: 16, Description: Shared secret CloudFront sends so the API only answers through the site}
   DailyComposeLimit: {Type: Number, Default: 30}
+  GpuEngine: {Type: String, Default: "off", AllowedValues: ["on", "off"], Description: "Accept AI-singer (YuE2) jobs. A GPU worker must also be running."}
   SignupOpen: {Type: String, Default: "true", AllowedValues: ["true", "false"]}
   DomainName: {Type: String, Default: "", Description: "Custom domain such as mhraaga.in (leave empty to use the CloudFront address)"}
   CertificateArn: {Type: String, Default: "", Description: "ACM certificate in us-east-1 covering DomainName and www.DomainName"}
@@ -86,6 +87,7 @@ Resources:
           ORIGIN_SECRET: !Ref OriginSecret
           SITE_BUCKET: !Sub mhraaga-site-${AWS::AccountId}-${AWS::Region}
           ADMIN_EMAILS: keshav.velhal@gmail.com
+          GPU_ENGINE: !Ref GpuEngine
 
   HttpApi:
     Type: AWS::ApiGatewayV2::Api

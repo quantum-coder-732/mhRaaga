@@ -1,7 +1,7 @@
-"""OpenClawAgent — a general-purpose ALGO AKANADE agent built directly on the
+"""OpenClawAgent — a general-purpose Kalkee agent built directly on the
 public Anthropic Claude API (llm/providers.py's AnthropicNative,
 registered as the "claude" provider in llm/router.py), with NO PM tools
-and no domain-specific logic — proof that ALGO AKANADE's model abstraction
+and no domain-specific logic — proof that Kalkee's model abstraction
 layer is reusable by a plain, tool-free agent just as easily as by the
 PM domain's tool-calling one.
 

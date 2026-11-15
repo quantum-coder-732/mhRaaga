@@ -197,7 +197,7 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
         ) : (
           <p className="panel-note">
             No persisted posterior yet — provider_optimizer saves every 20 calls; keep chatting through
-            Algo Akanade and this fills in.
+            Kalkee and this fills in.
           </p>
         )}
       </section>

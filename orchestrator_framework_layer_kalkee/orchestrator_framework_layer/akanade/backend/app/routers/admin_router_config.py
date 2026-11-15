@@ -43,7 +43,7 @@ def patch_service_config(payload: dict, user: dict = Depends(require_role("Execu
 # --- Primary pipeline blue/green switch (llm/primary_pipeline.py) — which
 # pipeline answers REAL live chat traffic: "routellm" (primary/default,
 # the CEO memo's own generic architecture) or "akanade" (secondary,
-# Algo aKANADE's own chain).
+# Algo Kalkee's own chain).
 # Local to this process (no ak-router proxy needed), same RBAC split as
 # everything else here — this is the single biggest lever in the whole
 # admin surface, so it stays Executive-only to flip. ---

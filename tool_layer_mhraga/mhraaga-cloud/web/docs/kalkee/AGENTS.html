@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The music agents · mhRaaga docs</title><meta name="description" content="The music agents">
+<link rel="stylesheet" href="../docs.css"></head>
+<body data-root="../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../overview.html">Overview</a></li><li><a href="../system.html">How the system works</a></li><li><a href="../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../ARCHITECTURE.html">Architecture</a></li><li><a href="../ENGINE.html">Engine, module by module</a></li><li><a href="../BACKEND.html">Backend, file by file</a></li><li><a href="../ADMIN.html">Admin dashboard</a></li><li><a href="../API.html">API for developers</a></li><li><a href="../SOUND.html">Sound</a></li><li><a href="../VOICE.html">AI voice</a></li><li><a href="../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../STUDIO.html">Stories, people, rules</a></li><li><a href="../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../FILES.html">Every music file</a></li><li><a href="../THIRD_PARTY.html">Vendored upstream repos</a></li><li><a href="../components/android-app.html">Android app</a></li></ul></details><details open><summary>Kalkee, the agents</summary><ul><li><a href="../kalkee/index.html">Kalkee in mhRaaga</a></li><li><a href="../kalkee/AGENTS.html" class=cur aria-current=page>The music agents</a></li><li><a href="../kalkee/LEARNING.html">How the agents learn</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="the-music-agents">The music agents</h1>
+<p>"Agent" here means a small piece of code that owns one decision or one judgement. None of them is an autonomous chatbot.</p>
+<h2 id="1-producer-agents-they-choose">1. Producer agents (they choose)</h2>
+<p>Seven producers each choose <strong>one gene</strong> of a song. They choose by Thompson sampling (see <a href="../kalkee/LEARNING.html">How the agents learn</a>): every option has a belief about how well it works for each language, the agent draws a random sample from each belief, and picks the highest.</p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Chooses from</th>
+<th>Judged by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>raga</code></td>
+<td>classical (30), gopi (1 to 16000), melakarta (1 to 72)</td>
+<td>raga_fidelity, library_affinity</td>
+</tr>
+<tr>
+<td><code>tala</code></td>
+<td>teental, keherwa, dadra, rupak, jhaptal, ektal, adi</td>
+<td>cadence, rhythm</td>
+</tr>
+<tr>
+<td><code>tempo</code></td>
+<td>54, 62, 70, 80, 92, 104 bpm</td>
+<td>rhythm, library_affinity</td>
+</tr>
+<tr>
+<td><code>lead</code></td>
+<td>bansuri, harmonium, veena</td>
+<td>contour, phrase_variety</td>
+</tr>
+<tr>
+<td><code>theme</code></td>
+<td>dawn, krishna, rain, night (the words come from the verse bank)</td>
+<td>lyrics_fit</td>
+</tr>
+<tr>
+<td><code>tonic</code></td>
+<td>183, 233, 234 Hz</td>
+<td>library_affinity, raga_fidelity</td>
+</tr>
+<tr>
+<td><code>form</code></td>
+<td>song or spoken poem</td>
+<td>lyrics_fit, poem_form</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-the-composer">2. The composer</h2>
+<p><code>compose.py</code> turns the seven genes into a score: alap, gat, tihai, tabla, lyrics. It is deterministic for a given seed. See <a href="../ENGINE.html">the engine</a>.</p>
+<h2 id="3-critic-agents-they-judge">3. Critic agents (they judge)</h2>
+<p>Eight pure functions in <code>agentic/critics.py</code>. Each scores one aspect of a finished score from 0 to 1. Their weights in the song's reward:</p>
+<table>
+<thead>
+<tr>
+<th>Critic</th>
+<th>Asks</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>raga_fidelity</code></td>
+<td>Do the notes belong to the raga, and are vadi and samvadi stressed?</td>
+<td>0.28</td>
+</tr>
+<tr>
+<td><code>library_affinity</code></td>
+<td>How close is the note-class profile to the reference tunes?</td>
+<td>0.15</td>
+</tr>
+<tr>
+<td><code>phrase_variety</code></td>
+<td>Are the phrases varied, not copies?</td>
+<td>0.14</td>
+</tr>
+<tr>
+<td><code>contour</code></td>
+<td>Does the melody rise and fall in a singable shape?</td>
+<td>0.14</td>
+</tr>
+<tr>
+<td><code>rhythm</code></td>
+<td>Does the tabla keep the tala?</td>
+<td>0.12</td>
+</tr>
+<tr>
+<td><code>lyrics_fit</code></td>
+<td>Does the script match the language and the pacing fit?</td>
+<td>0.12</td>
+</tr>
+<tr>
+<td><code>cadence</code></td>
+<td>Does the closing phrase land on sam?</td>
+<td>0.05</td>
+</tr>
+<tr>
+<td><code>poem_form</code></td>
+<td>For poems: short rhymed lines and pauses</td>
+<td>0 (0.20 for a poem)</td>
+</tr>
+</tbody>
+</table>
+<p>For a spoken poem the weights change: <code>rhythm</code> becomes 0, <code>poem_form</code> 0.20 and <code>phrase_variety</code> 0.06. The critics are <strong>rules, not listeners</strong>; the reference tunes are only analysed for pitch-class profile and tempo, never copied.</p>
+<h2 id="4-the-live-agents-they-run-when-you-press-create">4. The live agents (they run when you press Create)</h2>
+<p>These are ordinary services, listed so the picture is complete.</p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>File</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Brief planner</td>
+<td><code>brief.py</code></td>
+<td>Prompt, language and style words into raga, tala, tempo, mood, lead and lyrics (a language model, with keyword rules as a fallback)</td>
+</tr>
+<tr>
+<td>Style reader</td>
+<td><code>styles.py</code></td>
+<td>Style words such as "sufi qawwali, dholak, handclaps" into lead, tala, tempo and extra players</td>
+</tr>
+<tr>
+<td>Composer</td>
+<td><code>compose.py</code></td>
+<td>The score</td>
+</tr>
+<tr>
+<td>Physics</td>
+<td><code>physics.py</code></td>
+<td>Rubato, note weight, meend glide and drift on Box2D</td>
+</tr>
+<tr>
+<td>Phrase GAN</td>
+<td><code>gan.py</code></td>
+<td>New phrases, kept only if the discriminator accepts them</td>
+</tr>
+<tr>
+<td>Auto-tune</td>
+<td><code>autotune.py</code></td>
+<td>Pulls pitch toward the shruti</td>
+</tr>
+<tr>
+<td>Voice</td>
+<td><code>api/voice.py</code></td>
+<td>Neural speech for each lyric line</td>
+</tr>
+<tr>
+<td>AI singer</td>
+<td><code>gpu-worker/worker.py</code></td>
+<td>Real sung songs with YuE2 on a GPU machine (optional, administrators)</td>
+</tr>
+<tr>
+<td>Rules and learning</td>
+<td><code>api/studio.py</code></td>
+<td>The live rules and the learned defaults per language</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-how-one-song-moves-through-them">5. How one song moves through them</h2>
+<figure class="diagram"><a href="../diagrams/602670e168f1.svg" target="_blank" rel="noopener" title="Open the diagram full size"><img src="../diagrams/602670e168f1.svg" alt="Diagram" loading="lazy"></a></figure>
+<p>In the offline factory the first step is replaced by the seven producers, and after the composer the eight critics judge the score and the credit is shared.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#1-producer-agents-they-choose">1. Producer agents (they choose)</a><a class="l2" href="#2-the-composer">2. The composer</a><a class="l2" href="#3-critic-agents-they-judge">3. Critic agents (they judge)</a><a class="l2" href="#4-the-live-agents-they-run-when-you-press-create">4. The live agents (they run when you press Create)</a><a class="l2" href="#5-how-one-song-moves-through-them">5. How one song moves through them</a></aside></div>
+<script src="../docs.js"></script></body></html>

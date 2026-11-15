@@ -67,7 +67,7 @@ export function master(ctx, volume = 0.8) {
   const sat = ctx.createWaveShaper(), curve = new Float32Array(2049); for (let i = 0; i < 2049; i++) { const x = (i - 1024) / 1024; curve[i] = Math.tanh(1.5 * x) / 1.5; }
   sat.curve = curve; sat.oversample = "2x";
   const shelf = ctx.createBiquadFilter(); shelf.type = "highshelf"; shelf.frequency.value = 6500; shelf.gain.value = -4;
-  const low = ctx.createBiquadFilter(); low.type = "lowshelf"; low.frequency.value = 180; low.gain.value = 2;
+  const low = ctx.createBiquadFilter(); low.type = "lowshelf"; low.frequency.value = 160; low.gain.value = 4;
   comp.connect(sat); sat.connect(shelf); shelf.connect(low); low.connect(out);
   const lim = ctx.createDynamicsCompressor(); lim.threshold.value = -3; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = 0.002; lim.release.value = 0.12;   // limiter: peaks never clip
   out.connect(lim); lim.connect(ctx.destination);
@@ -112,13 +112,26 @@ function tanpura(ctx, dest, f, t, vol, life) {
   src.connect(g); g.connect(dest); src.start(t); src.stop(t + life + 0.9);
 }
 
+// The low end that real recordings have and a bare flute does not: the tanpura's bass string ringing on, and the body of the room. Measured against
+// recordings, the old mix had no energy below 200 Hz, which is what made it sound thin and "tinny".
+function subBass(ctx, dest, f, t, dur, vol) {
+  const g = ctx.createGain(), lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 340; lp.Q.value = 0.4;
+  g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 2.5); g.gain.setValueAtTime(vol, Math.max(t + 2.5, t + dur - 3)); g.gain.linearRampToValueAtTime(0.0001, t + dur);
+  for (const [type, m, det, lv] of [["triangle", 1, -3, 0.6], ["sine", 1, 4, 0.7], ["sine", 2, 0, 0.18], ["sine", 0.5, 0, 0.35]]) {
+    const o = ctx.createOscillator(), og = ctx.createGain(); o.type = type; o.frequency.value = f * m; o.detune.value = det; og.gain.value = lv;
+    const lfo = ctx.createOscillator(), lg = ctx.createGain(); lfo.frequency.value = 0.11 + Math.random() * 0.1; lg.gain.value = 0.12 * lv; lfo.connect(lg); lg.connect(og.gain); lfo.start(t); lfo.stop(t + dur + 0.1);
+    o.connect(og); og.connect(g); o.start(t); o.stop(t + dur + 0.1);
+  }
+  g.connect(lp); lp.connect(dest);
+}
+
 // Bansuri: a bamboo flute. A blown tube has a strong fundamental, weak overtones, a puff of air at the start, breath noise all through
 // the note, a slow vibrato that arrives after the note has begun, and pitch that is never perfectly still.
 function bansuri(ctx, dest, nz, f, t, d, orn, prev, vol, gl) {
   const a = 0.09 + Math.random() * 0.03, rel = 0.18, end = t + d;
   const body = ctx.createOscillator(), g = ctx.createGain(), tone = ctx.createBiquadFilter();
-  body.setPeriodicWave(harm(ctx, [1, 0.3 + Math.random() * 0.06, 0.1, 0.045, 0.02]));
-  tone.type = "lowpass"; tone.frequency.value = clamp(f * 5.5, 1800, 6000); tone.Q.value = 0.5;
+  body.setPeriodicWave(harm(ctx, [1, 0.62 + Math.random() * 0.08, 0.3, 0.16, 0.08, 0.04]));
+  tone.type = "lowpass"; tone.frequency.value = clamp(f * 6.5, 2200, 6500); tone.Q.value = 0.5;
   const start = orn === 1 && prev ? prev : orn === 2 ? f * 1.0595 : f * 0.985;           // an unslurred note is scooped up into pitch
   const glide = orn === 1 ? (gl || Math.min(0.16, d * 0.45)) : orn === 2 ? 0.07 : 0.05;
   body.frequency.setValueAtTime(start, t); body.frequency.exponentialRampToValueAtTime(f, t + glide);
@@ -191,7 +204,7 @@ function tabla(ctx, dest, nz, sa, bol, cls, t, vol) {
   if (cls === "left" || cls === "both") {
     const muted = low === "ka" || low === "kat" || low === "ke";
     if (muted) { hit(900, 2, 0.05, 0.3 * vol); mode(bay * 1.2, bay, 0.07, 0.35 * vol); }
-    else { mode(bay * 1.7, bay * 0.92, 0.5, 0.9 * vol); mode(bay * 2.6, bay * 1.9, 0.18, 0.18 * vol); hit(320, 1.2, 0.05, 0.22 * vol); }
+    else { mode(bay * 1.7, bay * 0.92, 0.62, 1.5 * vol); mode(bay * 2.6, bay * 1.9, 0.18, 0.18 * vol); hit(320, 1.2, 0.05, 0.22 * vol); }
   }
   if (cls === "right" || cls === "both") {
     const rim = ["na", "ti", "ra", "ki", "tu", "te"].includes(low), len = rim ? 0.2 : 0.7;
@@ -211,6 +224,25 @@ function manjira(ctx, dest, nz, t, vol) {
   g.gain.setValueAtTime(vol * 0.05, t); g.gain.exponentialRampToValueAtTime(0.0002, t + 0.05); n.connect(hp); hp.connect(g); g.connect(dest); n.start(t, Math.random() * 0.5); n.stop(t + 0.06);
 }
 
+// Dholak: the two-headed hand drum of qawwali and bhajan. A deep boom from the bass head on strong beats and a dry slap from the treble head on the others.
+function dholak(ctx, dest, nz, sa, t, vol, strong) {
+  const bay = clamp(sa / 2, 70, 140) * 0.9, o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine";
+  if (strong) {
+    o.frequency.setValueAtTime(bay * 1.5, t); o.frequency.exponentialRampToValueAtTime(bay, t + 0.07); g.gain.setValueAtTime(vol * 0.3, t); g.gain.exponentialRampToValueAtTime(0.0002, t + 0.26);
+    o.connect(g); g.connect(dest); o.start(t); o.stop(t + 0.28);
+  }
+  const n = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), ng = ctx.createGain(); n.buffer = nz; bp.type = "bandpass"; bp.frequency.value = strong ? 700 : 1900; bp.Q.value = 1.1;
+  ng.gain.setValueAtTime(vol * (strong ? 0.35 : 0.55), t); ng.gain.exponentialRampToValueAtTime(0.0002, t + 0.07); n.connect(bp); bp.connect(ng); ng.connect(dest); n.start(t, Math.random() * 0.5); n.stop(t + 0.09);
+}
+// Hand claps: a few people clapping a hair apart, so it sounds like a room and not a click.
+function clap(ctx, dest, nz, t, vol) {
+  for (let k = 0; k < 4; k++) {
+    const tt = t + k * 0.006 + Math.random() * 0.004, n = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), g = ctx.createGain(); n.buffer = nz;
+    bp.type = "bandpass"; bp.frequency.value = 1300 + Math.random() * 700; bp.Q.value = 0.8; g.gain.setValueAtTime(vol * 0.16, tt); g.gain.exponentialRampToValueAtTime(0.0002, tt + 0.075);
+    n.connect(bp); bp.connect(g); g.connect(dest); n.start(tt, Math.random() * 0.5); n.stop(tt + 0.09);
+  }
+}
+
 // Schedule the whole score on ctx. `from` seconds skips ahead (seeking). Returns the audible end time.
 export function schedule(ctx, bus, score, t0, from = 0, opts = {}) {
   const nz = noiseBuf(ctx), voice = score.lead_voice, dr = score.drone, rel = (t) => t0 + t - from;
@@ -218,7 +250,7 @@ export function schedule(ctx, bus, score, t0, from = 0, opts = {}) {
   const strings = [dr.second, dr.sa, dr.sa, dr.low_sa];
   for (let k = 0, t = 0; t < score.duration + 2; k++, t += tp) {
     if (t < from - 3) continue;
-    tanpura(ctx, bus, strings[k % 4], rel(t), (k % 4 === 3 ? 0.13 : 0.1), 4.2);
+    tanpura(ctx, bus, strings[k % 4], rel(t), (k % 4 === 3 ? 0.17 : 0.1), 4.2);
   }
   // Music breathes: the alap opens quietly and grows, the gat swells and settles with each phrase and over longer arcs, the tihai is strongest.
   const secs = score.sections || [], dyn = (t) => {
@@ -237,11 +269,19 @@ export function schedule(ctx, bus, score, t0, from = 0, opts = {}) {
     else bansuri(ctx, bus, nz, f, st, dd, orn, prev, 0.3 * v, gl);
     prev = f;
   }
-  const meta = (score.meta || {}), devo = /devot|bhakti|bhajan|krishna|calm|peace|meditat/i.test(String(meta.mood || "")) || meta.kind === "devotional";
+  // Extra players come from the Styles box (meta.ensemble). Songs made before that existed keep the old rule: manjira in devotional moods.
+  const meta = (score.meta || {}), ens = new Set(meta.ensemble || []);
+  if (!meta.ensemble && (/devot|bhakti|bhajan|krishna|calm|peace|meditat/i.test(String(meta.mood || "")) || meta.kind === "devotional")) ens.add("manjira");
+  { const st = Math.max(t0, rel(0)); subBass(ctx, bus, dr.low_sa, st, t0 + score.duration - from + 2 - st, ens.has("dholak") ? 0.03 : 0.075); }
+  let bi = 0;
   for (const [t, bol, cls, vol] of score.tabla) {
     if (t < from) continue;
-    tabla(ctx, bus, nz, score.sa, bol, cls, rel(t), vol * 0.8 * (0.7 + 0.3 * dyn(t)));
-    if (devo && vol >= 0.7) manjira(ctx, bus, nz, rel(t), vol * (0.6 + 0.4 * dyn(t)));
+    const d = 0.7 + 0.3 * dyn(t);
+    tabla(ctx, bus, nz, score.sa, bol, cls, rel(t), vol * 0.8 * d * (ens.has("dholak") ? 0.7 : 1));
+    if (ens.has("manjira") && vol >= 0.7) manjira(ctx, bus, nz, rel(t), vol * (0.6 + 0.4 * dyn(t)));
+    if (ens.has("dholak")) dholak(ctx, bus, nz, score.sa, rel(t) + 0.004, vol * 0.8 * d, vol >= 0.7 || cls !== "right");
+    if (ens.has("clap") && (bi % 2 === 1 || vol >= 0.95)) clap(ctx, bus, nz, rel(t) + 0.002, vol * d);
+    bi++;
   }
   return t0 + score.duration - from;
 }

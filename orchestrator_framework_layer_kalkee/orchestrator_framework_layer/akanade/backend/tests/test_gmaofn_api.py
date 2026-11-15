@@ -1,10 +1,10 @@
-"""ALGO AKANADE's REST API surface (/api/v1/*) — exercised through the real
+"""Kalkee's REST API surface (/api/v1/*) — exercised through the real
 bootstrapped agents (pm-agent, openclaw-agent, coding-agent; see
 gmaofn/bootstrap.py, wired into app startup by app/main.py), through the
 SAME TestClient/fixtures the rest of this suite uses, so a PM task
 executed via POST /api/v1/orchestration/execute is exercising the exact
 same real PM domain logic as POST /api/v1/chat/message — just through
-ALGO AKANADE's generic entry point instead of the PM-specific one.
+Kalkee's generic entry point instead of the PM-specific one.
 """
 from __future__ import annotations
 
@@ -88,10 +88,10 @@ def test_list_workflow_step_kinds(client, exec_token):
 
 def test_orchestration_execute_real_pm_prompt_end_to_end(client, exec_token):
     """The actual "make sure current prompts work" proof, through
-    ALGO AKANADE's generic entry point rather than /api/chat/message —
+    Kalkee's generic entry point rather than /api/chat/message —
     same underlying PM chatbot, same seeded Compass OS project."""
     r = client.post("/api/v1/orchestration/execute", json={
-        "task": "create a task called 'ALGO AKANADE API test' in Compass OS",
+        "task": "create a task called 'Kalkee API test' in Compass OS",
         "session_id": "gmaofn-api-test-1",
         "context": {"task_type": "project_management", "required_capabilities": ["project_management"]},
     }, headers=auth(exec_token))
@@ -144,7 +144,7 @@ def test_feedback_for_unknown_task_404s(client, exec_token):
 def test_rag_index_search_and_query_round_trip(client, exec_token):
     index = client.post("/api/v1/rag/index", json={
         "store": "default",
-        "text": "ALGO AKANADE is a generic multi-agent orchestration framework. "
+        "text": "Kalkee is a generic multi-agent orchestration framework. "
                "It routes tasks using Thompson Sampling and Shapley value credit assignment.",
     }, headers=auth(exec_token))
     assert index.status_code == 200

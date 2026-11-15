@@ -127,6 +127,7 @@ def _spent_site(h) -> float:
 def _add_spend(h, u: dict, usd: float) -> None:
     day = _day()
     h._songs.update_item(Key={"owner": "quota#tts", "id": day}, UpdateExpression="ADD usd :c", ExpressionAttributeValues={":c": Decimal(str(round(usd, 6)))})
+    h._users.update_item(Key={"email": u["email"]}, UpdateExpression="ADD tusd_total :c", ExpressionAttributeValues={":c": Decimal(str(round(usd, 6)))})   # lifetime, for the admin dashboard
     if u.get("tday") == day:
         h._users.update_item(Key={"email": u["email"]}, UpdateExpression="ADD tusd :c", ExpressionAttributeValues={":c": Decimal(str(round(usd, 6)))})
     else:

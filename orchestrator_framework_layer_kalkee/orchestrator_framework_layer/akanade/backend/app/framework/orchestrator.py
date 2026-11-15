@@ -110,7 +110,7 @@ class Orchestrator:
     def execute(self, task: Task) -> OrchestrationResult:
         candidates = self.registry.list_agents()
         if not candidates:
-            raise NoAgentsAvailableError("No agents registered with ALGO AKANADE")
+            raise NoAgentsAvailableError("No agents registered with Kalkee")
         # Self-healing: ensure every candidate has a network node with real
         # metadata BEFORE any capability/communication edge involving it is
         # added below — independent of whether bootstrap.py (or a caller

@@ -5,11 +5,11 @@ numpy>=1.26
 boto3>=1.34
 # "HIS ARCHITECTURE" comparison arm only (see his_architecture.py) — a
 # calibrated difficulty-aware classifier (default vs escalation tier per
-# PROMPT), never Algo aKANADE's own production routing mechanism
+# PROMPT), never Algo Kalkee's own production routing mechanism
 # (deterministic.py/thompson.py, untouched). Real, heavy ML deps
 # (torch/transformers/scikit-learn/pandas — ~1-2GB) come along
 # transitively; his_architecture.py loads the Controller LAZILY (first
-# actual use, not app startup) so this never costs Algo aKANADE's own
+# actual use, not app startup) so this never costs Algo Kalkee's own
 # `/route` hot path anything. Same "heavy ML deps live apart from the
 # always-running API image" principle as
 # orchestrator_framework_layer/akanade/backend's own split against

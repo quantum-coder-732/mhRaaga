@@ -1,7 +1,7 @@
-# Pecova as its own, separately deployable stack — runs alongside Akanade's
+# Kalkee as its own, separately deployable stack — runs alongside Kalkee's
 # existing containers (same Docker network as ak-backend/ak-chatbot when
 # deployed on the same host; see ../../deploy/ec2/README_PECOVA.md), but
-# is never exposed on a public port itself — only Akanade's own gateway
+# is never exposed on a public port itself — only Kalkee's own gateway
 # talks to it, over this internal network.
 services:
   pecova-router:

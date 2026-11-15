@@ -1,6 +1,6 @@
 """Registers this deployment's default agents into the shared registry —
 called once at process startup (see app/main.py). Adding a new agent to
-a running ALGO AKANADE deployment never requires editing this file: it's just
+a running Kalkee deployment never requires editing this file: it's just
 `registry.register(MyAgent())` from wherever that agent's own module
 lives (or a `POST /api/v1/agents/register` call at runtime, see
 routers/v1/agents.py) — this module only seeds the agents this
@@ -10,7 +10,7 @@ particular deployment ships with by default:
   pm-agent-adk              — the SAME PM chatbot, pinned to the "adk"
                               framework track specifically — Google ADK
                               exposed as its own independently-routable,
-                              independently-scored ALGO AKANADE agent, not just
+                              independently-scored Kalkee agent, not just
                               a query-param buried inside pm-agent
   openclaw-agent            — general-purpose, direct public Claude API
   coding-agent               — code generation + real ast.parse validation
@@ -18,7 +18,7 @@ particular deployment ships with by default:
                                 (agent/mcp_client.py) — proves MCP is a
                                 real capability source, not PM-only
   langchain-research-agent     — a real langchain_core Runnable + a real
-                                  BaseRetriever over ALGO AKANADE's RAG store
+                                  BaseRetriever over Kalkee's RAG store
   code-security-agent         — real static pattern checks for common
                                 Python vulnerability classes
   supply-chain-agent           — checks pinned dependencies against
@@ -48,7 +48,7 @@ def bootstrap_default_agents() -> None:
                description="The same PM chatbot as pm-agent, pinned to Google ADK's "
                           "Runner/LlmAgent machinery specifically — an 'outside' "
                           "agent framework integrated as its own independently-"
-                          "routable, independently-scored ALGO AKANADE agent."),
+                          "routable, independently-scored Kalkee agent."),
         OpenClawAgent(),
         CodingAgent(),
         MCPUtilityAgent(),

@@ -1,5 +1,5 @@
 """CodingAgent — §7's example second domain (code_generation, debugging,
-code_review, testing, refactoring), proving Algo aKANADE generalizes past the
+code_review, testing, refactoring), proving Algo Kalkee generalizes past the
 PM domain it started in without touching the framework core: this file
 is the ENTIRE integration surface for a brand-new domain — it's just
 another Agent, registered the same way PMAgent/OpenClawAgent are (see

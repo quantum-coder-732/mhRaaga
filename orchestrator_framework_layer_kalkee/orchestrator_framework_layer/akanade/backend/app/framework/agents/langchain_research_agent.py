@@ -1,9 +1,9 @@
 """LangChainResearchAgent — a real, working example of §8's LangChain
 integration: an actual `langchain_core` `Runnable` pipeline (a
-`ChatPromptTemplate` piped into a `RunnableLambda`), wrapped as a ALGO AKANADE
+`ChatPromptTemplate` piped into a `RunnableLambda`), wrapped as a Kalkee
 agent via `langchain_adapter.LangChainRunnableAgent` — not just an
 adapter module sitting unused. Also builds a real
-`langchain_core.retrievers.BaseRetriever` over ALGO AKANADE's in-memory RAG
+`langchain_core.retrievers.BaseRetriever` over Kalkee's in-memory RAG
 store (rag.py) via `vector_store_to_retriever`, so the "RAG" half of
 §8/§9's LangChain+RAG integration is exercised too: retrieved context is
 injected into the prompt before the model ever sees the question.
@@ -29,10 +29,10 @@ from ..task import TaskType
 # A tiny, self-contained knowledge base — enough to prove retrieval
 # actually changes the answer, without depending on any external corpus.
 _KNOWLEDGE_BASE = [
-    "ALGO AKANADE routes tasks to agents using a linear contextual Thompson Sampling bandit.",
-    "ALGO AKANADE splits credit across multiple agents on one task using the Shapley value, "
+    "Kalkee routes tasks to agents using a linear contextual Thompson Sampling bandit.",
+    "Kalkee splits credit across multiple agents on one task using the Shapley value, "
     "a 2012 Nobel Memorial Prize in Economic Sciences concept from cooperative game theory.",
-    "ALGO AKANADE's reward function is R = alpha*Quality + beta*Success + gamma*Feedback "
+    "Kalkee's reward function is R = alpha*Quality + beta*Success + gamma*Feedback "
     "- delta*Cost - epsilon*Latency - zeta*Failure, with adaptively-updated coefficients.",
 ]
 
@@ -69,7 +69,7 @@ def build_langchain_research_agent() -> LangChainRunnableAgent:
         agent_id="langchain-research-agent",
         name="LangChain Research Agent",
         description="A real langchain_core Runnable (ChatPromptTemplate | RunnableLambda) "
-                   "wrapped as a ALGO AKANADE agent, with a real BaseRetriever over an "
+                   "wrapped as a Kalkee agent, with a real BaseRetriever over an "
                    "in-memory RAG store injecting context before the model answers.",
         capabilities=frozenset({"research", "question_answering"}),
         supported_tasks=frozenset({TaskType.RESEARCH, TaskType.QUESTION_ANSWERING}),

@@ -131,6 +131,7 @@ def make_brief(prompt: str, opts: dict | None = None, api_key: str = "", timeout
         for model in MODELS:
             try:
                 raw = _call(model, prompt + (f"\n(language: {opts['language']})" if opts.get("language") else "") +
+                            (f"\n(style tags, follow them: {opts['style']})" if opts.get("style") else "") +
                             ("\n(spoken poem: write 14-18 short rhymed lines of 4-9 words, plain intimate words, gentle imagery like flute, moon, river, hands; tag [Verse]/[Chorus] every 4 lines)" if opts.get("poem") else "") +
                             ("\n(instrumental: no lyrics)" if opts.get("instrumental") else ""), api_key, timeout)
                 brief, source, usage = _clean(raw, prompt, opts), model, {"model": model, **raw.get("_usage", {})}

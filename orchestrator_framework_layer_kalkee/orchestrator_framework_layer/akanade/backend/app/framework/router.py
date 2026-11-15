@@ -1,5 +1,5 @@
 """The Adaptive Agent Assignment Engine — §2/§3's routing layer, and
-ALGO AKANADE's actual research contribution: agent selection modeled as a
+Kalkee's actual research contribution: agent selection modeled as a
 LINEAR CONTEXTUAL BANDIT solved with Thompson Sampling (Agrawal & Goyal,
 "Thompson Sampling for Contextual Bandits with Linear Payoffs", ICML
 2013), warm-started from a hand-designed utility prior and continuously
@@ -7,7 +7,7 @@ corrected by real observed rewards (whose credit, when multiple agents
 jointly worked a task, is split via shapley.py's Nobel-Prize-linked
 Shapley value before it ever reaches this module).
 
-Per candidate agent a, ALGO AKANADE maintains a Bayesian linear regression
+Per candidate agent a, Kalkee maintains a Bayesian linear regression
 posterior over "reward given context": N(μ_a, ν² B_a⁻¹), where
 B_a = Σ x xᵗ + λI (λ = ridge prior strength) and the posterior mean is
 μ_a = B_a⁻¹ f_a, f_a = Σ r·x accumulated from every past (context,

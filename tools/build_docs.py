@@ -37,11 +37,10 @@ GROUPS = [
         ("docs/ARCHITECTURE.md", None, "Architecture"), ("docs/ENGINE.md", None, "Engine, module by module"), ("docs/BACKEND.md", None, "Backend, file by file"), ("docs/ADMIN.md", None, "Admin dashboard"), ("docs/API.md", None, "API for developers"), ("docs/SOUND.md", None, "Sound"),
         ("docs/VOICE.md", None, "AI voice"), ("docs/TEAM_AND_PHYSICS.md", None, "Shared studio and physics"), ("docs/STUDIO.md", None, "Stories, people, rules"),
         ("docs/AGENTIC_ARCHITECTURE.md", None, "Song factory agents"), ("docs/DOMAIN.md", None, "Domain and HTTPS"),
-        ("docs/components/music-engine.md", None, "Music engine"), ("docs/components/android-app.md", None, "Android app"),
-        ("docs/components/music-backend.md", None, "Backend prototype"), ("docs/components/music-mobile.md", None, "Mobile prototype")]),
+        ("docs/FILES.md", None, "Every music file"), ("docs/THIRD_PARTY.md", None, "Vendored upstream repos"), ("docs/components/android-app.md", None, "Android app")]),
+    ("Kalkee, the agents", [("docs/kalkee/README.md", "kalkee/index.html", "Kalkee in mhRaaga"), ("docs/kalkee/AGENTS.md", None, "The music agents"), ("docs/kalkee/LEARNING.md", None, "How the agents learn")]),
 ]
-KALKEE_GROUPS = [("Kalkee", "docs/kalkee/kalkee"), ("Kalkee performance optimizer", "docs/kalkee/performance_optimizer"),
-                 ("Kalkee optimizer (standalone copy)", "docs/kalkee/performance_optimizer_standalone")]
+KALKEE_GROUPS = []
 
 
 def title_of(md: str, fallback: str) -> str:
@@ -67,19 +66,8 @@ def build_tree():
                 smap[src] = out
             rows.append({"src": src, "out": out, "title": title})
         groups.append((g, rows))
-    kal_index = ROOT / "docs/kalkee/README.md"
-    rows = [{"src": "docs/kalkee/README.md", "out": "kalkee/index.html", "title": "About these documents"}]
-    smap["docs/kalkee/README.md"] = "kalkee/index.html"
-    groups.append(("About Kalkee", rows))
     for g, folder in KALKEE_GROUPS:
-        rows = []
-        for p in sorted((ROOT / folder).glob("*.md")):
-            src = str(p.relative_to(ROOT))
-            out = src[5:].replace(".md", ".html")
-            smap[src] = out
-            rows.append({"src": src, "out": out, "title": title_of(p.read_text(encoding="utf-8"), pretty(p.name)) if p.name.startswith("README_") is False else pretty(p.name)})
-        if rows:
-            groups.append((g, rows))
+        pass
     return groups, smap
 
 
@@ -241,13 +229,9 @@ def page_agents() -> str:
                ("Rules and learning", "studio.py", "Live rules in S3 and learned defaults per language, applied to each new song."),
                ("Team studio", "team.py", "Shared projects of up to 150 members and 300 layers, with roles and optimistic locking.")]
     rt = "".join(f"<tr><td><b>{a}</b></td><td><code>{b}</code></td><td>{c}</td></tr>" for a, b, c in runtime)
-    kal = [("pm-agent", "Wraps the original PM chatbot verbatim."), ("pm-agent-adk", "The same chatbot, pinned to Google ADK."), ("openclaw-agent", "A plain Claude agent with no tools."),
-           ("coding-agent", "Writes code and checks it parses."), ("mcp-utility-agent", "Its tools all come from MCP servers."), ("langchain-research-agent", "A LangChain pipeline with retrieval."),
-           ("code-security-agent", "Scans Python for vulnerability patterns."), ("supply-chain-agent", "Looks up dependency vulnerabilities (OSV.dev)."), ("cloud-config-agent", "Scans Dockerfile, Kubernetes and Terraform for misconfigurations.")]
-    kl = "".join(f"<tr><td><code>{a}</code></td><td>{b}</td></tr>" for a, b in kal)
     return f'''<h1>All the agents</h1>
 <p class="lead">"Agent" is used in three places in this project. They are different things, so they are listed separately.</p>
-<div class="cards"><a class="card" href="#runtime"><b>1 · The live product</b><span>Services that run when you press Create</span></a><a class="card" href="#factory"><b>2 · The song factory</b><span>Offline agents and critics that improve the catalogue</span></a><a class="card" href="#kalkee"><b>3 · Kalkee</b><span>A separate orchestrator; mhRaaga borrows one function</span></a></div>
+<div class="cards"><a class="card" href="#runtime"><b>1 · The live product</b><span>Services that run when you press Create</span></a><a class="card" href="#factory"><b>2 · The song factory</b><span>Offline producers and critics that improve the catalogue</span></a><a class="card" href="#kalkee"><b>3 · Kalkee</b><span>The fair credit split that lets the producers learn</span></a></div>
 <h2 id="runtime">1 · The live product</h2><p>These run inside the Lambda or on your device when you create a song. They are ordinary code, not autonomous agents.</p>
 <table><tr><th>Part</th><th>File</th><th>What it does</th></tr>{rt}</table>
 <h2 id="factory">2 · The song factory (offline)</h2>
@@ -257,10 +241,9 @@ def page_agents() -> str:
 <table><tr><th>Critic</th><th>Question</th></tr>{crit}</table>
 <h3>Fair credit</h3><p>The reward is split with the <b>Shapley value</b> so an agent is credited for what it added, not just for being on a good song. This is the one function taken from Kalkee. If it is missing, a proportional split is used and the run records <code>local-fallback</code>.</p>
 <p>The catalogue holds at most 100 songs (about 14 per language); a better song replaces the weakest. Details: <a href="AGENTIC_ARCHITECTURE.html">Song factory agents</a>.</p>
-<h2 id="kalkee">3 · Kalkee</h2>
-<p>Kalkee is a separate multi-agent orchestrator in <code>orchestrator_framework_layer_kalkee/</code>. It routes each task to the best agent with a contextual Thompson-sampling router and runs a six-step pipeline (understand, plan, execute, validate, respond, evaluate). Its nine default agents are below. <b>mhRaaga does not run any of them.</b> The live site, the API and the app never import Kalkee. mhRaaga's song factory loads only the Shapley credit function.</p>
-<table><tr><th>Kalkee agent</th><th>What it is</th></tr>{kl}</table>
-<p>Read more: <a href="kalkee/kalkee/README_AGENTS.html">Kalkee's agents</a> · <a href="kalkee/kalkee/ARCHITECTURE.html">Kalkee architecture</a> · <a href="kalkee/index.html">all Kalkee documents</a>.</p>'''
+<h2 id="kalkee">3 · Kalkee: the credit split</h2>
+<p>Kalkee is the name of the agent layer. It is the part that lets the seven producers learn from the critics: when a song is judged, Kalkee's Shapley function shares the reward fairly among the producers according to what each added, and each producer updates its belief about the options it chose. mhRaaga uses that one function from Kalkee's code; everything else in this project is its own. The live site, the API and the app do not run Kalkee.</p>
+<p>Read more: <a href="kalkee/index.html">Kalkee in mhRaaga</a> · <a href="kalkee/AGENTS.html">The music agents</a> · <a href="kalkee/LEARNING.html">How the agents learn</a> · <a href="FILES.html">Every music file</a>.</p>'''
 
 
 def page_index(groups) -> str:
@@ -268,7 +251,7 @@ def page_index(groups) -> str:
     pick = [("overview.html", "Overview", "What mhRaaga is and how to run it"), ("system.html", "How the system works", "From a sentence to a song, with diagrams"),
             ("agents.html", "All the agents", "The live services, the song factory, and Kalkee"), ("ARCHITECTURE.html", "Architecture", "Layers, data, security, deploy"),
             ("API.html", "API for developers", "Accounts, endpoints, the score format"), ("SOUND.html", "Sound", "How the instruments are modelled"),
-            ("VOICE.html", "AI voice", "Neural speech, cost and caps"), ("kalkee/index.html", "Kalkee documents", "The orchestrator's guides, in HTML")]
+            ("VOICE.html", "AI voice", "Neural speech, cost and caps"), ("kalkee/index.html", "Kalkee in mhRaaga", "The agents, how they learn"), ("FILES.html", "Every music file", "What each file holds")]
     for h, t, s in pick:
         cards += f'<a class="card" href="{h}"><b>{t}</b><span>{s}</span></a>'
     return f'<h1>mhRaaga documentation</h1><p class="lead">Compose raga music from a sentence. Everything about how it is built, written for people to read.</p><div class="cards">{cards}</div><h2>All pages</h2>' + "".join(

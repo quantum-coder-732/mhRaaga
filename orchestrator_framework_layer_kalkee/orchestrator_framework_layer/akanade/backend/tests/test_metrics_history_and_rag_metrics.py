@@ -1,4 +1,4 @@
-"""Coverage for two new observability surfaces added for the ALGO AKANADE ops
+"""Coverage for two new observability surfaces added for the Kalkee ops
 dashboards (RL "improving over time" and RAG performance):
 
 - GET /api/v1/metrics/history (framework/metrics_history.py) — a real

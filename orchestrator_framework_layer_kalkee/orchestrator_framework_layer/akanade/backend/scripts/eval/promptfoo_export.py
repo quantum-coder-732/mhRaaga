@@ -57,7 +57,7 @@ def build_config(items: list[dict], candidates: list[dict]) -> dict:
         })
 
     return {
-        "description": "ALGO AKANADE candidate-selection pipeline (auto-exported from "
+        "description": "Kalkee candidate-selection pipeline (auto-exported from "
                        "eval/test_assets + eval/candidates.yaml — see promptfoo_export.py)",
         "providers": providers,
         "prompts": ["[{{\"role\": \"system\", \"content\": {{system | dump}} }}, "

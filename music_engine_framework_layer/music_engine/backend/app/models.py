@@ -1,5 +1,5 @@
-"""Request/response shapes for Pecova's /route and /outcome — the ONLY
-contract a caller (Akanade, or Outreach-Ai through it) needs to know
+"""Request/response shapes for Kalkee's /route and /outcome — the ONLY
+contract a caller (Kalkee, or Outreach-Ai through it) needs to know
 about. No session, no auth, no provider credentials cross this
 boundary.
 """
@@ -37,8 +37,8 @@ class RouteRequest(BaseModel):
     context: RouteContext
     # THIS is the field a caller sets to choose, per request, which path
     # answers — among whatever its integration key was approved for (that
-    # authorization check happens at Akanade's gateway, before the request
-    # ever reaches Pecova; this service trusts what it's handed). Omitted
+    # authorization check happens at Kalkee's gateway, before the request
+    # ever reaches Kalkee; this service trusts what it's handed). Omitted
     # means "whatever the integration's own approved routing_option was" —
     # only meaningful to set explicitly for an integration approved for
     # "both", to pick one specific path for one specific call.

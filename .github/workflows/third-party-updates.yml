@@ -1,0 +1,21 @@
+name: third-party updates
+on:
+  schedule: [{ cron: "0 4 * * 1" }]     # every Monday
+  workflow_dispatch: {}
+permissions: { contents: write, pull-requests: write }
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: true }
+      - run: tools/update_third_party.sh --apply
+      - name: Open a pull request when upstream moved
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          if [ -n "$(git status --porcelain third_party)" ]; then
+            git config user.name "mhraaga-bot"; git config user.email "bot@users.noreply.github.com"
+            git checkout -b third-party-update-$(date +%Y%m%d); git add third_party
+            git commit -m "Update vendored upstream repos"; git push origin HEAD
+            gh pr create --title "Update vendored upstream repos" --body "Weekly check found newer upstream commits in third_party/. Review the changes and run the tests before merging."
+          fi

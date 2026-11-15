@@ -22,7 +22,7 @@ result is either a tool call {name, arguments} or plain text. Providers:
       OpenAICompatible rung above — Claude's own tool_use/tool_result
       content-block shape, not OpenAI's tool_calls — so like
       LangChainOllama this is its own client, not OpenAICompatible again.
-  HuggingFaceProvider — ALGO AKANADE's generic model layer's Hugging Face
+  HuggingFaceProvider — Kalkee's generic model layer's Hugging Face
       rung: the real `huggingface_hub.InferenceClient`, so ANY model
       hosted on HF Inference Providers (or a dedicated HF Inference
       Endpoint via `endpoint_url`) is addable through config alone —
@@ -30,7 +30,7 @@ result is either a tool call {name, arguments} or plain text. Providers:
   CustomProvider — a thin, explicitly-named alias of OpenAICompatible for
       "any custom or locally-hosted model that speaks the OpenAI chat-
       completions wire format" (vLLM, llama.cpp's server, LM Studio, a
-      hand-rolled inference API, ...) — ALGO AKANADE's spec calls this rung out
+      hand-rolled inference API, ...) — Kalkee's spec calls this rung out
       by name (ModelProvider.CustomProvider) even though, mechanically,
       it's the exact same OpenAI-compatible contract Luna/Max/Groq/
       already use; no new wire-format code needed for it.
@@ -289,7 +289,7 @@ class AnthropicNative:
 
 @dataclass
 class CustomProvider(OpenAICompatible):
-    """Named alias of OpenAICompatible — ALGO AKANADE's generic model layer
+    """Named alias of OpenAICompatible — Kalkee's generic model layer
     calls this rung out explicitly (any custom/local model that speaks
     the OpenAI chat-completions wire format: vLLM, llama.cpp's server,
     LM Studio, a hand-rolled inference API, ...). Identical behavior to

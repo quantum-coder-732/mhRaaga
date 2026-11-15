@@ -1,4 +1,4 @@
-# Algo Akanade — the AI orchestration engine that directs and coordinates agents,
+# Kalkee — the AI orchestration engine that directs and coordinates agents,
 # models, tools, and workflows — two apps
 # (this deployment's PM-domain widget + its FastAPI backend) + optional
 # AWS-shaped storage.

@@ -32,7 +32,7 @@ class AgentRegisterRequest(BaseModel):
     agent_id: str
     name: str
     description: str
-    webhook_url: str = Field(..., description="Where ALGO AKANADE POSTs {task_id, text, session_id, "
+    webhook_url: str = Field(..., description="Where Kalkee POSTs {task_id, text, session_id, "
                                               "metadata} and expects back {text, ok, confidence}.")
     capabilities: list[str] = Field(default_factory=list)
     model: str = ""

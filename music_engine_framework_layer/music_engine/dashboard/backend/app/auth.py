@@ -1,8 +1,8 @@
-"""This dashboard's own login — deliberately independent of Algo Akanade's
+"""This dashboard's own login — deliberately independent of Kalkee's
 Users table/JWT secret (a real "separate UI and password", not a thin
 wrapper over the same account system). One admin identity, configured
 via DASHBOARD_ADMIN_USER/DASHBOARD_ADMIN_PASSWORD (config.py); same
-sha256+PyJWT shape Algo Akanade's own app/auth.py uses, so anyone who already
+sha256+PyJWT shape Kalkee's own app/auth.py uses, so anyone who already
 knows that codebase recognizes this instantly, just pointed at its own
 secret/table-free single account instead of a Users store.
 """

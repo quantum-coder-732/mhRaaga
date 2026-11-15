@@ -168,7 +168,7 @@ def _public(item: dict, cols: list, songs: int | None = None) -> dict:
     return {"email": item["email"], "name": item.get("name", ""), "role": "admin" if is_admin(item) else "user", "owner": is_owner(item["email"]),
             "disabled": bool(item.get("disabled")), "created": item.get("created", ""), "composed_today": int(item["qn"]) if item.get("qday") == day else 0,
             "limit": int(item.get("limit", H().DAILY_LIMIT)), "voice_usd_today": round(float(item["tusd"]), 4) if item.get("tday") == day and item.get("tusd") is not None else 0.0,
-            "last_login": item.get("last_login", ""), "songs": songs, "extra": {c["key"]: extra.get(c["key"]) for c in cols}}
+            "last_login": item.get("last_login", ""), "songs": songs, "voice_usd_total": round(float(item.get("tusd_total", 0)), 4), "extra": {c["key"]: extra.get(c["key"]) for c in cols}}
 
 
 def _count_songs(email: str) -> int:
@@ -177,7 +177,7 @@ def _count_songs(email: str) -> int:
     return int(r.get("Count", 0))
 
 
-def _all_users(limit: int = 500) -> list:
+def _all_users(limit: int = 5000) -> list:
     h = H()
     items, kw = [], {}
     while len(items) < limit:
@@ -193,7 +193,22 @@ def users_list(u: dict):
     need(u)
     cols = get_schema()
     items = sorted(_all_users(), key=lambda i: i.get("created", ""), reverse=True)
-    return 200, {"users": [_public(i, cols, _count_songs(i["email"])) for i in items], "columns": cols, "default_limit": H().DAILY_LIMIT, "roles": list(ROLES)}
+    # song counts cost one query per user, so only the newest 300 get one; the rest show a dash
+    return 200, {"total": len(items), "users": [_public(i, cols, _count_songs(i["email"]) if n < 300 else None) for n, i in enumerate(items)], "columns": cols, "default_limit": H().DAILY_LIMIT, "roles": list(ROLES)}
+
+
+def user_detail(u: dict, email: str):
+    """One person in full: the record, their latest songs, and what administrators did to them."""
+    need(u)
+    h = H()
+    email = email.lower()
+    item = h._users.get_item(Key={"email": email}).get("Item")
+    if not item:
+        raise h.ApiError(404, "No such user.")
+    r = h._songs.query(KeyConditionExpression=Key("owner").eq(email), ScanIndexForward=False, Limit=15)
+    songs = [{k: v for k, v in _clean(i).items() if k in ("id", "title", "raga", "tala", "language", "duration", "created", "source", "style")} for i in r.get("Items", [])]
+    log = [a for a in _recent_audit(200) if a.get("target") == email][:10]
+    return 200, {"user": _public(item, get_schema(), _count_songs(email)), "songs": songs, "log": log}
 
 
 def users_create(u: dict, b: dict):
@@ -417,6 +432,8 @@ def route(method: str, path: str, event: dict, user_from, body_of, query: dict):
         return users_list(u)
     if parts == ["users"] and method == "POST":
         return users_create(u, body_of(event))
+    if len(parts) == 2 and parts[0] == "users" and method == "GET":
+        return user_detail(u, parts[1])
     if len(parts) == 2 and parts[0] == "users" and method == "PATCH":
         return users_update(u, parts[1], body_of(event))
     if len(parts) == 3 and parts[0] == "users" and parts[2] == "delete" and method == "POST":

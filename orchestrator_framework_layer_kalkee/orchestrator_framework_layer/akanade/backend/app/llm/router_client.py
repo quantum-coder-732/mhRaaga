@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 # a per-call latency tax on the ENTIRE system the moment ak-router is
 # unreachable — confirmed live: it multiplied the akanade-backend test
 # suite's own runtime past 10 minutes. After a failure, skip trying again
-# for this cooldown window and fall straight through to None (Akanade's own
+# for this cooldown window and fall straight through to None (Kalkee's own
 # chain) — same "don't hammer a down dependency" pattern a real load
 # balancer's health check follows, not just a nicety.
 _CIRCUIT_COOLDOWN_S = 30.0

@@ -1,4 +1,4 @@
-"""AKANADEClient — a thin httpx wrapper around a deployed ALGO AKANADE
+"""AKANADEClient — a thin httpx wrapper around a deployed Kalkee
 chatbot's REST API. One class, one HTTP client, real endpoints only
 (no guessing at paths — every method below matches an actual route in
 akanade/backend/app/routers/).
@@ -19,7 +19,7 @@ class AKANADEError(RuntimeError):
     generic message."""
 
     def __init__(self, status_code: int, body: Any):
-        super().__init__(f"ALGO AKANADE API error {status_code}: {body}")
+        super().__init__(f"Kalkee API error {status_code}: {body}")
         self.status_code = status_code
         self.body = body
 

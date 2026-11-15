@@ -1,5 +1,5 @@
 """Domain mode — an RL-selected choice among MULTIPLE locally-registered
-Algo-Akanade-SLM variants (see README_SLM_GENERATION_LAYER.md), each
+Algo-Kalkee-SLM variants (see README_SLM_GENERATION_LAYER.md), each
 fine-tuned for a different domain via the SAME nightly pipeline, just
 pointed at different ground-truth/training data (a legal-support SLM, a
 customer-support SLM, a coding SLM, ...). Sits alongside

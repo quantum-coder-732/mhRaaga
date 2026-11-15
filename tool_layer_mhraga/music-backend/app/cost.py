@@ -9,7 +9,7 @@ def song_cost(*, polly_chars: int, llm_in: int, llm_out: int, llm_estimated: boo
     polly = polly_chars / 1e6 * config.PRICE_POLLY_NEURAL_PER_M_CHARS
     llm = llm_in / 1e6 * config.PRICE_LLM_IN_PER_M_TOKENS + llm_out / 1e6 * config.PRICE_LLM_OUT_PER_M_TOKENS
     if llm_cost is not None:
-        llm = float(llm_cost)  # OpenRouter's own billed cost when Akanade passes it through
+        llm = float(llm_cost)  # OpenRouter's own billed cost when Kalkee passes it through
     compute = render_seconds / 3600 * config.PRICE_EC2_PER_HOUR
     gb = size_bytes / 1e9
     storage_month = gb * config.PRICE_S3_PER_GB_MONTH

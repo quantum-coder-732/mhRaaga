@@ -103,7 +103,7 @@ def log_ollama_turn(*, messages: list[dict], reply: str, provider: str,
     `primary_pipeline` — "routellm" or "akanade" (llm/primary_pipeline.py's
     blue/green switch) — which pipeline's preference actually produced
     this turn, so nightly PEFT data (and the dashboards reading it) can
-    tell a RouteLLM-primary turn's example apart from a Akanade-secondary
+    tell a RouteLLM-primary turn's example apart from a Kalkee-secondary
     one, per the "secondary pipeline stores responses for PEFT too"
     requirement.
 
@@ -111,7 +111,7 @@ def log_ollama_turn(*, messages: list[dict], reply: str, provider: str,
     ("akanade" | "routellm" | "routellm_only"), distinct from
     `primary_pipeline` above (what actually answered). Lets a dashboard
     compute "routellm_only" mode's real leak rate — how often a turn
-    configured for primary-only coverage still needed Akanade's chain."""
+    configured for primary-only coverage still needed Kalkee's chain."""
     if not provider or not provider.startswith("ollama"):
         return
     _append({

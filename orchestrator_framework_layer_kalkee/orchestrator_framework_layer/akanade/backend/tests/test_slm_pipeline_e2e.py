@@ -14,7 +14,7 @@ Only the provider's own outbound HTTP call (OpenAICompatible.chat) is
 faked — every other layer (config API, provider registry,
 domain_router's live discovery, TierClient's chain-building,
 native_agent's handle_message) runs for real, exactly as it would
-against a real registered Algo-Akanade-SLM-legal.
+against a real registered Algo-Kalkee-SLM-legal.
 """
 from __future__ import annotations
 

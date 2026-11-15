@@ -8,6 +8,9 @@ Start with the [root README](../README.md), then:
 | Doc | For |
 |---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | The detailed architecture, step by step, and how Kalkee is (and is not) used |
+| [FILES.md](FILES.md) | **Every music file and what it holds** |
+| [THIRD_PARTY.md](THIRD_PARTY.md) | Vendored upstream repos (YuE2, Bark, setup-ffmpeg and more), licences, how to update them |
+| [kalkee/README.md](kalkee/README.md) | Kalkee in mhRaaga: the music agents, how they learn |
 | [ENGINE.md](ENGINE.md) | Every engine module: compose, ragas, tala, brief, poems, lyrics, physics, GAN, auto-tune |
 | [BACKEND.md](BACKEND.md) | handler, studio, team, voice, admin, the tables and the infrastructure |
 | [ADMIN.md](ADMIN.md) | The admin dashboard: users, types, columns, cloud cost |
@@ -19,8 +22,5 @@ Start with the [root README](../README.md), then:
 | [STUDIO.md](STUDIO.md) | Stories, pravachan, people, rules |
 | [AGENTIC_ARCHITECTURE.md](AGENTIC_ARCHITECTURE.md) | The song factory (agents and critics) |
 | [DOMAIN.md](DOMAIN.md) | Domain, DNS and HTTPS |
-| [components/music-engine.md](components/music-engine.md) | The raga engine package |
 | [components/android-app.md](components/android-app.md) | The Flutter Android app |
-| [components/music-backend.md](components/music-backend.md), [components/music-mobile.md](components/music-mobile.md) | Earlier prototypes |
 
-The Kalkee orchestrator's documents are in [kalkee/](kalkee/README.md) (moved from its code folders; no code reads them).

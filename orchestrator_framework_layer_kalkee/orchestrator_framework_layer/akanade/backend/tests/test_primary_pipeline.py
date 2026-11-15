@@ -1,6 +1,6 @@
 """app/llm/primary_pipeline.py — the three-way switch between RouteLLM
 ("routellm", primary+secondary/default, or "routellm_only", primary
-only) and Akanade's own chain ("akanade", secondary only) for real live chat
+only) and Kalkee's own chain ("akanade", secondary only) for real live chat
 responses, plus /api/admin/router/primary-pipeline.
 """
 from __future__ import annotations
@@ -95,5 +95,5 @@ def test_primary_pipeline_endpoint_rejects_unknown_value(client, exec_token):
 
 def test_resolve_routellm_preferred_returns_none_when_ak_router_unreachable():
     # No ak-router running in this test process — must degrade to None
-    # (Akanade's own chain), never raise.
+    # (Kalkee's own chain), never raise.
     assert primary_pipeline.resolve_routellm_preferred("write a function") is None

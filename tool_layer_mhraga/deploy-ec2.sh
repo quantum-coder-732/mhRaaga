@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Run ON the Akanade EC2 (needs docker). Pulls the repo, builds, and (re)starts aRaaga on :9100.
-# Data (accounts/tracks JSON or DynamoDB) and audio live in S3 / the 'raaga-data' volume. Login = Akanade's login.
+# Run ON the Kalkee EC2 (needs docker). Pulls the repo, builds, and (re)starts aRaaga on :9100.
+# Data (accounts/tracks JSON or DynamoDB) and audio live in S3 / the 'raaga-data' volume. Login = Kalkee's login.
 set -euo pipefail
 cd "$(dirname "$0")"
 docker build -t algo-raaga .

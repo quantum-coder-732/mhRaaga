@@ -1,6 +1,6 @@
 """MCPUtilityAgent — an agent whose ENTIRE tool set comes from MCP
 (agent/mcp_client.py), not the PM domain's tool schema, proving MCP is a
-genuine capability source for a dedicated ALGO AKANADE agent — not just an
+genuine capability source for a dedicated Kalkee agent — not just an
 add-on merged into the PM agent's much larger tool list (where it's easy
 to miss). Registers whichever tools config.py's MCP_SERVERS currently
 exposes (the bundled utility_server.py by default: get_current_datetime,

@@ -2,7 +2,7 @@
 never exposed publicly (only reachable on the internal ak-net Docker
 network, same trust boundary as, say, ak-dynamo). Admin role-gating for
 the strategy toggle lives on ak-chatbot's side (a small proxy endpoint
-there, using Akanade's existing require_role — see the plan's write-up);
+there, using Kalkee's existing require_role — see the plan's write-up);
 this service just does what it's told by a trusted caller.
 """
 from __future__ import annotations

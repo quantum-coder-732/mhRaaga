@@ -4,7 +4,7 @@ input always produces identical output, no sampling, no randomness — an
 operator can explain exactly why a given candidate was ranked first.
 
 Hard eligibility (policy_gate, provider_budget, .available()) already
-happened in Akanade BEFORE a candidate ever reaches this service — this
+happened in Kalkee BEFORE a candidate ever reaches this service — this
 module only orders what's already eligible.
 """
 from __future__ import annotations

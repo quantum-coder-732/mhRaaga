@@ -90,7 +90,7 @@ def fetch_topic_summary(topic: str) -> dict | None:
     try:
         r = httpx.get(_WIKI_SUMMARY_URL.format(title=topic.replace(" ", "_")),
                       timeout=_REQUEST_TIMEOUT_S,
-                      headers={"User-Agent": "Algo-Akanade-PEFT-Analyzer/1.0"})
+                      headers={"User-Agent": "Algo-Kalkee-PEFT-Analyzer/1.0"})
         r.raise_for_status()
         data = r.json()
     except (httpx.HTTPError, ValueError):

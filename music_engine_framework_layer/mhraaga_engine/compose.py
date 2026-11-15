@@ -85,7 +85,8 @@ def _orn(prev: int | None, n: int, rng: random.Random, stress: set[int]) -> int:
 
 
 def compose(raga: dict, tala: str = "", tempo: int = 72, duration: int = 90, lyrics: str = "", seed: int | None = None,
-            sa: float | None = None, lead: str = "bansuri", instrumental: bool = False, poem: bool = False, human: bool = True) -> dict:
+            sa: float | None = None, lead: str = "bansuri", instrumental: bool = False, poem: bool = False, human: bool = True,
+            style: str = "", ensemble: list | None = None) -> dict:
     tala = tala if tala in TALAS else raga.get("tala", "teental")
     T = TALAS[tala]
     sa = float(sa or raga.get("tonic") or 233.0)
@@ -220,7 +221,7 @@ def compose(raga: dict, tala: str = "", tempo: int = 72, duration: int = 90, lyr
         "meta": {"poem": poem, "raga": raga["name"], "tala": tala, "tempo": tempo, "sa": sa, "mood": raga["mood"], "time": raga["time"],
                  "seed": seed, "vadi": raga["vadi"], "samvadi": raga["samvadi"], "kind": raga.get("kind", "classical"),
                  "scale": sorted(set(n % 12 for n in raga["aroha"] + raga["avaroha"])),
-                 "physics": physics_meta, "gopi": raga.get("gopi"), "mela": raga.get("melakarta_names"), "aroha": raga["aroha"], "avaroha": raga["avaroha"]},
+                 "physics": physics_meta, "style": style[:200], "ensemble": [e for e in (ensemble or []) if e in ("dholak", "clap", "manjira")], "gopi": raga.get("gopi"), "mela": raga.get("melakarta_names"), "aroha": raga["aroha"], "avaroha": raga["avaroha"]},
         "sa": sa, "lead_voice": lead if lead in ("bansuri", "harmonium", "veena") else "bansuri",
         "drone": {"sa": sa, "second": round(hz(sa, second), 2), "low_sa": round(sa / 2, 2), "pluck": round(beat * 1.9, 3)},
         "lead": lead_ev, "tabla": tabla, "lyrics": ly, "sections": sections, "duration": round(total, 2),

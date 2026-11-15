@@ -1,5 +1,5 @@
 """§5/§14 — closing the loop from the outside: a human (or an evaluator
-service) rates a task ALGO AKANADE already answered, and that rating becomes a
+service) rates a task Kalkee already answered, and that rating becomes a
 second, human-grounded reward applied to every agent that contributed to
 it (via Shapley-attributed credit, same as the automatic self-evaluated
 close() that already ran right after execution — see

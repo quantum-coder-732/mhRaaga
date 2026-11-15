@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How the agents learn · mhRaaga docs</title><meta name="description" content="How the agents learn">
+<link rel="stylesheet" href="../docs.css"></head>
+<body data-root="../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../overview.html">Overview</a></li><li><a href="../system.html">How the system works</a></li><li><a href="../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../ARCHITECTURE.html">Architecture</a></li><li><a href="../ENGINE.html">Engine, module by module</a></li><li><a href="../BACKEND.html">Backend, file by file</a></li><li><a href="../ADMIN.html">Admin dashboard</a></li><li><a href="../API.html">API for developers</a></li><li><a href="../SOUND.html">Sound</a></li><li><a href="../VOICE.html">AI voice</a></li><li><a href="../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../STUDIO.html">Stories, people, rules</a></li><li><a href="../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../FILES.html">Every music file</a></li><li><a href="../THIRD_PARTY.html">Vendored upstream repos</a></li><li><a href="../components/android-app.html">Android app</a></li></ul></details><details open><summary>Kalkee, the agents</summary><ul><li><a href="../kalkee/index.html">Kalkee in mhRaaga</a></li><li><a href="../kalkee/AGENTS.html">The music agents</a></li><li><a href="../kalkee/LEARNING.html" class=cur aria-current=page>How the agents learn</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="how-the-agents-learn">How the agents learn</h1>
+<p>Source: <code>music_engine_framework_layer/mhraaga_engine/agentic/evolve.py</code> and <code>critics.py</code>. State is kept in <code>agentic/data/policy.json</code>.</p>
+<h2 id="one-round-step-by-step">One round, step by step</h2>
+<ol>
+<li><strong>Choose.</strong> For a language, each producer draws one random number from the Beta belief of every option it has and picks the option with the highest draw. Good options win more often; options with little evidence still get a chance, because their belief is wide.</li>
+<li><strong>Compose.</strong> The composer turns the seven genes into a song.</li>
+<li><strong>Judge.</strong> The eight critics score it. The song's <strong>reward</strong> is the weighted sum (weights in <a href="../kalkee/AGENTS.html">the agents page</a>).</li>
+<li><strong>Quality per agent.</strong> Each producer's quality is the mean of the scores of the critics that judge its work (for example <code>tempo</code> is judged by <code>rhythm</code> and <code>library_affinity</code>).</li>
+<li><strong>Share the credit.</strong> Kalkee's Shapley function splits the song's reward among the producers (below).</li>
+<li><strong>Update.</strong> For the option a producer picked, its belief moves: <code>alpha += p</code> and <code>beta += 1 - p</code>, where <code>p</code> is its credit scaled so that an equal share equals the song's own reward and clamped to 0 to 1. Next time that option is a little more or less likely to be drawn.</li>
+</ol>
+<h2 id="thompson-sampling-in-one-picture">Thompson sampling in one picture</h2>
+<p>Every option holds a Beta(alpha, beta) belief that starts at Beta(1, 1), "no idea". Each success adds to alpha, each failure to beta. The mean is alpha / (alpha + beta). Drawing from the belief, not using the mean, is what keeps the agents exploring.</p>
+<figure class="diagram"><a href="../diagrams/0ed122e657cb.svg" target="_blank" rel="noopener" title="Open the diagram full size"><img src="../diagrams/0ed122e657cb.svg" alt="Diagram" loading="lazy"></a></figure>
+<h2 id="the-shapley-credit-split">The Shapley credit split</h2>
+<p>A song is the work of seven agents together. Giving the whole reward to the last agent, or splitting it evenly, would teach them the wrong thing. The <strong>Shapley value</strong> gives each agent the average of what it adds across every order in which the agents could have joined.
+- The value of a group is modelled as a noisy-OR of its members' qualities: <code>v(S) = 1 - product(1 - quality_i)</code>. Two decent agents together are worth more than either alone, but not the sum.
+- With up to 8 agents the value is computed exactly (there are 7 here); above that a Monte Carlo estimate is used.
+- The reward is split in proportion to each agent's share, so the credits add up to the reward exactly.
+- If every quality is about zero, the reward is split evenly so nothing divides by zero.</p>
+<h2 id="the-catalogue">The catalogue</h2>
+<ul>
+<li>At most <strong>100 songs</strong>, about 14 per language (Hindi, Marathi, English, Telugu, Gujarati, Kannada, Tamil).</li>
+<li>A new song enters if its language has room, or if its reward beats the weakest song of that language by more than 0.003 (then it replaces it).</li>
+<li><strong>Improvement:</strong> the weakest songs of each language are re-made with new seeds and one gene re-drawn from the beliefs; a variant replaces its parent only if it scores higher.</li>
+<li>At least three spoken poems per language are kept.</li>
+</ul>
+<h2 id="what-this-does-and-does-not-do">What this does and does not do</h2>
+<p>It lifted the mean critic reward from 0.862 to 0.969 in the first runs. That is a number about the critics' rules. It is not a measure of how good a song sounds to a person. Listen, and use the Create page's Styles box to steer what the live site makes.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#one-round-step-by-step">One round, step by step</a><a class="l2" href="#thompson-sampling-in-one-picture">Thompson sampling in one picture</a><a class="l2" href="#the-shapley-credit-split">The Shapley credit split</a><a class="l2" href="#the-catalogue">The catalogue</a><a class="l2" href="#what-this-does-and-does-not-do">What this does and does not do</a></aside></div>
+<script src="../docs.js"></script></body></html>

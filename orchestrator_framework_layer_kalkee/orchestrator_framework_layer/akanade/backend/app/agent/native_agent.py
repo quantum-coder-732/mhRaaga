@@ -1121,7 +1121,7 @@ def handle_message(user: dict, session_id: str, user_msg: str,
         preferred_provider = hybrid_router.preferred_provider_for(hybrid_selection)
     # Domain mode (llm/domain_router.py) — a fourth UI-selectable option:
     # RL decides, per message, WHICH of possibly several registered
-    # domain-specific Algo-Akanade-SLM variants (or none, falling back to
+    # domain-specific Algo-Kalkee-SLM variants (or none, falling back to
     # the normal chain) this query is most likely to be answered well by.
     # Only intercepts the literal "domain" sentinel — mutually exclusive
     # with "hybrid" above (a caller sends one or the other).

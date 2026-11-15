@@ -31,7 +31,9 @@ from mhraaga_engine.brief import TARGETS, detect_language, translate
 from mhraaga_engine.tala import TALAS
 
 import admin
+import jobs
 import studio
+from mhraaga_engine import styles
 import team
 import voice
 
@@ -211,7 +213,8 @@ def make_song(event):
     prompt = text(b.get("prompt"), 800)
     if len(prompt) < 3:
         raise ApiError(400, "Describe the song in a few words.")
-    studio.check(prompt, text(b.get("lyrics"), 3000), text(b.get("title"), 60))
+    style = text(b.get("style"), 200)
+    studio.check(prompt, text(b.get("lyrics"), 3000), text(b.get("title"), 60), style)
     take_quota(u)
     raga_in = text(b.get("raga"), 40)
     if raga_in:
@@ -223,6 +226,13 @@ def make_song(event):
     opts = {"raga": raga_in, "tala": tala_in if tala_in in TALAS else "", "language": text(b.get("language"), 12).lower(),
             "lead": text(b.get("lead"), 12), "lyrics": text(b.get("lyrics"), 3000), "instrumental": bool(b.get("instrumental")), "poem": bool(b.get("poem")),
             "tempo": int(b["tempo"]) if isinstance(b.get("tempo"), (int, float)) and 40 <= b["tempo"] <= 180 else 0}
+    hint = styles.parse(style)                        # style words -> lead, tala, tempo, extra players (what you choose by hand still wins)
+    opts["style"] = style
+    for k in ("lead", "tala"):
+        if not opts[k] and hint[k]:
+            opts[k] = hint[k]
+    if not opts["tempo"] and hint["tempo"] and not opts["poem"]:
+        opts["tempo"] = hint["tempo"]
     for k, v in studio.learned_defaults(opts["language"] or detect_language(prompt)).items():  # what the self-learning loop found works best
         if k == "tala" and not opts["tala"]:
             opts["tala"] = v
@@ -233,6 +243,8 @@ def make_song(event):
     brief = make_brief(prompt, opts, secret("openrouter_key"))
     if text(b.get("title"), 60):
         brief["title"] = text(b.get("title"), 60)
+    if not raga_in and hint["ragas"] and brief.get("source") == "fallback":
+        brief["raga"] = hint["ragas"][0]
     try:
         tonic = float(b["tonic"]) if b.get("tonic") in (183, 233, 234, 183.0, 233.0, 234.0) else None
         raga = get_raga(brief["raga"], tonic)
@@ -240,12 +252,12 @@ def make_song(event):
         raga, brief["raga"] = get_raga("yaman"), "Yaman"
     dur = b.get("duration") if isinstance(b.get("duration"), (int, float)) else (150 if opts["poem"] else 90)
     score = compose(raga, brief.get("tala", ""), brief.get("tempo_bpm", 72), int(dur), brief.get("lyrics", ""),
-                    sa=tonic, lead=brief.get("lead", "bansuri"), instrumental=bool(opts["instrumental"]), poem=bool(opts["poem"]))
+                    sa=tonic, lead=brief.get("lead", "bansuri"), instrumental=bool(opts["instrumental"]), poem=bool(opts["poem"]), style=style, ensemble=hint["ensemble"])
     sid = f"{int(time.time() * 1000):013d}-{uuid.uuid4().hex[:6]}"
     summary = {"id": sid, "title": text(brief.get("title"), 60) or "Untitled", "raga": raga["name"], "tala": score["meta"]["tala"],
                "tempo": score["meta"]["tempo"], "mood": brief.get("mood", ""), "language": brief.get("language", ""),
                "duration": score["duration"], "created": datetime.now(timezone.utc).isoformat(), "source": brief["source"],
-               "prompt": prompt}
+               "prompt": prompt, "style": style}
     _songs.put_item(Item=_dec({"owner": u["email"], **summary, "brief": json.dumps({k: v for k, v in brief.items() if k != "usage"}),
                           "score": json.dumps(score, separators=(",", ":"))}))
     return 200, {**summary, "brief": {k: v for k, v in brief.items() if k != "usage"}, "score": score}
@@ -257,7 +269,7 @@ PLAYLIST_OWNER = "playlist#common"   # the shared, read-only playlist everybody 
 def list_songs(event, owner=None):
     owner = owner or user_from(event)["email"]
     r = _songs.query(KeyConditionExpression=Key("owner").eq(owner), ScanIndexForward=False, Limit=100,
-                     ProjectionExpression="id,title,raga,tala,tempo,mood,#l,#d,created,#s,prompt,plays,downloads",
+                     ProjectionExpression="id,title,raga,tala,tempo,mood,#l,#d,created,#s,prompt,plays,downloads,style",
                      ExpressionAttributeNames={"#l": "language", "#s": "source", "#d": "duration"})
     return 200, {"songs": r["Items"]}
 
@@ -367,6 +379,8 @@ def handler(event, context=None):
             status, out = me(event)
         elif (method, path) == ("PATCH", "/me"):
             status, out = rename_me(event)
+        elif path == "/jobs" or path.startswith("/jobs/"):
+            status, out = jobs.route(method, path[5:], event, user_from, body_of)
         elif path == "/admin" or path.startswith("/admin/"):
             status, out = admin.route(method, path[6:], event, user_from, body_of, event.get("queryStringParameters") or {})
         elif (method, path) == ("POST", "/translate"):

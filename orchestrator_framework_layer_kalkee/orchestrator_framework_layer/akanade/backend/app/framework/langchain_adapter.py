@@ -8,16 +8,16 @@
 
 Nothing in core.py/registry.py/router.py/workflow.py imports LangChain —
 this module is the only place that does, and it's imported lazily (only
-when one of the three functions below is actually called), so a ALGO AKANADE
+when one of the three functions below is actually called), so a Kalkee
 deployment that never touches LangChain doesn't pay for it and, per §16's
 own separation principle, the core stays usable if this adapter is
 deleted entirely. `langchain-core` and `langgraph` are already real
 dependencies here (the PM domain's own "langgraph" agent framework track
 uses them) — this module is what makes them usable OUTSIDE that one
-track too, for any ALGO AKANADE agent/tool.
+track too, for any Kalkee agent/tool.
 
 Three real, working bridges:
-  gmaofn_tool_to_langchain  — any ALGO AKANADE tool (a name/description/JSON
+  gmaofn_tool_to_langchain  — any Kalkee tool (a name/description/JSON
       Schema + a callable) becomes a real `langchain_core.tools.
       StructuredTool`, usable in a LangChain/LangGraph agent executor.
   vector_store_to_retriever — any `rag.VectorStoreAdapter` (Chroma-backed
@@ -26,8 +26,8 @@ Three real, working bridges:
       usable anywhere LangChain expects a retriever.
   LangChainRunnableAgent    — wraps an arbitrary LangChain `Runnable`
       (a prompt|model chain, a full `AgentExecutor`, a compiled LangGraph
-      graph) as a ALGO AKANADE `Agent`, so a LangChain-built agent can be
-      registered into ALGO AKANADE's registry/router/workflow engine exactly
+      graph) as a Kalkee `Agent`, so a LangChain-built agent can be
+      registered into Kalkee's registry/router/workflow engine exactly
       like a native one (agents/pm_agent.py, agents/coding_agent.py, ...).
 """
 from __future__ import annotations
@@ -58,7 +58,7 @@ def _json_schema_to_pydantic_model(name: str, schema: dict):
 
 def gmaofn_tool_to_langchain(name: str, description: str, parameters_schema: dict,
                             fn: Callable[..., str]):
-    """Wraps a ALGO AKANADE tool (agent/tools.py's TOOL_SCHEMAS shape, or an MCP
+    """Wraps a Kalkee tool (agent/tools.py's TOOL_SCHEMAS shape, or an MCP
     tool from mcp_client.mcp_tool_specs()) as a real LangChain
     StructuredTool — `fn` is whatever already executes it
     (e.g. `lambda **kwargs: format_result(tools.execute(user, name, kwargs))`)."""
@@ -91,10 +91,10 @@ def vector_store_to_retriever(store: VectorStoreAdapter, *, k: int = 5, filters:
 class LangChainRunnableAgent(Agent):
     """Wraps an arbitrary LangChain `Runnable` — a prompt|model chain, a
     full `AgentExecutor`, a compiled LangGraph graph, anything with
-    `.invoke({"input": ...}) -> {"output": ...}`-shaped I/O — as a ALGO AKANADE
+    `.invoke({"input": ...}) -> {"output": ...}`-shaped I/O — as a Kalkee
     Agent, so it's registerable/routable/composable exactly like a native
     one. `understand`/`plan`/`validate` are near-identity: whatever
-    reasoning the wrapped Runnable does internally is opaque to ALGO AKANADE by
+    reasoning the wrapped Runnable does internally is opaque to Kalkee by
     design (that's the whole point of delegating to it)."""
 
     def __init__(self, metadata: AgentMetadata, runnable, *,

@@ -3,7 +3,7 @@
 Live at https://www.mhraaga.in (AWS account 877157050453, region ap-south-1, stack `mhraaga`). A developer-friendly version with a diagram:
 https://www.mhraaga.in/developers.html. How to call the API from outside: [API.md](API.md).
 
-Module-level detail: [ENGINE.md](ENGINE.md) (compose, ragas, tala, brief, poems, lyrics, physics, GAN, auto-tune) and [BACKEND.md](BACKEND.md) (handler, studio, team, voice, admin, data).
+Every file and what it holds: [FILES.md](FILES.md). Vendored upstream repos (YuE2 and others): [THIRD_PARTY.md](THIRD_PARTY.md). Module-level detail: [ENGINE.md](ENGINE.md) (compose, ragas, tala, brief, poems, lyrics, physics, GAN, auto-tune) and [BACKEND.md](BACKEND.md) (handler, studio, team, voice, admin, data).
 
 ## 1. The four layers
 
@@ -65,15 +65,11 @@ Module-level detail: [ENGINE.md](ENGINE.md) (compose, ragas, tala, brief, poems,
 Up to 150 members and 300 layers per project; roles; optimistic locking; polling. `api/team.py`, `web/team.js`. Details: [TEAM_AND_PHYSICS.md](TEAM_AND_PHYSICS.md).
 
 ## 6. Kalkee <a id="kalkee"></a>
-**Kalkee** is a separate orchestrator product in `orchestrator_framework_layer_kalkee/`: adaptive routing of tasks to agents by Thompson sampling, fair credit across agents with the Shapley value, a reward loop, SLM and PEFT layers. Its documents are in [kalkee/](kalkee/README.md).
+**Kalkee** is the agent layer of the song factory: seven producer agents choose a song's raga, tala, tempo, lead, theme, tonic and form; eight critics judge the result; Kalkee's **Shapley** function shares the reward fairly among the producers; and each producer updates its Thompson-sampling belief about the option it chose. See [kalkee/README.md](kalkee/README.md), [the agents](kalkee/AGENTS.md) and [how they learn](kalkee/LEARNING.md).
 
-**What mhRaaga actually uses from it: one function.** `mhraaga_engine/agentic/evolve.py` loads
-`orchestrator_framework_layer_kalkee/orchestrator_framework_layer/akanade/backend/app/framework/shapley.py` (`attribute_reward`) and uses it to split each song's quality score fairly among the producer agents (raga, tala, tempo, lead, theme, tonic, form). If that file is missing, a proportional split is used and the run records `local-fallback`.
-- The Thompson-sampling idea is used too, but re-implemented in `evolve.py` (Beta posteriors per agent and choice), not imported.
+- mhRaaga loads **one function** from Kalkee's code, `attribute_reward` in `framework/shapley.py`, from `agentic/evolve.py`. If the file is missing a proportional split is used and the run records `local-fallback`.
 - **It runs offline** (the song factory that fills the catalogue), not inside the live Lambda. The live API, site and app do not import Kalkee.
-- The rest of Kalkee (router, workflow engine, dashboards, PM chatbot, SLM layers) is not part of mhRaaga.
-
-The song factory loop: producer agents pick options -> composer renders a song -> seven rule-based critics (raga fidelity, cadence on sam, phrase variety, contour, rhythm, lyric fit, similarity to reference tunes) score it -> Shapley splits the reward -> each agent updates its posterior. The catalogue keeps at most 100 songs, about 14 per language; better songs replace the weakest. The critics are rules, not listeners. Details: [AGENTIC_ARCHITECTURE.md](AGENTIC_ARCHITECTURE.md).
+- The Thompson-sampling policy itself is re-implemented in `evolve.py` (Beta beliefs per agent and option), not imported.
 
 ## 7. Deploy
 `DOMAIN_NAME=mhraaga.in CERT_ARN=<arn> AWS_PROFILE=default bash tool_layer_mhraga/mhraaga-cloud/infra/deploy.sh` (about 100 seconds): builds the Lambda zip (handler, engine, a Box2D wheel fetched for x86_64), updates the CloudFormation stack, syncs `web/` to S3, invalidates CloudFront, and checks that the direct API returns 403. Android: `flutter build apk --release`, copy to `web/mhraaga.apk`, deploy.

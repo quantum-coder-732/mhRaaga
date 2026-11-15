@@ -71,14 +71,14 @@ code { font-family: var(--mono); font-size: .88em; background: var(--soft); padd
   <header>
     <div class="kicker">aRaaga · how it works</div>
     <h1>A sentence goes in. <span>A raga comes out.</span></h1>
-    <p class="lede">The app you open is only a client. The AI that plans each song lives on Akanade's Pecova music agent; the service in the middle keeps accounts, queues the work, renders the audio and serves it back.</p>
+    <p class="lede">The app you open is only a client. The AI that plans each song lives on Kalkee music agent; the service in the middle keeps accounts, queues the work, renders the audio and serves it back.</p>
   </header>
 
   <section>
     <h2>Who talks to whom</h2>
     <figure>
       <div class="scroll">
-        <svg viewBox="0 0 980 500" role="img" aria-label="Clients call the aRaaga service. For each new song the service's composer client calls the Pecova music agent on the Akanade platform, which asks OpenRouter or the SLM model and returns a brief. The service renders audio itself and stores users, tracks and jobs in DynamoDB and audio files on disk.">
+        <svg viewBox="0 0 980 500" role="img" aria-label="Clients call the aRaaga service. For each new song the service's composer client calls the Kalkee music agent on the Kalkee platform, which asks OpenRouter or the SLM model and returns a brief. The service renders audio itself and stores users, tracks and jobs in DynamoDB and audio files on disk.">
           <defs>
             <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="arr"/></marker>
             <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="arr ai"/></marker>
@@ -106,17 +106,17 @@ code { font-family: var(--mono); font-size: .88em; background: var(--soft); padd
           <rect class="hot" x="308" y="204" width="264" height="56" rx="10"/>
           <text class="t" x="322" y="228">Job queue and worker</text><text class="s" x="322" y="246">one song at a time, 3 pending per user</text>
           <rect class="hot" x="308" y="272" width="264" height="64" rx="10"/>
-          <text class="t" x="322" y="296">Composer client</text><text class="s" x="322" y="314">asks for a brief; keyword fallback</text><text class="s" x="322" y="326">if Akanade is unreachable</text>
+          <text class="t" x="322" y="296">Composer client</text><text class="s" x="322" y="314">asks for a brief; keyword fallback</text><text class="s" x="322" y="326">if Kalkee is unreachable</text>
           <rect class="hot" x="308" y="348" width="264" height="100" rx="10"/>
           <text class="t" x="322" y="372">Audio renderer</text><text class="s" x="322" y="390">numpy synthesizer: raga scale,</text><text class="s" x="322" y="404">tanpura drone, taal on tabla,</text><text class="s" x="322" y="418">flute / sitar / harmonium lead,</text><text class="s" x="322" y="432">then ffmpeg to mp3</text>
 
           <!-- akanade -->
           <rect class="zone" x="690" y="150" width="270" height="270" rx="16" style="stroke: var(--violet)"/>
-          <text class="z" x="708" y="174" style="fill: var(--violet)">AKANADE AI PLATFORM</text>
+          <text class="z" x="708" y="174" style="fill: var(--violet)">KALKEE AI PLATFORM</text>
           <rect class="ai" x="708" y="190" width="234" height="56" rx="10"/>
           <text class="t" x="722" y="214">Orchestrator</text><text class="s" x="722" y="232">picks an agent by capability</text>
           <rect class="ai" x="708" y="268" width="234" height="62" rx="10"/>
-          <text class="t" x="722" y="292">Pecova music agent</text><text class="s" x="722" y="310">understand, plan, validate the brief</text>
+          <text class="t" x="722" y="292">Kalkee music agent</text><text class="s" x="722" y="310">understand, plan, validate the brief</text>
           <rect class="ai" x="708" y="352" width="234" height="52" rx="10"/>
           <text class="t" x="722" y="375">OpenRouter or SLM</text><text class="s" x="722" y="392">whichever the platform routes to</text>
 
@@ -140,7 +140,7 @@ code { font-family: var(--mono); font-size: .88em; background: var(--soft); padd
           <path class="ln" d="M440 336 V346" marker-end="url(#a1)"/>
         </svg>
       </div>
-      <figcaption>Saffron outlines mark the three parts that run only when you press Create. Violet is the Akanade platform: the only AI in the system. Everything else is ordinary web service work.</figcaption>
+      <figcaption>Saffron outlines mark the three parts that run only when you press Create. Violet is the Kalkee platform: the only AI in the system. Everything else is ordinary web service work.</figcaption>
     </figure>
   </section>
 
@@ -148,9 +148,9 @@ code { font-family: var(--mono); font-size: .88em; background: var(--soft); padd
     <h2>What happens when you press Create</h2>
     <ol class="walk">
       <li><div><b>The app submits the prompt</b><span><code>POST /api/music/generate</code> with your session token. The service saves a job as <code>QUEUED</code> and answers at once, so the page never waits on audio.</span></div></li>
-      <li><div><b>The worker picks it up and asks for a brief</b><span>The composer client calls Akanade's <code>/api/v1/orchestration/execute</code> asking for the <code>music_generation</code> capability.</span></div></li>
-      <li><div><b>Akanade routes it to the Pecova music agent</b><span>The agent asks the platform's model (OpenRouter or the SLM tier) for raga, taal, tempo, mood, instruments and lyrics, then clamps the answer to values the renderer knows.</span></div></li>
-      <li><div><b>The brief comes back, or a fallback takes over</b><span>If Akanade is down or no token is set, keyword rules build a plainer brief. Each track records which path made it.</span></div></li>
+      <li><div><b>The worker picks it up and asks for a brief</b><span>The composer client calls Kalkee's <code>/api/v1/orchestration/execute</code> asking for the <code>music_generation</code> capability.</span></div></li>
+      <li><div><b>Kalkee routes it to the Kalkee music agent</b><span>The agent asks the platform's model (OpenRouter or the SLM tier) for raga, taal, tempo, mood, instruments and lyrics, then clamps the answer to values the renderer knows.</span></div></li>
+      <li><div><b>The brief comes back, or a fallback takes over</b><span>If Kalkee is down or no token is set, keyword rules build a plainer brief. Each track records which path made it.</span></div></li>
       <li><div><b>The renderer plays the brief</b><span>It lays a tanpura drone, a tabla pattern in the chosen taal and a lead voice walking the raga's notes, then encodes mp3 and computes a waveform for the player.</span></div></li>
       <li><div><b>The track is saved and the job completes</b><span>Metadata goes to DynamoDB, audio to disk, the job flips to <code>COMPLETED</code>.</span></div></li>
       <li><div><b>The app notices and plays it</b><span>It polls the job every 1.2 seconds, then streams <code>/api/music/audio/…</code> with Range requests.</span></div></li>
@@ -198,12 +198,12 @@ code { font-family: var(--mono); font-size: .88em; background: var(--soft); padd
   <section>
     <h2>Languages, voices and raga rules</h2>
     <div class="notes">
-      <div><b>Four languages</b><p>English, Hindi, Marathi and Sanskrit. English lines go to Akanade text-to-speech with the signed-in person's token; Devanagari lines use local Piper models (Hindi, Marathi for Marathi and Sanskrit). No Amazon Polly.</p></div>
+      <div><b>Four languages</b><p>English, Hindi, Marathi and Sanskrit. English lines go to Kalkee text-to-speech with the signed-in person's token; Devanagari lines use local Piper models (Hindi, Marathi for Marathi and Sanskrit). No Amazon Polly.</p></div>
       <div><b>Raga grammar, not just a scale</b><p>Every raga has an aroha and avaroha, a vadi and samvadi (held twice as long), and a pakad that opens each cycle. A song follows the Hindustani form: alap (free time, drone and lead only), gat (tabla enters, pakad, rise, fall), then a tihai, the signature phrase three times landing on Sa. Rules live in <code>app/raga.py</code>.</p></div>
       <div><b>Voice and music in time and in key</b><p>The drone sits on Sa, the tabla runs at the brief's tempo, and each sung line is padded to a half or whole taal cycle so it starts on the beat. The lead melody fades while a line is sung and answers in the gaps. A stock recording is used only if it is tagged for the same raga.</p></div>
-      <div><b>Akanade is the AI platform</b><p>Login is Akanade's (<code>/api/auth/login</code>, role from <code>/api/users/me</code>). The music agent is registered through Akanade's agent API as a webhook; it calls OpenRouter (cheap model, fallback qwen) and records tokens and cost per task.</p></div>
+      <div><b>Kalkee is the AI platform</b><p>Login is Kalkee's (<code>/api/auth/login</code>, role from <code>/api/users/me</code>). The music agent is registered through Kalkee's agent API as a webhook; it calls OpenRouter (cheap model, fallback qwen) and records tokens and cost per task.</p></div>
       <div><b>Costs: admins and senior managers only</b><p><code>/api/admin/costs</code> shows per song and per user: voice characters, LLM tokens, EC2, S3 and CloudFront estimates. Account-wide OpenRouter credits need <code>OPENROUTER_MANAGEMENT_KEY</code>.</p></div>
-      <div><b>Where it runs</b><p>A Docker container on the Akanade EC2 behind nginx, fronted by its own CloudFront distribution; audio in S3 bucket <code>algo-raaga-877157050453</code> (the instance role needs S3 read/write); the Android app is a Flutter build.</p></div>
+      <div><b>Where it runs</b><p>A Docker container on the Kalkee EC2 behind nginx, fronted by its own CloudFront distribution; audio in S3 bucket <code>algo-raaga-877157050453</code> (the instance role needs S3 read/write); the Android app is a Flutter build.</p></div>
     </div>
   </section>
 
@@ -211,7 +211,7 @@ code { font-family: var(--mono); font-size: .88em; background: var(--soft); padd
     <h2>Good to know</h2>
     <div class="notes">
       <div><b>The instruments are synthesized; the words are spoken-sung by TTS</b><p>Audio is an offline synthesizer, raga and taal accurate. Lyrics are shown as text. A neural vocal or text-to-music model could replace the renderer without touching the rest.</p></div>
-      <div><b>The AI is optional at runtime</b><p>Without an Akanade token the service still makes music from keyword rules, so the app works fully offline.</p></div>
+      <div><b>The AI is optional at runtime</b><p>Without an Kalkee token the service still makes music from keyword rules, so the app works fully offline.</p></div>
       <div><b>One place for the name</b><p>The product name lives in <code>music-web/src/brand.ts</code> and the mobile app title.</p></div>
     </div>
   </section>

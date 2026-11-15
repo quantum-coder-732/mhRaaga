@@ -41,7 +41,7 @@ def test_rag_sources_surfaced_for_a_question_matching_an_indexed_document(client
 
     index = client.post("/api/v1/rag/index", json={
         "store": "default",
-        "text": "The ALGO AKANADE release process requires sign-off from the platform "
+        "text": "The Kalkee release process requires sign-off from the platform "
                "lead before any nightly fine-tune gets promoted to production.",
     }, headers=auth(exec_token))
     assert index.status_code == 200

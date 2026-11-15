@@ -1,5 +1,5 @@
 """The raw Bayesian linear regression Thompson Sampling primitive — a
-direct copy of Akanade's app/framework/bandit.py's LinearBanditCore (see
+direct copy of Kalkee's app/framework/bandit.py's LinearBanditCore (see
 that file for the full derivation, Agrawal & Goyal, ICML 2013). Copied
 rather than imported for the same reason as db.py: this service has no
 dependency on the rest of akanade/backend/app.

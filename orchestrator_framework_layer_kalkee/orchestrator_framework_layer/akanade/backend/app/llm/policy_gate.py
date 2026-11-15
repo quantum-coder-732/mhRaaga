@@ -1,5 +1,5 @@
 """Policy gate — the piece "policy always overrides the classifier" from
-the AA internal-routing architecture note names explicitly, and ALGO AKANADE
+the AA internal-routing architecture note names explicitly, and Kalkee
 didn't have as a first-class layer before this: a check that runs BEFORE
 any per-call routing preference (Hybrid mode's local/hosted bandit pick
 in llm/hybrid_router.py, an explicit `preferred=` override, provider_

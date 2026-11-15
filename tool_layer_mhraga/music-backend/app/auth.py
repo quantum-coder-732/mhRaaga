@@ -67,8 +67,8 @@ def record_failure(email: str) -> None:
 
 
 def akanade_login(email: str, password: str) -> dict | None:
-    """Validate email+password against Akanade's real login, then read the person's name and role.
-    Returns {name, role, token} on success (the token is the user's own Akanade token), else None."""
+    """Validate email+password against Kalkee's real login, then read the person's name and role.
+    Returns {name, role, token} on success (the token is the user's own Kalkee token), else None."""
     from . import config
     if not config.AKANADE_AUTH_URL:
         return None

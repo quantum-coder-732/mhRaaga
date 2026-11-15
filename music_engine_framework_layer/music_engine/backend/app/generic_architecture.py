@@ -16,7 +16,7 @@ memo's actual ask: "a calibrated acceptance-probability model."
 
 ("Generic" because this arm isn't tied to any one vendor's naming —
 it's the CEO's OWN reference design, evaluated on equal footing against
-Algo aKANADE's own models, not a competitor's product.)
+Algo Kalkee's own models, not a competitor's product.)
 
 RouteLLM is natively a WEAK/STRONG two-model router, not an N-model
 tier router — `weak_model`/`strong_model` below are just LABELS
@@ -30,10 +30,10 @@ need one).
 
 PRIMARY, not comparison-only: llm/primary_pipeline.py (akanade/backend —
 "akanade" names the infrastructure/codebase only, never a user-facing
-product name; the product is Algo aKANADE) now calls this service's own
+product name; the product is Algo Kalkee) now calls this service's own
 decision as the FIRST preference for real live chat traffic when the
 admin blue/green switch is set to "routellm" (the default) — Algo
-aKANADE's own deterministic.py/thompson.py stay fully intact as the
+Kalkee's own deterministic.py/thompson.py stay fully intact as the
 automatic-failover path (see that module's own docstring), not
 replaced.
 
@@ -43,7 +43,7 @@ than the rest of this lightweight service, same "heavy ML deps live
 apart from the always-running API image" principle
 orchestrator_framework_layer/akanade/backend/Dockerfile already follows
 for algo-kaizen-finetune. The Controller is built on FIRST USE of
-pick()/escalate(), not at import/app-startup time, so Algo aKANADE's
+pick()/escalate(), not at import/app-startup time, so Algo Kalkee's
 own `/route` hot path (every real chat turn) never pays RouteLLM's
 import/checkpoint-download cost — only an actual generic-architecture
 call does.
@@ -178,7 +178,7 @@ def _decide_tier(prompt: str) -> str:
             # itself), every call to either fails at call time, not
             # construction time — caught here, per call, per router,
             # same "present but gracefully degrades" story as every
-            # provider in Algo aKANADE's own llm/router.py, rather than
+            # provider in Algo Kalkee's own llm/router.py, rather than
             # a one-time fallback that can't recover once a key IS
             # configured. "bert" needs no external call, so it's the
             # rung that actually decides most calls today.
@@ -211,7 +211,7 @@ def escalate(prompt: str = "") -> dict:
     """Force the escalation tier regardless of RouteLLM's own decision
     — the explicit "the default tier's answer wasn't good enough,
     retry with the strong tier" path, same escalation-on-failure shape
-    Algo aKANADE's own TierClient.chat() already uses for its real
+    Algo Kalkee's own TierClient.chat() already uses for its real
     chain."""
     del prompt  # not scored — this is an explicit override, not a decision
     return {"model_name": next(_escalation_cycle), "tier": "escalation"}

@@ -7,7 +7,7 @@
 This is the SAME orchestrator (gmaofn.orchestrator.orchestrator) that
 routes to PMAgent, OpenClawAgent, CodingAgent, or any agent registered at
 runtime — a caller here never names a framework/agent, only describes
-the task; Algo aKANADE decides who answers.
+the task; Algo Kalkee decides who answers.
 """
 from __future__ import annotations
 

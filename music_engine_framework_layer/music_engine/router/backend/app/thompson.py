@@ -1,5 +1,5 @@
 """Thompson Sampling — opt-in only, restricted to exactly two arms
-("groq", "algo-akanade-slm"), modeled directly on Akanade's
+("groq", "algo-akanade-slm"), modeled directly on Kalkee's
 llm/hybrid_router.py (one LinearBanditCore, two arms, an asymmetric
 reward). Deliberately NOT a copy of provider_optimizer.py/
 cost_optimizer.py, which span the full provider chain — the CEO memo is

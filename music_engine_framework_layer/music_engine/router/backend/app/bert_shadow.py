@@ -1,4 +1,4 @@
-"""Admin-toggled shadow signal for Algo aKANADE's OWN secondary pipeline
+"""Admin-toggled shadow signal for Algo Kalkee's OWN secondary pipeline
 (deterministic.py + thompson.py) — NOT the primary/RouteLLM "Generic
 Architecture" arm (generic_architecture.py), which already has its own
 full mf/bert/sw_ranking/random cascade and needs nothing from this file.

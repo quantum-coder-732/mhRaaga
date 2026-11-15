@@ -1,4 +1,4 @@
-"""The one interface every ALGO AKANADE agent implements, and the metadata every
+"""The one interface every Kalkee agent implements, and the metadata every
 agent publishes to the registry (registry.py) so the router can score it
 without knowing anything about its internals.
 

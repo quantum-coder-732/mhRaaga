@@ -1,4 +1,4 @@
-"""ALGO AKANADE — Multi-Agent GenAI Network with Evolving Training and Orchestration.
+"""Kalkee — Multi-Agent GenAI Network with Evolving Training and Orchestration.
 
 A generic, domain-agnostic layer for registering heterogeneous AI agents
 (PM, Coding, Research, ...), routing a task to the best agent(s) via an
@@ -13,9 +13,9 @@ as ONE registered agent (gmaofn.agents.pm_agent.PMAgent) alongside others
 (gmaofn.agents.coding_agent.CodingAgent,
 gmaofn.agents.openclaw_agent.OpenClawAgent, ...) — proving the framework
 is generic by construction, not by claim: the PM domain is a tenant of
-ALGO AKANADE, not baked into it.
+Kalkee, not baked into it.
 
-See README.md's "ALGO AKANADE" section for the full architecture, the routing
+See README.md's "Kalkee" section for the full architecture, the routing
 math (Thompson Sampling contextual bandit + Shapley-value credit
 assignment), and how to register a new agent/model/tool/RAG backend
 without touching this package's core.

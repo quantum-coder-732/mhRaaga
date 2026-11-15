@@ -1,9 +1,9 @@
 """Settings for the Optimization Dashboard — a small, deliberately
-SEPARATE FastAPI service from Algo Akanade's own backend (its own login, its
-own JWT secret, its own process). It reads Algo Akanade's durable state files
+SEPARATE FastAPI service from Kalkee's own backend (its own login, its
+own JWT secret, its own process). It reads Kalkee's durable state files
 (app/db.py's LocalStore JSON tables) directly off disk rather than
-calling Algo Akanade's HTTP API, so this dashboard keeps working even when
-Algo Akanade's own process isn't currently running (a real requirement for a
+calling Kalkee's HTTP API, so this dashboard keeps working even when
+Kalkee's own process isn't currently running (a real requirement for a
 "what happened yesterday" view) — see README_OPTIMIZATION_DASHBOARD.md
 § Architecture for why.
 """
@@ -47,7 +47,7 @@ class Settings:
     ALGO_ENGINE_BASE_URL: str = field(default_factory=lambda: os.getenv("ALGO_ENGINE_BASE_URL", ""))
 
     # This dashboard's OWN admin credential — separate from every user
-    # account in Algo Akanade's/Aksha PM's own Users table by design (the
+    # account in Kalkee's/Aksha PM's own Users table by design (the
     # explicit ask: "make a separate UI and password"). Change both via
     # env vars for anything beyond a laptop demo.
     DASHBOARD_ADMIN_USER: str = field(default_factory=lambda: os.getenv("DASHBOARD_ADMIN_USER", "admin"))

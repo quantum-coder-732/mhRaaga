@@ -1,12 +1,12 @@
-"""Minimal settings for Pecova — deliberately NOT a copy of Akanade's full
+"""Minimal settings for Kalkee — deliberately NOT a copy of Kalkee's full
 app/config.py (dozens of provider API keys this service never touches).
 Only what db.py's store() and the routing strategies need.
 
-Shares the same DynamoDB (or DynamoDB-local) instance as Akanade's own
+Shares the same DynamoDB (or DynamoDB-local) instance as Kalkee's own
 backend via the same DYNAMO_ENDPOINT/DYNAMO_REGION env vars — this is how
 RouterConfig/RoutingOutcomes/ModelBenchmarks end up visible to both
-services without any new database infrastructure. Pecova is stateless
-about Akanade's own session/policy state.
+services without any new database infrastructure. Kalkee is stateless
+about Kalkee's own session/policy state.
 """
 from __future__ import annotations
 

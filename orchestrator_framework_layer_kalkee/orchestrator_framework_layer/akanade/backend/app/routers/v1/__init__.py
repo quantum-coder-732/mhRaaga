@@ -1,4 +1,4 @@
-"""ALGO AKANADE's generic REST API surface — /api/v1/* — additive to the PM
+"""Kalkee's generic REST API surface — /api/v1/* — additive to the PM
 domain's own existing routers (routers/pm.py, routers/chat.py,
 routers/acp.py), never replacing them. See app/gmaofn/README.md."""
 from __future__ import annotations

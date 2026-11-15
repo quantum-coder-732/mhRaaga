@@ -1,5 +1,5 @@
 """End-to-end tests against a REAL temp data directory shaped exactly
-like app/db.py's LocalStore writes it (this dashboard reads Algo Akanade's
+like app/db.py's LocalStore writes it (this dashboard reads Kalkee's
 files directly, see events_store.py's docstring) — no mocking of the
 storage layer, so a real format drift between the two services would
 actually fail this suite.

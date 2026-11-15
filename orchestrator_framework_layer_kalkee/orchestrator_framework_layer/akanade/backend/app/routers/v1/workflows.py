@@ -1,6 +1,6 @@
 """§12/§14's `/api/v1/workflows` — the execution-mode primitives
 orchestrator.py composes dynamically per task (see workflow.py), exposed
-read-only: ALGO AKANADE doesn't store named workflow templates — the shape is
+read-only: Kalkee doesn't store named workflow templates — the shape is
 DERIVED from each task's own capability requirements every time (that's
 the "dynamically change this workflow depending on task requirements"
 property working, not a missing feature) — this endpoint documents which

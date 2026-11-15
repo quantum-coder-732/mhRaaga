@@ -1,5 +1,5 @@
-"""The Pecova music agent's webhook. Registered into Akanade with POST /api/v1/agents/register (see
-scripts/register_agent.py): Akanade routes music tasks here and we answer {text, ok, confidence} where text is the
+"""The Kalkee music agent's webhook. Registered into Kalkee with POST /api/v1/agents/register (see
+scripts/register_agent.py): Kalkee routes music tasks here and we answer {text, ok, confidence} where text is the
 JSON brief. The brief is written by the cheapest capable OpenRouter model; every call's real usage/cost is recorded so
 the admin cost page can show what *this app* used of the shared OpenRouter credits."""
 from __future__ import annotations

@@ -51,7 +51,7 @@ from ..db import store
 # OpenRouter-gatewayed hosted models (glm-5.3-flash/glm-5.3-full/sol-xhigh
 # are configured via EXTRA_LLM_PROVIDERS on the deployment, base_url
 # https://openrouter.ai/api/v1 or the model's own native API — an ops
-# concern, invisible here); "claude" is Algo aKANADE's own AnthropicNative
+# concern, invisible here); "claude" is Algo Kalkee's own AnthropicNative
 # provider (model claude-opus-5, i.e. "Opus 5"); "groq"/"ollama-coder" are
 # router.py's own built-in registry keys (the hosted Groq rung and the
 # local code-specialized SLM on the same Ollama server, respectively).

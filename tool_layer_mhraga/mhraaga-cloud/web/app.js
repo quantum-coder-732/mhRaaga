@@ -51,11 +51,18 @@ document.getElementById("styles").onclick = (e) => {
   const b = e.target.closest(".tag"); if (!b) return;
   if (b.dataset.lead) leadTag = leadTag === b.dataset.lead ? "" : b.dataset.lead;
   else { const t = b.dataset.tag; tags.has(t) ? tags.delete(t) : tags.add(t); if (t === "krishna" && !tags.has(t)) forced = ""; }
-  paintTags();
+  paintTags(); syncStyleText();
 };
+// The Styles box is the source of truth: chips add and remove their word in it, and anything typed there is sent as is.
+const CHIPWORDS = ["devotional", "dawn", "rain", "night", "romantic", "meditative", "joyful", "bhajan", "bansuri", "veena", "harmonium"];
+function syncStyleText() {
+  const box = $("styletext"), cur = box.value.split(",").map((x) => x.trim()).filter(Boolean).filter((x) => !CHIPWORDS.includes(x.toLowerCase()));
+  const chips = [...tags].filter((t) => CHIPWORDS.includes(t)).concat(leadTag ? [leadTag] : []); box.value = [...chips, ...cur].join(", ");
+}
+$("styletext").addEventListener("input", () => { const have = new Set($("styletext").value.toLowerCase().split(/[,\s]+/)); tags.forEach((t) => { if (CHIPWORDS.includes(t) && !have.has(t)) tags.delete(t); }); if (leadTag && !have.has(leadTag)) leadTag = ""; paintTags(); });
 const rnd = (n) => 1 + Math.floor(Math.random() * n);
 function raga() { return forced || (tags.has("krishna") ? `gopi:${rnd(16000)}` : $("raga").value); }
-function styleBits() { return [...tags].filter((t) => t !== "krishna" && t !== "poem"); }
+function styleBits() { return [...tags].filter((t) => t !== "krishna" && t !== "poem" && !CHIPWORDS.includes(t)); }
 $("tempo").oninput = () => ($("tempo-v").textContent = +$("tempo").value === 40 ? "auto" : $("tempo").value + " bpm");
 $("dur").oninput = () => ($("dur-v").textContent = $("dur").value + " s");
 
@@ -64,7 +71,7 @@ async function compose(extra = {}) {
   if (prompt.length < 3) { $("status").className = "err"; $("status").textContent = "Describe the song first."; return; }
   $("go").disabled = true; $("surprise").disabled = true; $("status").className = ""; $("status").textContent = "Composing… the planner is choosing raga, tāla and words.";
   try {
-    const bits = styleBits(), kr = tags.has("krishna"), body = { prompt: bits.length ? `${prompt}. Style: ${bits.join(", ")}` : prompt, raga: raga(), title: $("title").value.trim() || undefined, tala: $("tala").value, language: $("language").value, lead: leadTag || (kr ? "bansuri" : $("lead").value), tonic: +$("tonic").value || undefined,
+    const bits = styleBits(), kr = tags.has("krishna"), body = { prompt: bits.length ? `${prompt}. Style: ${bits.join(", ")}` : prompt, style: $("styletext").value.trim() || undefined, raga: raga(), title: $("title").value.trim() || undefined, tala: $("tala").value, language: $("language").value, lead: leadTag || (kr ? "bansuri" : $("lead").value), tonic: +$("tonic").value || undefined,
       tempo: +$("tempo").value === 40 ? undefined : +$("tempo").value, duration: tags.has("poem") ? Math.max(120, +$("dur").value) : +$("dur").value, poem: tags.has("poem") || undefined, instrumental: $("instr").checked, lyrics: $("lyrics").value, ...extra };
     song = await api("/compose", { method: "POST", body });
     $("status").textContent = ""; await show(song); refreshLibrary(); me = await api("/me");
@@ -83,7 +90,7 @@ async function refreshPlaylist() {
     const shown = plistAll ? songs : songs.slice(0, 12);
     if (songs.length > 12) { const m = document.createElement("li"); const mb = document.createElement("button"); mb.type = "button"; mb.className = "ghost"; mb.textContent = plistAll ? "Show fewer" : `Show all ${songs.length}`; mb.onclick = () => { plistAll = !plistAll; refreshPlaylist(); }; m.append(mb); ul.append(m); }
     for (const s of shown) { const li = document.createElement("li"); const b = document.createElement("button"); b.type = "button";
-      b.className = "srow"; const l = document.createElement("span"); l.textContent = s.title; const r = document.createElement("small"); r.textContent = `${s.raga} · ${s.language || ""} · ${s.tala}`; b.append(thumb(s), textBox(l, r), counts(s));
+      b.className = "srow"; const l = document.createElement("span"); l.textContent = s.title; const r = document.createElement("small"); r.textContent = `${s.raga} · ${s.language || ""} · ${s.tala}${s.style ? " · " + s.style : ""}`; b.append(thumb(s), textBox(l, r), counts(s));
       b.onclick = async () => { try { song = await api("/playlist/" + s.id); song._shared = true; await show(song); await play(); api(`/playlist/${s.id}/play`, { method: "POST" }).then(refreshPlaylist).catch(() => {}); } catch (e) { toast(e.message); } };
       li.append(b); ul.append(li); }
   } catch { $("pempty").textContent = "Playlist unavailable."; }
@@ -93,7 +100,7 @@ async function refreshLibrary() {
   for (const s of songs) {
     const li = document.createElement("li"); if (song && song.id === s.id) li.className = "on";
     const b = document.createElement("button"); const l = document.createElement("span"), r = document.createElement("small");
-    b.className = "srow"; l.textContent = s.title; r.textContent = `${s.raga} · ${s.tala} · ${fmt(s.duration)}`; b.append(thumb(s), textBox(l, r));
+    b.className = "srow"; l.textContent = s.title; r.textContent = `${s.raga} · ${s.tala} · ${fmt(s.duration)}${s.style ? " · " + s.style : ""}`; b.append(thumb(s), textBox(l, r));
     b.onclick = async () => { try { song = await api("/songs/" + s.id); await show(song); await play(); } catch (e) { toast(e.message); } };
     li.append(b); ul.append(li);
   }

@@ -5,3 +5,5 @@ from .compose import compose
 from .brief import make_brief
 
 __all__ = ["get_raga", "catalog", "melakarta", "gopi", "SVARA", "TALAS", "compose", "make_brief"]
+
+from . import styles  # noqa: E402,F401

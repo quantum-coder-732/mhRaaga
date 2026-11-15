@@ -1,21 +1,21 @@
 """Which pipeline answers real, live chat traffic — three admin-selectable
 modes, not just a binary blue/green:
   - "akanade"          SECONDARY ONLY — RouteLLM never consulted at all.
-                      Algo aKANADE's own TierClient chain, what
+                      Algo Kalkee's own TierClient chain, what
                       was live before this switch existed ("akanade" here
                       names the infrastructure/codebase only, never a
                       user-facing product name — the product is Algo
-                      aKANADE).
+                      Kalkee).
   - "routellm"        PRIMARY + SECONDARY (default) — the CEO memo's own
                       generic architecture reference design (RouteLLM's
                       difficulty classifier, Default vs Escalation tier)
                       is preferred, with automatic failover to Algo
-                      aKANADE's own chain treated as an expected,
+                      Kalkee's own chain treated as an expected,
                       routine part of this mode.
   - "routellm_only"   PRIMARY ONLY (intended) — same RouteLLM
                       preference and the SAME automatic-failover safety
                       net (a chat turn must never hard-fail — see
-                      below), but a fallback to Algo aKANADE's chain in
+                      below), but a fallback to Algo Kalkee's chain in
                       this mode is logged as an unintended "leak" rather
                       than routine behavior, since the whole point of
                       selecting this mode is to measure RouteLLM's own,
@@ -28,7 +28,7 @@ Automatic failover is built in, not bolted on, for BOTH "routellm" modes:
 resolve_routellm_preferred() below returns None whenever ak-router is
 unreachable, the router service is disabled, or RouteLLM's pick has no
 real registered provider on this deployment — TierClient.chat() treats
-that exactly like "no preference," and falls straight through to Akanade's
+that exactly like "no preference," and falls straight through to Kalkee's
 own normal chain for that one call. A prompt never goes unanswered
 because the primary side had a bad moment; it silently lands on green
 instead of blue for that turn, same call, no user-visible failure — this
@@ -46,7 +46,7 @@ itself (see llm/router.py's own call site), rather than only on one
 specific endpoint, is the fix for a real gap the first live A/B test
 surfaced: routing RouteLLM's pick through the general PM chat endpoint
 only (the only one that accepted a provider override at the time) gave
-it a structurally worse shot on coding prompts than Algo aKANADE's own
+it a structurally worse shot on coding prompts than Algo Kalkee's own
 coding-agent path got — an apples-to-oranges comparison, not a real
 capability gap. Wiring the preference in at TierClient itself means
 every track (PM, coding, trading) gets the identical treatment,
@@ -115,7 +115,7 @@ def resolve_routellm_preferred(prompt: str) -> str | None:
     """Called from TierClient.chat() only when get_pipeline() is one of
     ROUTELLM_MODES ("routellm" or "routellm_only"). Returns a real,
     registered provider key to prefer, or
-    None (fall through to Algo aKANADE's own normal chain) when
+    None (fall through to Algo Kalkee's own normal chain) when
     ak-router is unreachable/disabled (router_client.py's own circuit
     breaker keeps this cheap even then), or — should
     generic_architecture.py's tier lists ever grow a candidate this map
@@ -127,7 +127,7 @@ def resolve_routellm_preferred(prompt: str) -> str | None:
     model_name = decision.get("model_name")
     registered = REGISTERED_MODEL_MAP.get(model_name)
     if registered is None:
-        logger.info("RouteLLM picked %r (tier=%s) — no registered provider, falling through to Akanade's own chain",
+        logger.info("RouteLLM picked %r (tier=%s) — no registered provider, falling through to Kalkee's own chain",
                    model_name, decision.get("tier"))
     return registered
 

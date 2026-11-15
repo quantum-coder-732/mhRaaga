@@ -285,7 +285,7 @@ def test_ollama_provider_available_when_configured_and_installed():
 
 
 def test_algo_engine_rung_present_but_unconfigured_by_default():
-    """Algo Engine — ALGO AKANADE's self-hosted model execution layer — is
+    """Algo Engine — Kalkee's self-hosted model execution layer — is
     just another OpenAICompatible rung. Unconfigured in the test env,
     same as every other tier with no URL set."""
     assert "algo-engine" in CHAINS["delay_ok"] and "algo-engine" in CHAINS["bulk"]

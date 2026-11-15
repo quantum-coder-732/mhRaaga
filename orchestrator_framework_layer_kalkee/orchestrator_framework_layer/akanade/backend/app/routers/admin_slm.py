@@ -3,7 +3,7 @@
 convert_and_register_ollama_model.sh run reports its outcome here
 (sanity check / regression gate / whether it was actually registered),
 success or failure, so the Admin dashboard can show which
-Algo-Akanade-SLM version is live and what happened on prior nights,
+Algo-Kalkee-SLM version is live and what happened on prior nights,
 without reaching into the deploy box's filesystem. Recording a new
 version (POST) is Executive-role only, same bar as admin_providers.py —
 this is part of the same "which model is actually answering" surface.

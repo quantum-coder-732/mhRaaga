@@ -1,0 +1,14 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: true }
+      - uses: ./third_party/setup-ffmpeg      # the vendored action (suno-ai/setup-ffmpeg), used for the media tools
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install markdown pygments boto3
+      - run: for t in tool_layer_mhraga/mhraaga-cloud/tests/test_*.py; do python3 "$t"; done
+      - run: python3 -m py_compile tool_layer_mhraga/gpu-worker/worker.py tools/build_docs.py

@@ -1,7 +1,7 @@
 """Real code, not just documentation, for ARCHITECTURE.md §7's model
 optimization strategies — as an `OptimizationProfile` any model provider
 can DECLARE (metadata describing how its backend is actually deployed,
-since ALGO AKANADE's own process never runs the optimization itself — see the
+since Kalkee's own process never runs the optimization itself — see the
 module docstring below) plus genuine `extra_body` pass-through
 (providers.py's OpenAICompatible/CustomProvider/HuggingFaceProvider all
 now accept it) so an operator can actually forward server-specific

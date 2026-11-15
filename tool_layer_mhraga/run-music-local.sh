@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # aRaaga, all local: DynamoDB-local (docker), the service (:9100) and the web app (:5174).
-# Optional: export AKANADE_URL / AKANADE_TOKEN to plan songs with Algo's Pecova music agent.
+# Optional: export AKANADE_URL / AKANADE_TOKEN to plan songs with Kalkee music agent.
 set -e
 cd "$(dirname "$0")"
 docker start algo-music-ddb >/dev/null 2>&1 || docker run -d --name algo-music-ddb -p 8002:8000 \

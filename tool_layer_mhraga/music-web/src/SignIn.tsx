@@ -1,4 +1,4 @@
-// Sign in / create account, laid out like Akanade's sign-in (brand panel left, form right) in aRaaga's own colors.
+// Sign in / create account, laid out like Kalkee's sign-in (brand panel left, form right) in aRaaga's own colors.
 import { useState, type FormEvent } from 'react';
 import { signIn, signUp, setToken, type Me } from './api';
 import { BRAND } from './brand';
@@ -31,7 +31,7 @@ export function SignIn({ onDone }: { onDone: (me: Me) => void }) {
         <div className="si-body">
           <img className="si-mandala" src="/raaga-logo.svg" alt="" />
           <h1>Say it.<br /><span>Hear it as a raga.</span></h1>
-          <p>Describe a mood, a deity or a time of day. {BRAND.name} composes a song or raga for you, planned by Algo&apos;s Pecova music agent.</p>
+          <p>Describe a mood, a deity or a time of day. {BRAND.name} composes a song or raga for you, planned by Algo&apos;s Kalkee music agent.</p>
           <div className="si-tags"><span>Ragas &amp; taals</span><span>AI music</span></div>
         </div>
         <span className="si-fine">© 2026 AlgoAnalytics</span>
