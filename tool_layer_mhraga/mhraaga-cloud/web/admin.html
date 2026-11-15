@@ -11,7 +11,7 @@
   <div id="gate" class="card" hidden><h2>Administrators only</h2><p class="muted" id="gate-msg">Sign in with an administrator account.</p><a class="primary btn" href="login.html">Sign in</a></div>
   <div id="app" hidden>
     <div class="tabs" role="tablist" id="tabs">
-      <button role="tab" class="on" data-t="overview">Overview</button><button role="tab" data-t="users">Users</button><button role="tab" data-t="columns">Columns</button><button role="tab" data-t="costs">Cloud cost</button><button role="tab" data-t="singer">AI singer</button>
+      <button role="tab" class="on" data-t="overview">Overview</button><button role="tab" data-t="requests">Requests <span id="req-n" class="badge off" hidden></span></button><button role="tab" data-t="users">Users</button><button role="tab" data-t="columns">Columns</button><button role="tab" data-t="costs">Cloud cost</button><button role="tab" data-t="singer">AI singer</button>
     </div>
 
     <section id="t-overview">
@@ -19,6 +19,12 @@
       <div class="two"><div class="card"><h3>New users, last 14 days</h3><div id="c-signups" class="chart"></div></div>
       <div class="card"><h3>AI voice spend, last 14 days (USD)</h3><div id="c-voice" class="chart"></div></div></div>
       <div class="card"><h3>Recent admin actions</h3><div id="audit" class="audit"></div></div>
+    </section>
+
+    <section id="t-requests" hidden>
+      <div class="card"><h3>Sign-up requests</h3>
+        <p class="muted">People ask for access on the sign-in page. <b>Approve</b> creates the account with a temporary password, shown once. Send it to them by email yourself (the button opens your mail app). They change it after signing in.</p>
+        <div id="req-list" class="reqs"></div></div>
     </section>
 
     <section id="t-users" hidden>
@@ -64,6 +70,11 @@
   <label class="field"><span>Name</span><input id="a-name" maxlength="60"></label><label class="field"><span>Email</span><input id="a-email" type="email" maxlength="254"></label>
   <label class="field"><span>Password (8 or more characters)</span><input id="a-pw" type="text" maxlength="128" autocomplete="off"></label><label class="field"><span>Type</span><select id="a-role"><option value="user">User</option><option value="admin">Admin</option></select></label></div>
   <p id="a-status" role="status" class="muted"></p><div class="actions"><button type="button" id="a-save" class="primary">Create</button><button type="button" id="a-cancel" class="ghost">Cancel</button></div></form></dialog>
+<dialog id="rdlg"><form method="dialog"><h3>Approved</h3><p class="muted">Send this temporary password to <b id="r-who"></b>. It is shown only now; if you lose it, press Approve again to make a new one.</p>
+  <div class="tmp"><code id="r-pw"></code><button type="button" id="r-copy" class="ghost">Copy</button></div>
+  <label class="field"><span>Email text</span><textarea id="r-body" rows="7" readonly></textarea></label>
+  <div class="actions"><a id="r-mail" class="primary btn" href="#">Open in my mail app</a><button type="button" id="r-copy2" class="ghost">Copy email text</button><button type="button" id="r-close" class="ghost">Done</button></div></form></dialog>
+<footer class="mvpfoot"><b>MVP version, work in progress.</b> © 2026 Keshav Velhal. All rights reserved.</footer>
 <div id="toast" class="toast" hidden role="status"></div>
 <script type="module" src="admin.js"></script>
 </body></html>

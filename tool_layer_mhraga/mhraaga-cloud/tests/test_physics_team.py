@@ -80,7 +80,8 @@ class Team(unittest.TestCase):
         import local_server as ls
         cls.h = ls.h; ls.DB.unlink(missing_ok=True); cls.tok = {}
         for n in ("dir", "a1", "a2", "vw", "out"):
-            c, o = cls.call("POST", "/auth/signup", body={"name": n, "email": f"{n}@t.com", "password": "Test-pass-123!"}); cls.tok[n] = o["token"]
+            cls.h._users.put_item(Item={"email": f"{n}@t.com", "name": n, "pw": cls.h.hash_pw("Test-pass-123!"), "created": "2026-01-01T00:00:00+00:00", "fails": 0, "locked_until": 0, "qday": cls.h.today(), "qn": 0})
+            c, o = cls.call("POST", "/auth/login", body={"email": f"{n}@t.com", "password": "Test-pass-123!"}); cls.tok[n] = o["token"]
 
     @classmethod
     def call(cls, m, p, t=None, body=None):

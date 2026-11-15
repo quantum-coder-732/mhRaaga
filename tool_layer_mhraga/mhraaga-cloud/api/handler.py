@@ -146,20 +146,54 @@ def text(v, limit: int) -> str:
 
 
 # ---------------------------------------------------------------- routes
+REQ_OWNER = "signup#req"
+
+
 def signup(event):
+    """Sign-up is a request: no password is taken. An administrator approves it in the dashboard and sends a temporary password by email."""
     if not SIGNUP_OPEN:
         raise ApiError(403, "Sign-ups are closed.")
     b = body_of(event)
-    name, email, pw = text(b.get("name"), 60), text(b.get("email"), 254).lower(), b.get("password") or ""
-    if not name or not EMAIL.match(email) or not isinstance(pw, str) or not 8 <= len(pw) <= 128:
-        raise ApiError(400, "Enter a name, a valid email and a password of 8-128 characters.")
-    try:
-        _users.put_item(Item={"email": email, "name": name, "pw": hash_pw(pw), "created": datetime.now(timezone.utc).isoformat(),
-                              "fails": 0, "locked_until": 0, "qday": today(), "qn": 0},
-                        ConditionExpression="attribute_not_exists(email)")
-    except _db.meta.client.exceptions.ConditionalCheckFailedException:
-        raise ApiError(409, "That email is already registered. Sign in instead.")
-    return 201, {"token": make_token(email), "user": {"name": name, "email": email}}
+    name, email, note = text(b.get("name"), 60), text(b.get("email"), 254).lower(), text(b.get("note"), 300)
+    if not name or not EMAIL.match(email):
+        raise ApiError(400, "Enter your name and a valid email.")
+    if _users.get_item(Key={"email": email}).get("Item"):
+        raise ApiError(409, "That email already has an account. Sign in, or ask an administrator for a new temporary password.")
+    old = _songs.get_item(Key={"owner": REQ_OWNER, "id": email}).get("Item")
+    if old and old.get("status") == "pending":
+        return 202, {"status": "pending", "message": REQ_MESSAGE}
+    _songs.put_item(Item={"owner": REQ_OWNER, "id": email, "name": name, "note": note, "status": "pending", "created": datetime.now(timezone.utc).isoformat()})
+    return 202, {"status": "pending", "message": REQ_MESSAGE}
+
+
+REQ_MESSAGE = "Request received. An administrator will approve it and email you a temporary password. You can change it after you sign in."
+
+
+def request_status(event):
+    email = text(body_of(event).get("email"), 254).lower()
+    if not EMAIL.match(email):
+        raise ApiError(400, "Enter a valid email.")
+    if _users.get_item(Key={"email": email}).get("Item"):
+        return 200, {"status": "account", "message": "You have an account. Sign in with the temporary password you were emailed."}
+    it = _songs.get_item(Key={"owner": REQ_OWNER, "id": email}).get("Item")
+    if not it:
+        return 200, {"status": "none", "message": "No request found for this email."}
+    return 200, {"status": it["status"], "created": it.get("created"), "decided": it.get("decided"),
+                 "message": {"pending": "Waiting for an administrator to approve.", "approved": "Approved. The administrator will email your temporary password.", "rejected": "This request was not approved."}.get(it["status"], "")}
+
+
+def change_password(event):
+    u = user_from(event)
+    b = body_of(event)
+    cur, new = b.get("current") or "", b.get("new") or ""
+    if not isinstance(new, str) or not 8 <= len(new) <= 128:
+        raise ApiError(400, "The new password must be 8-128 characters.")
+    if not isinstance(cur, str) or not check_pw(cur, u["pw"]):
+        raise ApiError(401, "The current password is wrong.")
+    if new == cur:
+        raise ApiError(400, "Choose a different password.")
+    _users.update_item(Key={"email": u["email"]}, UpdateExpression="SET pw=:p REMOVE must_change", ExpressionAttributeValues={":p": hash_pw(new)})
+    return 200, {"ok": True}
 
 
 def login(event):
@@ -179,14 +213,14 @@ def login(event):
     if item.get("disabled"):
         raise ApiError(403, "This account is disabled. Ask an administrator.")
     _users.update_item(Key={"email": email}, UpdateExpression="SET fails=:z, last_login=:t", ExpressionAttributeValues={":z": 0, ":t": datetime.now(timezone.utc).isoformat()})
-    return 200, {"token": make_token(email), "user": {"name": item["name"], "email": email}}
+    return 200, {"token": make_token(email), "must_change": bool(item.get("must_change")), "user": {"name": item["name"], "email": email}}
 
 
 def me(event):
     u = user_from(event)
     used = int(u["qn"]) if u.get("qday") == today() else 0
     return 200, {"name": u["name"], "email": u["email"], "composed_today": used, "daily_limit": int(u.get("limit", DAILY_LIMIT)), "admin": admin.is_admin(u),
-                 "role": "admin" if admin.is_admin(u) else "user"}
+                 "role": "admin" if admin.is_admin(u) else "user", "must_change": bool(u.get("must_change"))}
 
 
 def rename_me(event):
@@ -373,6 +407,10 @@ def handler(event, context=None):
                 raise ApiError(404, "Unknown raga.")
         elif (method, path) == ("POST", "/auth/signup"):
             status, out = signup(event)
+        elif (method, path) == ("POST", "/auth/request"):
+            status, out = request_status(event)
+        elif (method, path) == ("POST", "/me/password"):
+            status, out = change_password(event)
         elif (method, path) == ("POST", "/auth/login"):
             status, out = login(event)
         elif (method, path) == ("GET", "/me"):

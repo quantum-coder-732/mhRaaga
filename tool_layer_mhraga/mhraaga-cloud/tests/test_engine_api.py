@@ -98,14 +98,22 @@ class Api(unittest.TestCase):
               "body": json.dumps(body) if body is not None else None}
         r = self.h.handler(ev); return r["statusCode"], json.loads(r["body"] or "{}")
 
+    def mkuser(self, email, pw="longenough1"):
+        """Accounts exist only after an administrator approves a request, so tests create the row directly, then sign in."""
+        self.h._users.put_item(Item={"email": email, "name": "A", "pw": self.h.hash_pw(pw), "created": "2026-01-01T00:00:00+00:00", "fails": 0, "locked_until": 0, "qday": self.h.today(), "qn": 0})
+        st, r = self.call("POST", "/api/auth/login", {"email": email, "password": pw}); self.assertEqual(st, 200); return r["token"]
+
     def test_flow_and_protection(self):
         self.assertEqual(self.call("GET", "/api/health")[0], 200)
         self.assertEqual(self.call("POST", "/api/compose", {"prompt": "yaman"})[0], 401)
         self.assertEqual(self.call("GET", "/api/songs", token="forged.token.here")[0], 401)
-        self.assertEqual(self.call("POST", "/api/auth/signup", {"name": "A", "email": "x@y.in", "password": "short"})[0], 400)
-        st, r = self.call("POST", "/api/auth/signup", {"name": "A", "email": "X@y.in", "password": "longenough1"}); self.assertEqual(st, 201)
-        tok = r["token"]
-        self.assertEqual(self.call("POST", "/api/auth/signup", {"name": "A", "email": "x@y.in", "password": "longenough1"})[0], 409)
+        self.assertEqual(self.call("POST", "/api/auth/signup", {"name": "A", "email": "not-an-email"})[0], 400)
+        st, r = self.call("POST", "/api/auth/signup", {"name": "A", "email": "X@y.in"}); self.assertEqual(st, 202); self.assertEqual(r["status"], "pending")   # a request, no password, no token
+        self.assertNotIn("token", r)
+        self.assertEqual(self.call("POST", "/api/auth/login", {"email": "x@y.in", "password": "longenough1"})[0], 401)    # not approved yet
+        self.assertEqual(self.call("POST", "/api/auth/request", {"email": "x@y.in"})[1]["status"], "pending")
+        tok = self.mkuser("x@y.in")
+        self.assertEqual(self.call("POST", "/api/auth/signup", {"name": "A", "email": "x@y.in"})[0], 409)
         self.assertEqual(self.call("POST", "/api/auth/login", {"email": "x@y.in", "password": "wrongwrong"})[0], 401)
         self.assertEqual(self.call("POST", "/api/auth/login", {"email": "x@y.in", "password": "longenough1"})[0], 200)
         st, song = self.call("POST", "/api/compose", {"prompt": "krishna flute dawn bhajan", "duration": 60}, tok)
@@ -117,9 +125,9 @@ class Api(unittest.TestCase):
 
     def test_quota(self):
         self.h.DAILY_LIMIT = 2
-        _, r = self.call("POST", "/api/auth/signup", {"name": "A", "email": "x@y.in", "password": "longenough1"})
-        for _ in range(2): self.assertEqual(self.call("POST", "/api/compose", {"prompt": "yaman evening"}, r["token"])[0], 200)
-        self.assertEqual(self.call("POST", "/api/compose", {"prompt": "yaman evening"}, r["token"])[0], 429)
+        tok = self.mkuser("x@y.in")
+        for _ in range(2): self.assertEqual(self.call("POST", "/api/compose", {"prompt": "yaman evening"}, tok)[0], 200)
+        self.assertEqual(self.call("POST", "/api/compose", {"prompt": "yaman evening"}, tok)[0], 429)
 
     def test_token_expiry_and_tamper(self):
         t = self.h.make_token("a@b.in", "k")

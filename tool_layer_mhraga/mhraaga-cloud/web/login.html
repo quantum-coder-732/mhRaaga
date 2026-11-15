@@ -7,15 +7,45 @@
 </head><body>
 <nav class="nav" data-page="login"></nav>
 <main class="authpage">
+  <div class="authwrap">
+  <div class="brandrow"><span class="om">ॐ</span><b>mhRaaga</b><span class="mvp">MVP</span></div>
   <form class="card" id="authform" autocomplete="on">
     <h1 id="h">Welcome back</h1><p class="sub" id="sub">Sign in to compose and keep your songs.</p>
-    <div class="tabs"><button type="button" id="tab-in" class="on">Sign in</button><button type="button" id="tab-up">Create account</button></div>
-    <label class="field" id="f-name" hidden><span>Name</span><input id="a-name" autocomplete="name" maxlength="60"></label>
-    <label class="field"><span>Email</span><input id="a-email" type="email" autocomplete="email" required></label>
-    <label class="field"><span>Password <em>(8+ characters)</em></span><input id="a-pass" type="password" autocomplete="current-password" minlength="8" required></label>
+    <div class="tabs"><button type="button" id="tab-in" class="on">Sign in</button><button type="button" id="tab-up">Request access</button></div>
+
+    <div id="p-in">
+      <label class="field"><span>Email</span><input id="a-email" type="email" autocomplete="email" required></label>
+      <label class="field"><span>Password <em>(the temporary one from your email, the first time)</em></span><input id="a-pass" type="password" autocomplete="current-password" minlength="8" required></label>
+    </div>
+
+    <div id="p-up" hidden>
+      <div class="notice">New accounts are approved by an administrator. <b>You will get an email with a temporary password</b> once approved, and you choose your own password after signing in. No password is needed now.</div>
+      <label class="field"><span>Name</span><input id="r-name" autocomplete="name" maxlength="60"></label>
+      <label class="field"><span>Email</span><input id="r-email" type="email" autocomplete="email"></label>
+      <label class="field"><span>Why do you want to join? <em>(optional)</em></span><input id="r-note" maxlength="300" placeholder="For example: I make bhajans"></label>
+    </div>
+
+    <div id="p-ch" hidden>
+      <div class="notice">You signed in with a temporary password. Choose your own now.</div>
+      <label class="field"><span>Temporary password</span><input id="c-cur" type="password" autocomplete="current-password"></label>
+      <label class="field"><span>New password <em>(8+ characters)</em></span><input id="c-new" type="password" autocomplete="new-password" minlength="8"></label>
+    </div>
+
     <button class="primary" id="a-go">Sign in</button>
+    <button type="button" class="ghost later" id="c-later" hidden>Later</button>
     <p id="a-err" class="error" role="alert"></p>
+
+    <ol class="steps" id="steps" hidden>
+      <li data-s="1"><b>Request sent</b><span>Your name and email reach the administrator.</span></li>
+      <li data-s="2"><b>Administrator approves</b><span>Done in the admin dashboard.</span></li>
+      <li data-s="3"><b>You get an email</b><span>It holds your temporary password. Sent by hand, so it can take a while.</span></li>
+      <li data-s="4"><b>Sign in and set your password</b><span>Use the Sign in tab.</span></li>
+    </ol>
+    <button type="button" class="linkbtn" id="chk" hidden>Check the status of my request</button>
   </form>
+  <p class="mvpnote"><b>MVP version, work in progress.</b> Things may change or break while it grows.</p>
+  <p class="copy">© 2026 Keshav Velhal. All rights reserved.</p>
+  </div>
 </main>
 <script type="module" src="site.js"></script><script type="module" src="login.js"></script>
 </body></html>

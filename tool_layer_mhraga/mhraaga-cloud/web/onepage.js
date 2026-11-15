@@ -5,7 +5,7 @@ const authed = !!token;
 
 if (authed) {
   $("sign").textContent = "Sign out"; $("sign").removeAttribute("href"); $("sign").className = "ghost btn2"; $("sign").onclick = () => { try { localStorage.removeItem("mh_token"); } catch {} location.reload(); };
-  fetch("/api/me", { headers: { Authorization: "Bearer " + token } }).then((r) => (r.ok ? r.json() : Promise.reject())).then((me) => {
+  fetch("/api/me", { headers: { Authorization: "Bearer " + token } }).then((r) => (r.ok ? r.json() : Promise.reject())).then((me) => { if (me.must_change && !sessionStorage.getItem("mh_later")) { location.href = "login.html?change=1"; return; }
     $("who").textContent = me.name; $("hello").textContent = `Welcome back, ${me.name.split(" ")[0]}`; $("quota").textContent = `${me.daily_limit - me.composed_today} of ${me.daily_limit} songs left today`;
   }).catch(() => { try { localStorage.removeItem("mh_token"); } catch {} location.reload(); });
 }

@@ -98,6 +98,32 @@ async function saveUser() {
   catch (e) { $("ud-status").textContent = e.message; }
 }
 
+// ---------------------------------------------------------------- sign-up requests
+let tmpMail = "";
+async function requests() {
+  const d = await api("/admin/requests"), box = $("req-list"); box.replaceChildren();
+  $("req-n").hidden = !d.pending; $("req-n").textContent = d.pending;
+  if (!d.requests.length) box.append(el("span", { className: "muted", textContent: "No requests yet." }));
+  d.requests.forEach((r) => {
+    const row = el("div", { className: "req " + r.status }, el("div", {}, el("b", { textContent: r.name }), el("span", { textContent: r.email }), ...(r.note ? [el("em", { className: "muted", textContent: "“" + r.note + "”" })] : []), el("small", { className: "muted", textContent: `asked ${when(r.created)}` + (r.decided ? ` · ${r.status} ${when(r.decided)} by ${r.by}` : "") })));
+    const act = el("div", { className: "ract" });
+    if (r.status !== "rejected") { const ok = el("button", { type: "button", className: "primary", textContent: r.status === "approved" ? "New temporary password" : "Approve" }); ok.onclick = () => approve(r, ok); act.append(ok); }
+    if (r.status === "pending") { const no = el("button", { type: "button", className: "ghost", textContent: "Reject" }); no.onclick = async () => { try { await api("/admin/requests/" + encodeURIComponent(r.email) + "/reject", { method: "POST", body: {} }); toast("Rejected."); await requests(); } catch (e) { toast(e.message); } }; act.append(no); }
+    row.append(el("span", { className: "badge " + (r.status === "pending" ? "off" : r.status === "approved" ? "admin" : ""), textContent: r.status }), act); box.append(row);
+  });
+}
+async function approve(r, btn) {
+  btn.disabled = true;
+  try {
+    const d = await api("/admin/requests/" + encodeURIComponent(r.email) + "/approve", { method: "POST", body: {} });
+    const body = `Hello ${d.name},\n\nYour mhRaaga account is approved.\n\nSign in at https://www.mhraaga.in/login.html\nEmail: ${d.email}\nTemporary password: ${d.temp_password}\n\nAfter you sign in you will be asked to choose your own password.\n\nmhRaaga is an MVP (work in progress), so expect rough edges.\n\nKeshav Velhal`;
+    $("r-who").textContent = d.email; $("r-pw").textContent = d.temp_password; $("r-body").value = body; tmpMail = body;
+    $("r-mail").href = "mailto:" + encodeURIComponent(d.email).replace("%40", "@") + "?subject=" + encodeURIComponent("Your mhRaaga account") + "&body=" + encodeURIComponent(body);
+    $("rdlg").showModal(); loaded.users = false; loaded.overview = false; await requests();
+  } catch (e) { toast(e.message); } finally { btn.disabled = false; }
+}
+const copy = async (t) => { try { await navigator.clipboard.writeText(t); toast("Copied."); } catch { toast("Select the text and copy it."); } };
+
 // ---------------------------------------------------------------- columns
 function colRow(c = { key: "", label: "", type: "text" }) {
   const key = el("input", { value: c.key, placeholder: "key, e.g. plan", maxLength: 24 }), label = el("input", { value: c.label, placeholder: "Label", maxLength: 40 });
@@ -144,8 +170,8 @@ $("sg-go").onclick = async () => { try { $("sg-status").textContent = "Queuing�
 // ---------------------------------------------------------------- tabs and start
 async function show(t) {
   document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("on", b.dataset.t === t));
-  ["overview", "users", "columns", "costs", "singer"].forEach((x) => ($("t-" + x).hidden = x !== t));
-  try { if (!loaded[t]) { if (t === "overview") await overview(); if (t === "users") await loadUsers(); if (t === "columns") { await loadUsers(); drawCols(); } if (t === "costs") await costs(); if (t === "singer") await singer(); loaded[t] = t !== "singer"; } }
+  ["overview", "requests", "users", "columns", "costs", "singer"].forEach((x) => ($("t-" + x).hidden = x !== t));
+  try { if (!loaded[t]) { if (t === "overview") await overview(); if (t === "requests") await requests(); if (t === "users") await loadUsers(); if (t === "columns") { await loadUsers(); drawCols(); } if (t === "costs") await costs(); if (t === "singer") await singer(); loaded[t] = t !== "singer" && t !== "requests"; } }
   catch (e) { toast(e.message); }
   history.replaceState(null, "", "#" + t);
 }
@@ -165,6 +191,8 @@ async function start() {
   $("a-save").onclick = async () => { try { await api("/admin/users", { method: "POST", body: { name: $("a-name").value, email: $("a-email").value, password: $("a-pw").value, role: $("a-role").value } }); $("adlg").close(); ["a-name", "a-email", "a-pw"].forEach((i) => ($(i).value = "")); toast("User added."); await loadUsers(); loaded.overview = false; } catch (e) { $("a-status").textContent = e.message; } };
   $("col-add").onclick = () => { const b = $("cols"); if (!b.querySelector(".colrow")) b.replaceChildren(); b.append(colRow()); }; $("col-save").onclick = saveCols;
   $("cost-refresh").onclick = async () => { try { await costs(true); } catch (e) { toast(e.message); } };
-  const t = location.hash.slice(1); show(["overview", "users", "columns", "costs", "singer"].includes(t) ? t : "overview");
+  $("r-copy").onclick = () => copy($("r-pw").textContent); $("r-copy2").onclick = () => copy(tmpMail); $("r-close").onclick = () => $("rdlg").close();
+  api("/admin/requests").then((d) => { $("req-n").hidden = !d.pending; $("req-n").textContent = d.pending; if (d.pending && !location.hash) show("requests"); }).catch(() => {});
+  const t = location.hash.slice(1); show(["overview", "requests", "users", "columns", "costs", "singer"].includes(t) ? t : "overview");
 }
 start();

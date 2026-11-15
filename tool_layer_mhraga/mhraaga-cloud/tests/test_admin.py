@@ -133,5 +133,52 @@ class Admin(unittest.TestCase):
         with self.assertRaises(h.ApiError): studio.need_admin(self.bob)
 
 
+class SignupRequests(unittest.TestCase):
+    """Sign-up is a request; an administrator approves it and passes on a temporary password; the user then picks their own."""
+    def setUp(self):
+        h._users, h._songs = Fake(("email",)), Fake(("owner", "id"))
+        self.boss, self.bob = mk("boss@example.com", "Boss"), mk("bob@example.com", "Bob")
+
+    def ev(self, body, token=None):
+        return {"headers": {"authorization": "Bearer " + token} if token else {}, "body": json.dumps(body)}
+
+    def test_whole_flow(self):
+        with self.assertRaises(h.ApiError) as c: h.signup(self.ev({"name": "A", "email": "nope"}))
+        self.assertEqual(c.exception.status, 400)
+        st, r = h.signup(self.ev({"name": "Neha", "email": "Neha@Y.in", "note": "bhajans"})); self.assertEqual((st, r["status"]), (202, "pending")); self.assertNotIn("token", r)
+        self.assertEqual(h.signup(self.ev({"name": "Neha", "email": "neha@y.in"}))[0], 202)                      # twice is harmless
+        with self.assertRaises(h.ApiError) as c: h.login(self.ev({"email": "neha@y.in", "password": "anything1"}))   # no account before approval
+        self.assertEqual(c.exception.status, 401)
+        self.assertEqual(h.request_status(self.ev({"email": "neha@y.in"}))[1]["status"], "pending")
+        with self.assertRaises(h.ApiError): admin.requests_list(self.bob)                                          # plain users cannot see requests
+        _, lst = admin.requests_list(self.boss); self.assertEqual((lst["pending"], lst["requests"][0]["email"]), (1, "neha@y.in"))
+        _, ap = admin.request_approve(self.boss, "neha@y.in"); temp = ap["temp_password"]; self.assertGreaterEqual(len(temp), 8)
+        self.assertEqual(h.request_status(self.ev({"email": "neha@y.in"}))[1]["status"], "account")
+        _, lg = h.login(self.ev({"email": "neha@y.in", "password": temp})); self.assertTrue(lg["must_change"])
+        user = h._users.get_item(Key={"email": "neha@y.in"})["Item"]; self.assertEqual(user["name"], "Neha")
+        tok = lg["token"]
+        for bad, code in (({"current": "wrong-wrong", "new": "my-own-pass1"}, 401), ({"current": temp, "new": "short"}, 400), ({"current": temp, "new": temp}, 400)):
+            with self.assertRaises(h.ApiError) as c: h.change_password(self.ev(bad, tok))
+            self.assertEqual(c.exception.status, code)
+        self.assertEqual(h.change_password(self.ev({"current": temp, "new": "my-own-pass1"}, tok))[0], 200)
+        with self.assertRaises(h.ApiError): h.login(self.ev({"email": "neha@y.in", "password": temp}))             # temporary password is dead
+        self.assertFalse(h.login(self.ev({"email": "neha@y.in", "password": "my-own-pass1"}))[1]["must_change"])
+        with self.assertRaises(h.ApiError) as c: admin.request_approve(self.boss, "neha@y.in")                     # they already set their own
+        self.assertEqual(c.exception.status, 409)
+        with self.assertRaises(h.ApiError) as c: h.signup(self.ev({"name": "Neha", "email": "neha@y.in"}))
+        self.assertEqual(c.exception.status, 409)
+
+    def test_reissue_and_reject(self):
+        h.signup(self.ev({"name": "Ravi", "email": "ravi@y.in"})); _, a1 = admin.request_approve(self.boss, "ravi@y.in"); _, a2 = admin.request_approve(self.boss, "ravi@y.in")
+        self.assertNotEqual(a1["temp_password"], a2["temp_password"])                                              # lost the first one: approve again
+        with self.assertRaises(h.ApiError): h.login(self.ev({"email": "ravi@y.in", "password": a1["temp_password"]}))
+        self.assertTrue(h.login(self.ev({"email": "ravi@y.in", "password": a2["temp_password"]}))[1]["must_change"])
+        h.signup(self.ev({"name": "Spam", "email": "spam@y.in"})); admin.request_reject(self.boss, "spam@y.in")
+        self.assertEqual(h.request_status(self.ev({"email": "spam@y.in"}))[1]["status"], "rejected")
+        with self.assertRaises(h.ApiError): h.login(self.ev({"email": "spam@y.in", "password": "whatever12"}))
+        with self.assertRaises(h.ApiError) as c: admin.request_approve(self.boss, "ghost@y.in")
+        self.assertEqual(c.exception.status, 404)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=0)

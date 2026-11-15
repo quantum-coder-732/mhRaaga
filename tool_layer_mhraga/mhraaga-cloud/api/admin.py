@@ -27,6 +27,7 @@ from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
 import boto3
+from boto3.dynamodb.conditions import Key as _Key
 from boto3.dynamodb.conditions import Key
 
 import studio
@@ -422,6 +423,62 @@ def costs(u: dict, refresh: bool = False):
     return 200, {**out, "cached": False, "age_s": 0}
 
 
+REQ_OWNER = "signup#req"
+
+
+def _temp_password() -> str:
+    import secrets
+    al = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    return "".join(secrets.choice(al) for _ in range(4)) + "-" + "".join(secrets.choice(al) for _ in range(4)) + "-" + "".join(secrets.choice("23456789") for _ in range(2))
+
+
+def requests_list(u: dict):
+    need(u)
+    h = H()
+    items, kw = [], {"KeyConditionExpression": _Key("owner").eq(REQ_OWNER)}
+    while True:
+        r = h._songs.query(**kw); items += r.get("Items", [])
+        if not r.get("LastEvaluatedKey") or len(items) > 500:
+            break
+        kw["ExclusiveStartKey"] = r["LastEvaluatedKey"]
+    out = [{"email": i["id"], "name": i.get("name", ""), "note": i.get("note", ""), "status": i.get("status", "pending"), "created": i.get("created"), "decided": i.get("decided"), "by": i.get("by", "")} for i in items]
+    out.sort(key=lambda x: (x["status"] != "pending", x["created"] or ""), reverse=False)
+    return 200, {"requests": out, "pending": sum(1 for x in out if x["status"] == "pending")}
+
+
+def request_approve(u: dict, email: str):
+    """Create the account (or reset an account that has not changed its temporary password) and return the temporary password once."""
+    need(u)
+    h = H()
+    email = email.lower()
+    it = h._songs.get_item(Key={"owner": REQ_OWNER, "id": email}).get("Item")
+    if not it:
+        raise h.ApiError(404, "No such request.")
+    pw, now = _temp_password(), datetime.now(timezone.utc).isoformat()
+    cur = h._users.get_item(Key={"email": email}).get("Item")
+    if cur and not cur.get("must_change"):
+        raise h.ApiError(409, "This person already has an account and has changed the password.")
+    if cur:
+        h._users.update_item(Key={"email": email}, UpdateExpression="SET pw=:p, must_change=:t, fails=:z, locked_until=:z", ExpressionAttributeValues={":p": h.hash_pw(pw), ":t": True, ":z": 0})
+    else:
+        h._users.put_item(Item={"email": email, "name": it.get("name", email), "pw": h.hash_pw(pw), "created": now, "fails": 0, "locked_until": 0, "qday": h.today(), "qn": 0, "role": "user", "must_change": True})
+    h._songs.update_item(Key={"owner": REQ_OWNER, "id": email}, UpdateExpression="SET #s=:a, decided=:d, #b=:u", ExpressionAttributeNames={"#s": "status", "#b": "by"}, ExpressionAttributeValues={":a": "approved", ":d": now, ":u": u["email"]})
+    audit(u, "signup.approve", email)
+    return 200, {"email": email, "name": it.get("name", ""), "temp_password": pw}
+
+
+def request_reject(u: dict, email: str):
+    need(u)
+    h = H()
+    email = email.lower()
+    if not h._songs.get_item(Key={"owner": REQ_OWNER, "id": email}).get("Item"):
+        raise h.ApiError(404, "No such request.")
+    h._songs.update_item(Key={"owner": REQ_OWNER, "id": email}, UpdateExpression="SET #s=:a, decided=:d, #b=:u", ExpressionAttributeNames={"#s": "status", "#b": "by"},
+                         ExpressionAttributeValues={":a": "rejected", ":d": datetime.now(timezone.utc).isoformat(), ":u": u["email"]})
+    audit(u, "signup.reject", email)
+    return 200, {"ok": True}
+
+
 # ---------------------------------------------------------------- router
 def route(method: str, path: str, event: dict, user_from, body_of, query: dict):
     """path is the part after /admin. Returns (status, body)."""
@@ -438,6 +495,12 @@ def route(method: str, path: str, event: dict, user_from, body_of, query: dict):
         return users_update(u, parts[1], body_of(event))
     if len(parts) == 3 and parts[0] == "users" and parts[2] == "delete" and method == "POST":
         return users_delete(u, parts[1], body_of(event))
+    if parts == ["requests"] and method == "GET":
+        return requests_list(u)
+    if len(parts) == 3 and parts[0] == "requests" and parts[2] == "approve" and method == "POST":
+        return request_approve(u, parts[1])
+    if len(parts) == 3 and parts[0] == "requests" and parts[2] == "reject" and method == "POST":
+        return request_reject(u, parts[1])
     if parts == ["schema"] and method == "GET":
         return schema_get(u)
     if parts == ["schema"] and method == "PUT":
