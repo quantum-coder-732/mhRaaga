@@ -14,7 +14,7 @@ document.querySelectorAll("[data-auth]").forEach((s) => (s.hidden = !authed));
 
 // Suno-style shell for signed-in people: sidebar on desktop, bottom bar on phones. One view at a time, linkable by #hash.
 const NAV = [["home", "🏠", "Home"], ["create", "✨", "Create"], ["playlist", "🎵", "Playlist"], ["mine", "📚", "My songs"], ["stories", "📖", "Stories"], ["people", "👤", "People"], ["film", "🎬", "Film"], ["team", "👥", "Team"], ["studio", "🧠", "Studio"], ["ragas", "🪈", "Ragas"]];
-const VIEWS = { home: ["home-hero", "library", "app"], create: ["create"], playlist: ["playlist"], mine: ["mine"], stories: ["stories"], people: ["people"], film: ["film"], team: ["team"], studio: ["studio"], ragas: ["ragas"] };
+const VIEWS = { home: ["home-hero", "features", "models", "app"], create: ["create"], playlist: ["playlist"], mine: ["mine"], stories: ["stories"], people: ["people"], film: ["film"], team: ["team"], studio: ["studio"], ragas: ["ragas"] };
 let view = "home";
 function show(v, push = true) {
   if (!authed) return;

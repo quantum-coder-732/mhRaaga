@@ -276,7 +276,7 @@ def make_song(event):
             opts["lead"] = v
         elif k == "tempo" and not opts["tempo"] and not opts["poem"]:
             opts["tempo"] = v
-    brief = make_brief(prompt, opts, secret("openrouter_key"))
+    brief = make_brief(prompt, opts, secret("openrouter_key"), timeout=30.0 if opts["planner"] != "auto" else 11.0)   # a model you chose gets time to answer (GLM can take 15 s)
     if text(b.get("title"), 60):
         brief["title"] = text(b.get("title"), 60)
     if not raga_in and hint["ragas"] and brief.get("source") == "fallback":
@@ -294,9 +294,26 @@ def make_song(event):
                "tempo": score["meta"]["tempo"], "mood": brief.get("mood", ""), "language": brief.get("language", ""),
                "duration": score["duration"], "created": datetime.now(timezone.utc).isoformat(), "source": brief["source"],
                "prompt": prompt, "style": style}
+    summary["planner"], summary["usd"] = plan_cost(brief)
     _songs.put_item(Item=_dec({"owner": u["email"], **summary, "brief": json.dumps({k: v for k, v in brief.items() if k != "usage"}),
                           "score": json.dumps(score, separators=(",", ":"))}))
     return 200, {**summary, "brief": {k: v for k, v in brief.items() if k != "usage"}, "score": score}
+
+
+PLAN_PRICE = {"z-ai/glm-5.3-flash": (1.5e-7, 5e-7), "deepseek/deepseek-v4-flash": (9e-8, 1.8e-7)}   # USD per input / output token
+PLAN_NAME = {"z-ai/glm-5.3-flash": "GLM 5.3 Flash", "deepseek/deepseek-v4-flash": "DeepSeek V4 Flash"}
+
+
+def plan_cost(brief: dict) -> tuple[str, float]:
+    """Which model wrote the plan and what that call cost (from the token counts the API reports). The built-in engine is free."""
+    u = brief.get("usage") or {}
+    m = u.get("model")
+    if not m:
+        return "Built-in engine", 0.0
+    if u.get("cost"):
+        return PLAN_NAME.get(m, m), float(u["cost"])
+    pi, po = PLAN_PRICE.get(m, (0.0, 0.0))
+    return PLAN_NAME.get(m, m), round(int(u.get("prompt_tokens", 0)) * pi + int(u.get("completion_tokens", 0)) * po, 6)
 
 
 PLAYLIST_OWNER = "playlist#common"   # the shared, read-only playlist everybody can hear
@@ -305,7 +322,7 @@ PLAYLIST_OWNER = "playlist#common"   # the shared, read-only playlist everybody 
 def list_songs(event, owner=None):
     owner = owner or user_from(event)["email"]
     r = _songs.query(KeyConditionExpression=Key("owner").eq(owner), ScanIndexForward=False, Limit=100,
-                     ProjectionExpression="id,title,raga,tala,tempo,mood,#l,#d,created,#s,prompt,plays,downloads,#y,audio,#t",      # "style", "status" are DynamoDB reserved words
+                     ProjectionExpression="id,title,raga,tala,tempo,mood,#l,#d,created,#s,prompt,plays,downloads,#y,audio,#t,planner,usd,model",      # "style", "status" are DynamoDB reserved words
                      ExpressionAttributeNames={"#l": "language", "#s": "source", "#d": "duration", "#y": "style", "#t": "status"})
     return 200, {"songs": r["Items"]}
 

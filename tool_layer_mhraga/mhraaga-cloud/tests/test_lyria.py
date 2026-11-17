@@ -73,6 +73,11 @@ class Ly(unittest.TestCase):
         self.assertFalse(out["ok"]); st = lyria.status(self.u, r["id"])[1]; self.assertEqual(st["status"], "failed"); self.assertTrue(st["error"])
         self.assertEqual(int(h._users.get_item(Key={"email": "bob@example.com"})["Item"]["ly_n"]), 0)   # nothing charged, so the try is given back
 
+    def test_plan_cost_names_the_model_and_prices_the_call(self):
+        n, c = h.plan_cost({"usage": {"model": "deepseek/deepseek-v4-flash", "prompt_tokens": 1000, "completion_tokens": 500}}); self.assertEqual(n, "DeepSeek V4 Flash"); self.assertAlmostEqual(c, 0.00018, places=6)
+        self.assertEqual(h.plan_cost({"source": "fallback"}), ("Built-in engine", 0.0))
+        self.assertEqual(h.plan_cost({"usage": {"model": "z-ai/glm-5.3-flash", "cost": 0.0004}}), ("GLM 5.3 Flash", 0.0004))
+
     def test_handler_runs_the_background_job(self):
         self.assertIn("lyria_job", __import__("inspect").getsource(h.handler))
 

@@ -204,3 +204,16 @@ html.v-mine .compose,html.v-mine .library:not(#library){display:none!important}
 .model .mt{font-weight:700}.model .price{font-size:1.4rem;color:var(--gold)}.model .price.free{color:#7fe0a8}.model .md{color:var(--mute);font-size:.82rem;line-height:1.35}
 .lybar{height:6px;border-radius:99px;background:var(--bg2);overflow:hidden;margin-top:12px}.lybar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),#ff8a5c);transition:width 3.5s linear}
 #ly audio{width:100%;margin-top:14px}#ly .chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+
+/* professional home page */
+.hero1.pro{padding-top:clamp(40px,8vh,90px)}.eyebrow{letter-spacing:.14em;text-transform:uppercase;font-size:.78rem;color:var(--gold)}
+.hero1.pro h1{font-size:clamp(2rem,5.2vw,3.6rem);line-height:1.08;max-width:18ch;margin-inline:auto}
+.facts{list-style:none;display:flex;justify-content:center;gap:clamp(18px,5vw,56px);flex-wrap:wrap;margin:26px 0 0;padding:0}
+.facts li{display:grid;justify-items:center;gap:2px}.facts b{font-size:1.5rem}.facts span{color:var(--mute);font-size:.82rem}
+.sech{text-align:center;font-size:clamp(1.3rem,3vw,1.8rem);margin:10px 0 6px}.sub2{text-align:center;margin:0 0 18px}
+.cards4,.cards3{display:grid;gap:14px;max-width:1040px;margin:18px auto 0}.cards4{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}.cards3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.fcard,.mcard{background:linear-gradient(180deg,var(--card),#1a1550);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:8px;align-content:start;transition:transform .18s,border-color .18s}
+.fcard:hover,.mcard:hover{transform:translateY(-3px);border-color:rgba(244,185,66,.5)}.fcard h3,.mcard h3{margin:0;font-size:1.05rem}.fcard p,.mcard p{margin:0;color:var(--mute);font-size:.9rem;line-height:1.5}
+.fic{width:40px;height:40px;border-radius:12px;background:rgba(244,185,66,.14);color:var(--gold);display:grid;place-items:center;font-size:1.2rem}
+.mprice{font-size:1.8rem;color:var(--gold)}.mprice.free{color:#7fe0a8}.mcard.hl{border-color:var(--gold);box-shadow:0 0 0 3px rgba(244,185,66,.14)}
+.hero1.pro h1{max-width:24ch}footer.foot a{color:var(--gold)}footer.foot a:hover{text-decoration:underline}

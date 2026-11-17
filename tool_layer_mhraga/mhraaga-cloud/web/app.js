@@ -91,11 +91,12 @@ async function refreshPlaylist() {
     if (songs.length > 12) { const m = document.createElement("li"); const mb = document.createElement("button"); mb.type = "button"; mb.className = "ghost"; mb.textContent = plistAll ? "Show fewer" : `Show all ${songs.length}`; mb.onclick = () => { plistAll = !plistAll; refreshPlaylist(); }; m.append(mb); ul.append(m); }
     for (const s of shown) { const li = document.createElement("li"); const b = document.createElement("button"); b.type = "button";
       b.className = "srow"; const l = document.createElement("span"); l.textContent = s.title; const r = document.createElement("small"); r.textContent = `${s.raga} · ${s.language || ""} · ${s.tala}${s.style ? " · " + s.style : ""}`; b.append(thumb(s), textBox(l, r), counts(s));
-      if (s.audio) { r.textContent = `AI singer · ${s.language || ""} · ${fmt(s.duration || 0)}${s.style ? " · " + s.style : ""}`; b.onclick = () => { window.dispatchEvent(new CustomEvent("mh-audio", { detail: s })); api(`/playlist/${s.id}/play`, { method: "POST" }).then(refreshPlaylist).catch(() => {}); }; li.append(b); ul.append(li); continue; }
+      if (s.audio) { r.textContent = `${s.planner || "AI singer"} · ${money(s.usd)} · ${fmt(s.duration || 0)}${s.style ? " · " + s.style : ""}`; b.onclick = () => { window.dispatchEvent(new CustomEvent("mh-audio", { detail: s })); api(`/playlist/${s.id}/play`, { method: "POST" }).then(refreshPlaylist).catch(() => {}); }; li.append(b); ul.append(li); continue; }
       b.onclick = async () => { try { song = await api("/playlist/" + s.id); song._shared = true; await show(song); await play(); api(`/playlist/${s.id}/play`, { method: "POST" }).then(refreshPlaylist).catch(() => {}); } catch (e) { toast(e.message); } };
       li.append(b); ul.append(li); }
   } catch { $("pempty").textContent = "Playlist unavailable."; }
 }
+const money = (v) => (!v ? "free" : v < 0.01 ? "$" + v.toFixed(4) : "$" + v.toFixed(2));   // what a song cost to make
 window.addEventListener("mh-refresh", () => refreshLibrary());
 async function refreshLibrary() {
   const { songs } = await api("/songs"); const ul = $("songs"); ul.replaceChildren(); $("empty").hidden = songs.length > 0;
@@ -104,7 +105,7 @@ async function refreshLibrary() {
     const b = document.createElement("button"); const l = document.createElement("span"), r = document.createElement("small");
     b.className = "srow"; l.textContent = s.title; r.textContent = `${s.raga} · ${s.tala} · ${fmt(s.duration)}${s.style ? " · " + s.style : ""}`; b.append(thumb(s), textBox(l, r));
     if (s.audio) {                                                      // a full AI song (Lyria): plays from its MP3, not from a score
-      r.textContent = s.status === "pending" ? "Making your song…" : s.status === "failed" ? "Did not work" : `AI singer · ${fmt(s.duration || 0)}${s.style ? " · " + s.style : ""}`;
+      r.textContent = s.status === "pending" ? "Making your song…" : s.status === "failed" ? "Did not work" : `${s.planner || "AI singer"} · ${money(s.usd)} · ${fmt(s.duration || 0)}${s.style ? " · " + s.style : ""}`;
       b.onclick = () => (s.status === "done" || !s.status ? window.dispatchEvent(new CustomEvent("mh-audio", { detail: s })) : toast(r.textContent));
     } else b.onclick = async () => { try { song = await api("/songs/" + s.id); await show(song); await play(); } catch (e) { toast(e.message); } };
     li.append(b); ul.append(li);
@@ -115,9 +116,9 @@ async function refreshLibrary() {
 let ctx = null, bus = null, volNode = null, startAt = 0, offset = 0, playing = false, raf = 0, timers = [];
 async function show(s) {
   stop(); song = s; $("player").hidden = false; $("s-title").textContent = s.title; $("player").classList.toggle("poem", !!s.score.meta.poem);
-  const m = s.score.meta, chips = $("chips"); chips.replaceChildren(...(m.gopi ? [chip("🪈 Krishna flute", "gold")] : []), chip(m.gopi ? "mystery raga" : m.raga, "gold"), chip(m.tala), chip(m.tempo + " bpm"), chip(m.mood));
-  $("s-info").textContent = m.gopi ? `A Krishna flute raga, chosen for you from sixteen thousand · vādī ${SVARA[m.vadi % 12]}, samvādī ${SVARA[m.samvadi % 12]} · ${m.time}`
-    : `vādī ${SVARA[m.vadi % 12]}, samvādī ${SVARA[m.samvadi % 12]} · best at ${m.time} · planned by ${s.source === "fallback" ? "built-in rules" : s.source}`;
+  const m = s.score.meta, chips = $("chips"); chips.replaceChildren(...(m.gopi ? [chip("Auto raga", "gold")] : []), chip(m.gopi ? "chosen for you" : m.raga, "gold"), chip(m.tala), chip(m.tempo + " bpm"), chip(m.mood), ...(s.planner ? [chip(`${s.planner} · ${money(s.usd)}`, "gold")] : []));
+  $("s-info").textContent = m.gopi ? `Raga chosen for you · vādī ${SVARA[m.vadi % 12]}, samvādī ${SVARA[m.samvadi % 12]} · ${m.time}`
+    : `vādī ${SVARA[m.vadi % 12]}, samvādī ${SVARA[m.samvadi % 12]} · best at ${m.time} · plan by ${s.planner || (s.source === "fallback" ? "built-in rules" : s.source)}${s.planner ? " · cost " + money(s.usd) : ""}`;
   $("lyrics-out").textContent = (s.brief.lyrics || "(instrumental)"); $("lyric-now").textContent = ""; offset = 0; draw(0); $("clock").textContent = "0:00"; $("seek").value = 0;
   for (const li of $("songs").children) li.classList.remove("on");
   document.title = `${s.title} · mhRaaga`;

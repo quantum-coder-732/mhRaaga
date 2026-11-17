@@ -31,7 +31,7 @@ function wait(id, expect) {
     const sec = (Date.now() - t0) / 1000; $("ly-fill").style.width = Math.min(95, (sec / expect) * 100) + "%";
     try {
       const s = await api("/lyria/" + id);
-      if (s.status === "done") { $("ly-fill").style.width = "100%"; say("Ready."); finish(); window.dispatchEvent(new Event("mh-refresh")); playAudio({ audio: s.audio, title: s.title }); }
+      if (s.status === "done") { $("ly-fill").style.width = "100%"; say(`Ready. Made by ${s.planner || "Lyria 3"} · $${(s.usd || 0).toFixed(2)}`); finish(); window.dispatchEvent(new Event("mh-refresh")); playAudio({ audio: s.audio, title: s.title }); }
       else if (s.status === "failed") { say(s.error || "It did not work. Try again."); finish(); window.dispatchEvent(new Event("mh-refresh")); }
       else say(`Making your song… ${Math.round(sec)} s`);
     } catch (err) { say(err.message); finish(); }

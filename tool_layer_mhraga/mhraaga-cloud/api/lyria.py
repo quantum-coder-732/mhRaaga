@@ -35,6 +35,7 @@ MODELS = {
 ENABLED = os.environ.get("LYRIA", "on") == "on" and bool(BUCKET)
 USER_DAILY = int(os.environ.get("LYRIA_USER_DAILY", "3"))
 SITE_DAILY_USD = float(os.environ.get("LYRIA_SITE_DAILY_USD", "2"))
+NAMES = {m[0]: n for n, m in (("Google Lyria 3 Pro", MODELS["pro"]), ("Google Lyria 3 Clip", MODELS["clip"]))}
 _s3 = boto3.client("s3") if BUCKET else None
 _lam = None
 
@@ -97,7 +98,7 @@ def status(u: dict, sid: str) -> tuple[int, dict]:
     it = h._songs.get_item(Key={"owner": u["email"], "id": sid}).get("Item")
     if not it or it.get("source") != "lyria":
         raise h.ApiError(404, "Song not found.")
-    return 200, {"id": sid, "status": it.get("status", "done"), "audio": it.get("audio") if it.get("status") == "done" else None, "error": it.get("error", ""), "title": it.get("title", "")}
+    return 200, {"id": sid, "status": it.get("status", "done"), "audio": it.get("audio") if it.get("status") == "done" else None, "error": it.get("error", ""), "title": it.get("title", ""), "planner": it.get("planner", ""), "usd": float(it.get("usd", 0) or 0)}
 
 
 def run(job: dict) -> dict:
@@ -131,8 +132,9 @@ def run(job: dict) -> dict:
             raise RuntimeError("the model returned no song")
         _s3.put_object(Bucket=BUCKET, Key=job["key"], Body=bytes(mp3), ContentType="audio/mpeg", CacheControl="public,max-age=31536000,immutable")
         secs = int(len(mp3) * 8 / 192000)               # Lyria sends about 192 kbps; an estimate for the list
-        h._songs.update_item(Key={"owner": owner, "id": sid}, UpdateExpression="SET #s=:s, #d=:d, tex=:t",
-                             ExpressionAttributeNames={"#s": "status", "#d": "duration"}, ExpressionAttributeValues={":s": "done", ":d": Decimal(secs), ":t": text[:3000]})
+        h._songs.update_item(Key={"owner": owner, "id": sid}, UpdateExpression="SET #s=:s, #d=:d, tex=:t, usd=:u, planner=:p",
+                             ExpressionAttributeNames={"#s": "status", "#d": "duration"},
+                             ExpressionAttributeValues={":s": "done", ":d": Decimal(secs), ":t": text[:3000], ":u": Decimal(str(round(spent, 4))), ":p": NAMES.get(job.get("model"), "Lyria 3")})
         return {"ok": True, "bytes": len(mp3), "usd": spent}
     except Exception as e:
         print(f"[lyria] {type(e).__name__}: {e}")

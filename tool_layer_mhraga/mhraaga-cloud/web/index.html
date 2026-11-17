@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mhRaaga · Raga music, poems and stories from a sentence</title>
-<meta name="description" content="Compose raga songs, spoken poems, stories and talks from a sentence. Krishna's flute, 7 languages, speech in and out.">
+<title>mhRaaga · AI music studio</title>
+<meta name="description" content="An AI music studio: original songs, spoken poems and films from a sentence, free or with a sung voice.">
 <meta name="theme-color" content="#120f2e">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231b1646'/%3E%3Cpath d='M9 21c4-10 10-10 14 0' stroke='%23f4b942' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css">
@@ -11,36 +11,42 @@
 <header class="top1"><a class="logo" href="#top"><span class="om">ॐ</span><b>mhRaaga</b><span class="mvp">MVP</span></a><span class="sp"></span><span id="who" class="who"></span><a id="sign" class="btn" href="login.html">Sign in</a></header>
 
 <main class="one-main" id="top">
-  <section class="hero1" id="home-hero" data-sec>
-    <canvas id="wave" width="560" height="560" aria-hidden="true"></canvas>
-    <p class="hello" id="hello">Raga music from a sentence</p>
-    <h1>Say a feeling.<br>Hear a <em>raga</em>.</h1>
-    <p class="lead">Songs, spoken poems, stories and talks, in seven languages, over a tanpura, bansurī and tabla. Krishna's flute picks a raga for you from sixteen thousand.</p>
+  <section class="hero1 pro" id="home-hero" data-sec>
+    <p class="hello eyebrow" id="hello">AI music studio</p>
+    <h1>Original songs, poems and films,<br>from a single sentence.</h1>
+    <p class="lead">Describe what you want and choose how it is made. Get a finished piece with real instruments and, if you like, a singer. Hindi, Marathi, English and more.</p>
     <form class="dprompt" id="dform">
       <textarea id="dtext" rows="2" maxlength="800" placeholder="Describe the song you want to make…" aria-label="Describe the song"></textarea>
       <div class="drow"><div class="dchips" id="dchips">
-        <button type="button" class="tag krishna" data-s="krishna">🪈 Krishna flute</button><button type="button" class="tag krishna" data-s="poem">📜 Spoken poem</button>
-        <button type="button" class="tag" data-s="devotional">devotional</button><button type="button" class="tag" data-s="dawn">dawn</button><button type="button" class="tag" data-s="rain">rain</button><button type="button" class="tag" data-s="night">night</button></div>
+        <button type="button" class="tag" data-s="devotional">Devotional</button><button type="button" class="tag" data-s="poem">Spoken poem</button><button type="button" class="tag" data-s="dawn">Dawn</button><button type="button" class="tag" data-s="rain">Rain</button><button type="button" class="tag" data-s="night">Night</button></div>
         <button class="primary" type="submit">Create</button></div>
     </form>
     <p class="muted" id="quota"></p>
-    <div class="stats"><div><b>16,000</b>Krishna flute ragas</div><div><b>72</b>melakartas</div><div><b>7</b>languages</div><div><b>30</b>classical ragas</div></div>
+    <ul class="facts" aria-label="Highlights"><li><b>7</b><span>languages</span></li><li><b>Free</b><span>or AI singer, your choice</span></li><li><b>Clear</b><span>model and cost on every song</span></li></ul>
   </section>
 
-  <section class="gate card" id="gate"><h2>Sign in to create</h2><p class="muted">Songs, poems, stories, people and the studio need an account. Listening to the playlist and exploring ragas are open to everyone.</p><a class="btn" href="login.html">Sign in or create an account</a></section>
+  <section class="gate card" id="gate"><h2>Sign in to create</h2><p class="muted">Songs, poems, stories and films need an account. New accounts are approved by an administrator.</p><a class="btn" href="login.html">Sign in or request access</a></section>
 
-  <section class="blk" id="create" data-sec data-auth><h2>Create</h2><p class="muted">Songs, spoken poems, speech and translation, plus your library.</p><iframe title="Create" data-src="app.html" allow="microphone"></iframe></section>
-  <section class="blk" id="playlist" data-sec data-auth><h2>Playlist</h2><p class="muted">Every song in the shared playlist. Tap one to play it.</p><iframe title="Playlist" data-src="app.html?view=playlist"></iframe></section>
-  <section class="blk" id="mine" data-sec data-auth><h2>My songs</h2><p class="muted">Everything you have made.</p><iframe title="My songs" data-src="app.html?view=mine"></iframe></section>
-  <section class="blk" id="stories" data-sec data-auth><h2>Stories, pravachan &amp; explainers</h2><p class="muted">1 to 30 minutes, written section by section and narrated over a raga.</p><iframe title="Stories" data-src="stories.html" allow="microphone"></iframe></section>
-  <section class="blk" id="people" data-sec data-auth><h2>People</h2><p class="muted">Voice samples and speaking styles, with consent.</p><iframe title="People" data-src="people.html" allow="microphone"></iframe></section>
-  <section class="blk" id="film" data-sec data-auth><h2>Film studio</h2><p class="muted">Auto-direct a storyboard, then edit scenes, effects and colour, and export.</p><iframe title="Film studio" data-src="film.html"></iframe></section>
-  <section class="blk" id="team" data-sec data-auth><h2>Team studio</h2><p class="muted">Up to 150 artists in one shared film or song. Each owns a layer, the director approves.</p><iframe title="Team studio" data-src="team.html"></iframe></section>
-  <section class="blk" id="studio" data-sec data-auth><h2>Studio</h2><p class="muted">The rules the AI follows and what it has learned.</p><iframe title="Studio" data-src="studio.html"></iframe></section>
-  <section class="blk" id="ragas" data-sec><h2>Explore the ragas</h2><p class="muted">Thirty classical ragas, the 72 melakartas, and Krishna's sixteen thousand.</p><iframe title="Ragas" data-src="ragas.html"></iframe></section>
-  <section class="blk" id="library" data-sec><h2>Library &amp; self-improving catalog</h2><p id="learn" class="muted">The agents compose, critics score, and the weakest songs are replaced.</p><div id="tunes" class="tunes"></div></section>
-  <section class="blk" id="app" data-sec><div class="card dl"><div><h3>Get the Android app</h3><p>The same studio in your pocket, with microphone access. Allow installs from your browser to install the file.</p></div><a class="btn" href="mhraaga.apk" download>Download APK</a></div></section>
+  <section class="blk home-only" id="features" data-sec><h2 class="sech">What you can make</h2>
+    <div class="cards4">
+      <article class="fcard"><span class="fic">♪</span><h3>Songs</h3><p>Pick a style, language and lyrics. Free built-in instruments, or a full AI song with a sung voice.</p></article>
+      <article class="fcard"><span class="fic">❝</span><h3>Spoken poems</h3><p>A poem read in a natural voice over gentle music, ready to share.</p></article>
+      <article class="fcard"><span class="fic">▶</span><h3>Films</h3><p>A storyboard cut to your music: scenes, colour, effects, then export.</p></article>
+      <article class="fcard"><span class="fic">☰</span><h3>Teams</h3><p>Up to 150 people on one piece, each with a layer, one director to approve.</p></article>
+    </div>
+  </section>
+
+  <section class="blk home-only" id="models" data-sec><h2 class="sech">Choose how it is made</h2><p class="muted sub2">Every song shows the model that made it and what it cost.</p>
+    <div class="cards3">
+      <article class="mcard"><h3>Built-in engine</h3><b class="mprice free">Free</b><p>Instant, in your browser. Lyrics and plan written by a low-cost text model (GLM or DeepSeek). Spoken-style voice.</p></article>
+      <article class="mcard"><h3>AI singer · Clip</h3><b class="mprice">$0.04</b><p>A 30-second sung clip from Google Lyria 3. A cheap way to try an idea.</p></article>
+      <article class="mcard hl"><h3>AI singer · Full song</h3><b class="mprice">$0.08</b><p>A complete song of about two minutes with verses, a chorus and a real sung voice.</p></article>
+    </div>
+  </section>
+
+  <section class="blk" id="ragas" data-sec data-auth><h2>Raga explorer</h2><p class="muted">Browse scales, listen to their notes and pick one for your song.</p><iframe title="Ragas" data-src="ragas.html"></iframe></section>
+  <section class="blk home-only" id="app" data-sec><div class="card dl"><div><h3>Get the Android app</h3><p>The same studio in your pocket, with microphone access. Allow installs from your browser to install the file.</p></div><a class="btn" href="mhraaga.apk" download>Download APK</a></div></section>
 </main>
 <footer class="foot">mhRaaga · music is made in your browser · AI voice on the server · <a href="docs/index.html">Docs</a> · <a href="developers.html">For developers</a><br><b>MVP version, work in progress.</b> © 2026 Keshav Velhal. All rights reserved.</footer>
-<script type="module" src="home.js"></script><script type="module" src="onepage.js"></script>
+<script type="module" src="onepage.js"></script>
 </body></html>
