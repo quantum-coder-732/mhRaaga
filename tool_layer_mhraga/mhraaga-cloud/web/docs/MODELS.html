@@ -70,6 +70,64 @@
 <h2 id="where-the-cheap-models-fit">Where the cheap models fit</h2>
 <figure class="diagram"><a href="diagrams/93d6ce0e01d1.svg" target="_blank" rel="noopener" title="Open the diagram full size"><img src="diagrams/93d6ce0e01d1.svg" alt="Diagram" loading="lazy"></a></figure>
 <p>Here is what that means in practice: choosing <strong>DeepSeek or GLM</strong> changes who writes the lyrics and the plan. It does not change how the song sounds, because the sound comes from the synth or from Lyria.</p>
+<h2 id="every-kind-of-generation-and-what-covers-it">Every kind of generation, and what covers it</h2>
+<p>Your figure splits generative models into text, image, audio and video. This is what mhRaaga uses for each, and what it does not do yet.</p>
+<figure class="diagram"><a href="diagrams/dfdbe7dd2e06.svg" target="_blank" rel="noopener" title="Open the diagram full size"><img src="diagrams/dfdbe7dd2e06.svg" alt="Diagram" loading="lazy"></a></figure>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Used for</th>
+<th>Model</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Text</td>
+<td>Lyrics, plans, story outlines, translation</td>
+<td>GLM 5.3 Flash or DeepSeek V4 Flash</td>
+<td>well under a cent</td>
+</tr>
+<tr>
+<td>Speech</td>
+<td>Narration of poems, stories and film scenes</td>
+<td>GPT audio (neural), device voice as back-up</td>
+<td>a few cents per new line, cached after</td>
+</tr>
+<tr>
+<td>Music</td>
+<td>Sung songs</td>
+<td>Lyria 3 Clip or Pro</td>
+<td>$0.04 or $0.08</td>
+</tr>
+<tr>
+<td>Music</td>
+<td>Free instruments</td>
+<td>Our raga engine and browser synth</td>
+<td>free</td>
+</tr>
+<tr>
+<td>Image</td>
+<td>Film scene backgrounds</td>
+<td>Gemini image model</td>
+<td>about $0.034 each (measured)</td>
+</tr>
+<tr>
+<td>VFX</td>
+<td>Glow, vignette, grain, soft focus, light leak, physics petals, slow zoom, colour grade</td>
+<td>Canvas and Box2D in the browser</td>
+<td>free</td>
+</tr>
+<tr>
+<td>Video</td>
+<td>Whole clips from text</td>
+<td><strong>not built</strong>: OpenRouter lists two Gemini video models, but their price per clip has not been measured</td>
+<td>n/a</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Limits that protect the bill:</strong> 5 pictures per person per day and $1 per day for the site; 3 AI songs per person per day and $2 per day for the site; voice $0.60 per person per day and $12 per day for the site. All of it is counted on the <em>Users &amp; cost</em> page.</p>
 <h2 id="open-source-libraries-that-fit-this-project">Open-source libraries that fit this project</h2>
 <p>Licences and sizes were read from GitHub on 17 November 2026.</p>
 <table>
@@ -182,5 +240,5 @@
 </tr>
 </tbody>
 </table>
-<p>If you want a free route that sounds natural, the next piece of work is replacing the synthesized instruments with SoundFont samples through SpessaSynth.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#the-three-jobs">The three jobs</a><a class="l2" href="#route-a-free-built-from-our-own-engine">Route A: free, built from our own engine</a><a class="l2" href="#route-b-a-full-ai-song-with-a-singer-lyria-3">Route B: a full AI song with a singer (Lyria 3)</a><a class="l2" href="#route-c-gpu-singer-you-run-yourself">Route C: GPU singer you run yourself</a><a class="l2" href="#where-the-cheap-models-fit">Where the cheap models fit</a><a class="l2" href="#open-source-libraries-that-fit-this-project">Open-source libraries that fit this project</a><a class="l2" href="#what-each-route-can-honestly-do">What each route can honestly do</a></aside></div>
+<p>If you want a free route that sounds natural, the next piece of work is replacing the synthesized instruments with SoundFont samples through SpessaSynth.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#the-three-jobs">The three jobs</a><a class="l2" href="#route-a-free-built-from-our-own-engine">Route A: free, built from our own engine</a><a class="l2" href="#route-b-a-full-ai-song-with-a-singer-lyria-3">Route B: a full AI song with a singer (Lyria 3)</a><a class="l2" href="#route-c-gpu-singer-you-run-yourself">Route C: GPU singer you run yourself</a><a class="l2" href="#where-the-cheap-models-fit">Where the cheap models fit</a><a class="l2" href="#every-kind-of-generation-and-what-covers-it">Every kind of generation, and what covers it</a><a class="l2" href="#open-source-libraries-that-fit-this-project">Open-source libraries that fit this project</a><a class="l2" href="#what-each-route-can-honestly-do">What each route can honestly do</a></aside></div>
 <script src="docs.js"></script></body></html>

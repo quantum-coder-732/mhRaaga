@@ -88,6 +88,37 @@ flowchart TB
 
 Here is what that means in practice: choosing **DeepSeek or GLM** changes who writes the lyrics and the plan. It does not change how the song sounds, because the sound comes from the synth or from Lyria.
 
+## Every kind of generation, and what covers it
+
+Your figure splits generative models into text, image, audio and video. This is what mhRaaga uses for each, and what it does not do yet.
+
+```mermaid
+flowchart TB
+  G[Generative AI] --> T[Text]
+  G --> I[Image]
+  G --> A[Audio]
+  G --> V[Video]
+  T --> T1[Transformers: GLM 5.3 Flash, DeepSeek V4 Flash<br/>lyrics, raga plan, story outlines, translation]
+  I --> I1[Gemini image model via OpenRouter<br/>film scene pictures, about 3 cents each]
+  A --> A1[Lyria 3: sung songs, 4 to 8 cents]
+  A --> A2[GPT audio: text to speech, narration]
+  A --> A3[Our synth and raga engine: free instruments]
+  V --> V1[Not generated: storyboard cut to music]
+  V1 --> V2[Canvas VFX: glow, grain, light leak, petals, zoom, colour grade, WebM export]
+```
+
+| Kind | Used for | Model | Cost |
+| --- | --- | --- | --- |
+| Text | Lyrics, plans, story outlines, translation | GLM 5.3 Flash or DeepSeek V4 Flash | well under a cent |
+| Speech | Narration of poems, stories and film scenes | GPT audio (neural), device voice as back-up | a few cents per new line, cached after |
+| Music | Sung songs | Lyria 3 Clip or Pro | $0.04 or $0.08 |
+| Music | Free instruments | Our raga engine and browser synth | free |
+| Image | Film scene backgrounds | Gemini image model | about $0.034 each (measured) |
+| VFX | Glow, vignette, grain, soft focus, light leak, physics petals, slow zoom, colour grade | Canvas and Box2D in the browser | free |
+| Video | Whole clips from text | **not built**: OpenRouter lists two Gemini video models, but their price per clip has not been measured | n/a |
+
+**Limits that protect the bill:** 5 pictures per person per day and $1 per day for the site; 3 AI songs per person per day and $2 per day for the site; voice $0.60 per person per day and $12 per day for the site. All of it is counted on the *Users & cost* page.
+
 ## Open-source libraries that fit this project
 
 Licences and sizes were read from GitHub on 17 November 2026.

@@ -122,8 +122,24 @@ const bind = (id, fn) => ($(id).oninput = () => { const s = proj.scenes[cur]; if
 bind("i-title", (s, v) => (s.title = v)); bind("i-text", (s, v) => (s.text = v)); bind("i-narr", (s, v) => (s.narration = v)); bind("i-c1", (s, v) => (s.bg.c1 = v)); bind("i-c2", (s, v) => (s.bg.c2 = v));
 bind("i-dur", (s, v) => { s.duration = +v; $("i-dur-v").textContent = v + " s"; }); for (const k of ["exposure", "contrast", "saturation", "hue"]) bind("g-" + k, (s, v) => (s.grade[k] = +v));
 $("i-noimg").onclick = () => { const s = proj.scenes[cur]; if (s) { s.bg.image = ""; draw(); } };
-$("i-img").onchange = async () => { const f = $("i-img").files[0], s = proj.scenes[cur]; if (!f || !s) return; const bmp = await createImageBitmap(f), r = Math.min(1, 960 / bmp.width), c = el("canvas", { width: Math.round(bmp.width * r), height: Math.round(bmp.height * r) });
-  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height); s.bg.image = c.toDataURL("image/jpeg", 0.6); if (s.bg.image.length > 120000) { s.bg.image = c.toDataURL("image/jpeg", 0.4); } draw(); };
+async function useImage(src, s) {                  // shrink a picture (a file or an AI picture) so it stays inside the saved project
+  const bmp = await createImageBitmap(src), r = Math.min(1, 960 / bmp.width), c = el("canvas", { width: Math.round(bmp.width * r), height: Math.round(bmp.height * r) });
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height); s.bg.image = c.toDataURL("image/jpeg", 0.6); if (s.bg.image.length > 120000) { s.bg.image = c.toDataURL("image/jpeg", 0.4); } draw();
+}
+$("i-img").onchange = async () => { const f = $("i-img").files[0], s = proj.scenes[cur]; if (f && s) await useImage(f, s); };
+// AI picture for the scene: costs about $0.03, so the button says so and a daily limit applies
+const toBlob = (u) => { const [h, b64] = u.split(","), bin = atob(b64), a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return new Blob([a], { type: h.slice(5, h.indexOf(";")) }); };   // no fetch(): the page may only connect to itself
+api("/image/info").then((i) => { if (!i.enabled) document.querySelector(".aiimg").hidden = true; $("ai-left").textContent = i.left_today; }).catch(() => {});
+$("ai-go").onclick = async () => {
+  const s = proj.scenes[cur], p = $("ai-prompt").value.trim() || [s?.title, s?.text].filter(Boolean).join(". "); if (!s) return;
+  if (p.length < 3) { $("ai-status").textContent = "Describe the picture first."; return; }
+  $("ai-go").disabled = true; $("ai-status").textContent = "Painting… about 20 seconds";
+  try {
+    const r = await api("/image", { method: "POST", body: { prompt: p, style: proj.style || "" } });
+    await useImage(toBlob(r.image), s);
+    $("ai-left").textContent = r.left_today; $("ai-status").textContent = `Done · cost $${r.usd.toFixed(3)}`;
+  } catch (e) { $("ai-status").textContent = e.message; } finally { $("ai-go").disabled = false; }
+};
 $("s-add").onclick = () => { proj.scenes.splice(cur + 1, 0, blank()); select(cur + 1); };
 $("s-dup").onclick = () => { if (proj.scenes[cur]) { proj.scenes.splice(cur + 1, 0, JSON.parse(JSON.stringify(proj.scenes[cur]))); select(cur + 1); } };
 $("s-del").onclick = () => { if (proj.scenes[cur] && confirm("Delete this scene?")) { proj.scenes.splice(cur, 1); select(cur); draw(); } };

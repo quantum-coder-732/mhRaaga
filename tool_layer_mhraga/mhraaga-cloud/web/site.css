@@ -217,3 +217,4 @@ html.v-mine .compose,html.v-mine .library:not(#library){display:none!important}
 .fic{width:40px;height:40px;border-radius:12px;background:rgba(244,185,66,.14);color:var(--gold);display:grid;place-items:center;font-size:1.2rem}
 .mprice{font-size:1.8rem;color:var(--gold)}.mprice.free{color:#7fe0a8}.mcard.hl{border-color:var(--gold);box-shadow:0 0 0 3px rgba(244,185,66,.14)}
 .hero1.pro h1{max-width:24ch}footer.foot a{color:var(--gold)}footer.foot a:hover{text-decoration:underline}
+.aiimg{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);display:grid;gap:8px}.aiimg .field{margin:0}

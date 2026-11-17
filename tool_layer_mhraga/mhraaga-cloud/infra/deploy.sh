@@ -22,7 +22,7 @@ ORIGIN=$(aws ssm get-parameter --name /mhraaga/origin_secret --with-decryption -
 
 # 2. Lambda package = API handler + the music engine layer
 rm -rf "$HERE/build"; mkdir -p "$HERE/build/lambda"
-cp "$HERE/api/handler.py" "$HERE/api/studio.py" "$HERE/api/team.py" "$HERE/api/voice.py" "$HERE/api/admin.py" "$HERE/api/jobs.py" "$HERE/api/lyria.py" "$HERE/build/lambda/"
+cp "$HERE/api/handler.py" "$HERE/api/studio.py" "$HERE/api/team.py" "$HERE/api/voice.py" "$HERE/api/admin.py" "$HERE/api/jobs.py" "$HERE/api/lyria.py" "$HERE/api/image.py" "$HERE/build/lambda/"
 cp -r "$HERE/../singer" "$HERE/build/lambda/singer" && rm -rf "$HERE/build/lambda/singer/__pycache__" "$HERE/build/lambda/singer/examples" "$HERE/build/lambda/singer/colab_singer.ipynb"
 cp -r "$ROOT/music_engine_framework_layer/mhraaga_engine" "$HERE/build/lambda/"
 rm -rf "$HERE/build/lambda/mhraaga_engine/agentic/data" "$HERE/build/lambda/mhraaga_engine/agentic"   # offline tooling, not needed at runtime

@@ -37,6 +37,7 @@ from mhraaga_engine import styles
 import team
 import voice
 import lyria
+import image
 
 USERS = os.environ.get("USERS_TABLE", "mhraaga-users")
 SONGS = os.environ.get("SONGS_TABLE", "mhraaga-songs")
@@ -498,6 +499,10 @@ def handler(event, context=None):
             status, out = (studio.film_get(u, fid) if method == "GET" else studio.film_save(u, fid, body_of(event, 400000)) if method == "PUT" else studio.film_delete(u, fid))
         elif (method, path) == ("GET", "/tts/info"):
             status, out = voice.info()
+        elif (method, path) == ("GET", "/image/info"):
+            status, out = image.info(user_from(event))
+        elif (method, path) == ("POST", "/image"):
+            status, out = image.make(user_from(event), body_of(event, 4000))
         elif (method, path) == ("GET", "/lyria/info"):
             status, out = lyria.info(user_from(event))
         elif (method, path) == ("POST", "/lyria"):

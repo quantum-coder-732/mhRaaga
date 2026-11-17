@@ -43,6 +43,8 @@
         <label class="field"><span>Duration <b id="i-dur-v"></b></span><input id="i-dur" type="range" min="2" max="40" step="0.5"></label>
         <div class="grid"><label class="field"><span>Colour 1</span><input id="i-c1" type="color"></label><label class="field"><span>Colour 2</span><input id="i-c2" type="color"></label></div>
         <label class="field"><span>Background image <em>(optional, kept small)</em></span><input id="i-img" type="file" accept="image/*"></label><button id="i-noimg" class="ghost" type="button">Remove image</button>
+        <div class="aiimg"><label class="field"><span>Or make a picture with AI <em>(about $0.03 each, <b id="ai-left">5</b> left today)</em></span><input id="ai-prompt" maxlength="400" placeholder="A calm river at dawn, golden light"></label>
+          <button id="ai-go" class="ghost" type="button">Generate picture</button><span id="ai-status" class="muted" role="status"></span></div>
         <h3>Effects</h3><div id="i-fx" class="styles"></div>
         <h3>Colour grade</h3>
         <button id="g-auto" class="ghost" type="button">✨ Auto-tune look</button>
