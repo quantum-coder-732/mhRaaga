@@ -11,6 +11,7 @@ Start with the [root README](../README.md), then:
 | [SINGER.md](SINGER.md) | The singer layer: make the raga song SING with YuE2, free on Colab |
 | [FILES.md](FILES.md) | **Every music file and what it holds** |
 | [THIRD_PARTY.md](THIRD_PARTY.md) | Vendored upstream repos (YuE2, Bark, setup-ffmpeg and more), licences, how to update them |
+| [kalkee/PLATFORM.md](kalkee/PLATFORM.md) | **KALKEE**, the platform: full form, the six parts, many agents, one outcome |
 | [kalkee/README.md](kalkee/README.md) | Kalkee in mhRaaga: the music agents, how they learn |
 | [ENGINE.md](ENGINE.md) | Every engine module: compose, ragas, tala, brief, poems, lyrics, physics, GAN, auto-tune |
 | [BACKEND.md](BACKEND.md) | handler, studio, team, voice, admin, the tables and the infrastructure |

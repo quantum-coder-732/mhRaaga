@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KALKEE: Many Agents. Adaptive Intelligence. One Outcome. · mhRaaga docs</title><meta name="description" content="KALKEE: Many Agents. Adaptive Intelligence. One Outcome.">
+<link rel="stylesheet" href="../docs.css"></head>
+<body data-root="../">
+<header class="top"><button id="navbtn" aria-label="Menu" class="ibtn">☰</button><a class="brand" href="../index.html">mhRaaga <span>docs</span></a>
+<div class="search"><input id="q" type="search" placeholder="Search the docs…" autocomplete="off" aria-label="Search"><div id="res" role="listbox"></div></div>
+<a class="ibtn lnk" href="/developers.html">API</a><a class="ibtn lnk" href="/">Open app</a><button id="theme" class="ibtn" aria-label="Light or dark">◐</button></header>
+<div class="shell"><nav class="side" id="side"><details open><summary>Start here</summary><ul><li><a href="../overview.html">Overview</a></li><li><a href="../system.html">How the system works</a></li><li><a href="../agents.html">All the agents</a></li></ul></details><details><summary>mhRaaga</summary><ul><li><a href="../ARCHITECTURE.html">Architecture</a></li><li><a href="../ENGINE.html">Engine, module by module</a></li><li><a href="../BACKEND.html">Backend, file by file</a></li><li><a href="../ADMIN.html">Admin dashboard</a></li><li><a href="../API.html">API for developers</a></li><li><a href="../SOUND.html">Sound</a></li><li><a href="../VOICE.html">AI voice</a></li><li><a href="../TEAM_AND_PHYSICS.html">Shared studio and physics</a></li><li><a href="../STUDIO.html">Stories, people, rules</a></li><li><a href="../AGENTIC_ARCHITECTURE.html">Song factory agents</a></li><li><a href="../DOMAIN.html">Domain and HTTPS</a></li><li><a href="../SINGER.html">The singer layer (YuE2)</a></li><li><a href="../FILES.html">Every music file</a></li><li><a href="../THIRD_PARTY.html">Vendored upstream repos</a></li><li><a href="../components/android-app.html">Android app</a></li></ul></details><details open><summary>Kalkee, the agents</summary><ul><li><a href="../kalkee/PLATFORM.html" class=cur aria-current=page>KALKEE: the platform</a></li><li><a href="../kalkee/index.html">Kalkee in mhRaaga</a></li><li><a href="../kalkee/AGENTS.html">The music agents</a></li><li><a href="../kalkee/LEARNING.html">How the agents learn</a></li></ul></details></nav>
+<main class="doc"><article><h1 id="kalkee-many-agents-adaptive-intelligence-one-outcome">KALKEE: Many Agents. Adaptive Intelligence. One Outcome.</h1>
+<p><strong>KALKEE</strong> is an intelligent multi-agent orchestration and adaptive intelligence platform. It breaks a task into the work of specialised agents, runs them in the right pattern, judges the result, shares the credit fairly, and uses that credit to choose better agents and models next time.</p>
+<h2 id="the-full-form">The full form</h2>
+<table>
+<thead>
+<tr>
+<th>Letter</th>
+<th>Stands for</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>K</strong></td>
+<td><strong>Knowledge Intelligence</strong></td>
+<td>Understands tasks, context, requirements and the knowledge available.</td>
+</tr>
+<tr>
+<td><strong>A</strong></td>
+<td><strong>Adaptive Intelligence</strong></td>
+<td>Learns from feedback and improves how agents and models are selected.</td>
+</tr>
+<tr>
+<td><strong>L</strong></td>
+<td><strong>Layered Orchestration</strong></td>
+<td>Coordinates agents, workflows, models and tools across layers.</td>
+</tr>
+<tr>
+<td><strong>K</strong></td>
+<td><strong>Knowledge Collaboration</strong></td>
+<td>Lets specialised agents share context and work together.</td>
+</tr>
+<tr>
+<td><strong>E</strong></td>
+<td><strong>Execution at Scale</strong></td>
+<td>Runs work in parallel, sequential, hierarchical and consensus patterns.</td>
+</tr>
+<tr>
+<td><strong>E</strong></td>
+<td><strong>Evaluation &amp; Evolution</strong></td>
+<td>Evaluates documents and outcomes, assigns credit, and keeps improving performance.</td>
+</tr>
+</tbody>
+</table>
+<pre class="plain"><code>flowchart LR
+    K1[&quot;K: Knowledge Intelligence&lt;br/&gt;understand the task&quot;] --&gt; L[&quot;L: Layered Orchestration&lt;br/&gt;agents, models, tools&quot;]
+    L --&gt; K2[&quot;K: Knowledge Collaboration&lt;br/&gt;shared context&quot;]
+    K2 --&gt; E1[&quot;E: Execution at Scale&lt;br/&gt;parallel, sequential,&lt;br/&gt;hierarchical, consensus&quot;]
+    E1 --&gt; E2[&quot;E: Evaluation &amp; Evolution&lt;br/&gt;judge, credit, improve&quot;]
+    E2 --&gt; A[&quot;A: Adaptive Intelligence&lt;br/&gt;better agent and model choice&quot;]
+    A --&gt; K1
+</code></pre>
+<h2 id="how-the-six-parts-fit-together">How the six parts fit together</h2>
+<ol>
+<li><strong>Understand (K).</strong> Read the task, its context and requirements, and find the knowledge that applies.</li>
+<li><strong>Orchestrate (L).</strong> Pick the agents, workflow, models and tools, layer by layer.</li>
+<li><strong>Collaborate (K).</strong> Specialists pass context to each other instead of working alone.</li>
+<li><strong>Execute (E).</strong> Run the work in the pattern that suits it: parallel, sequential, hierarchical, or consensus among several agents.</li>
+<li><strong>Evaluate and evolve (E).</strong> Judge the documents and outcomes produced, assign credit to each agent for what it added, and keep improving.</li>
+<li><strong>Adapt (A).</strong> Feed that credit back so the next task starts with better agent and model selection.</li>
+</ol>
+<h2 id="kalkee-in-mhraaga">KALKEE in mhRaaga</h2>
+<p>mhRaaga is one application of this idea, in the music domain: seven producer agents choose a song's raga, tala, tempo, lead, theme, tonic and form, eight critics judge it, and the <strong>Shapley value</strong> shares the reward so each producer learns which choices work (the <em>Evaluation &amp; Evolution</em> and <em>Adaptive Intelligence</em> parts). See <a href="../kalkee/AGENTS.html">the music agents</a> and <a href="../kalkee/LEARNING.html">how they learn</a>.</p>
+<p>mhRaaga uses only one function from KALKEE's code, <code>attribute_reward</code> in <code>framework/shapley.py</code>, and it runs offline in the song factory, not in the live site or API. The other parts of the platform described here are KALKEE's own and are not part of mhRaaga.</p></article><footer class="foot">mhRaaga documentation · built from the Markdown in the repository · <a href="https://github.com/quantum-coder-732/mhRaaga/tree/main/docs" target="_blank" rel="noopener">source</a></footer></main><aside class="toc"><b>On this page</b><a class="l2" href="#the-full-form">The full form</a><a class="l2" href="#how-the-six-parts-fit-together">How the six parts fit together</a><a class="l2" href="#kalkee-in-mhraaga">KALKEE in mhRaaga</a></aside></div>
+<script src="../docs.js"></script></body></html>
