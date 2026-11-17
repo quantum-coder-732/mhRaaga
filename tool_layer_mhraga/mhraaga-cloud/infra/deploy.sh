@@ -42,7 +42,7 @@ out() { aws cloudformation describe-stacks --stack-name $STACK --query "Stacks[0
 SITE=$(out SiteUrl); BUCKET=$(out SiteBucketName); DIST=$(out DistributionId); DIRECT=$(out ApiDirectUrl)
 
 # 4. website
-aws s3 sync "$HERE/web" "s3://$BUCKET" --delete --cache-control "public,max-age=300" --exclude ".DS_Store" --exclude "catalog/*" --exclude "library/*" --exclude "rules/*" --exclude "samples/*" --exclude "tts/*" --exclude "lyria/*" --exclude "yue/*" >/dev/null
+aws s3 sync "$HERE/web" "s3://$BUCKET" --delete --cache-control "public,max-age=300" --exclude ".DS_Store" --exclude "catalog/*" --exclude "library/*" --exclude "rules/*" --exclude "samples/*" --exclude "tts/*" --exclude "lyria/*" --exclude "audio/*" --exclude "yue/*" >/dev/null
 # /docs and /docs/ (no file name) have no object of their own, so S3 answered Access Denied. Give both a tiny page that opens the docs.
 mkdir -p "$HERE/build"
 printf '%s' '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=/docs/index.html"><title>mhRaaga docs</title><p><a href="/docs/index.html">Open the documentation</a></p>' > "$HERE/build/docs-redirect.html"

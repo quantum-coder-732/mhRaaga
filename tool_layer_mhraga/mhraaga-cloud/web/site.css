@@ -218,3 +218,7 @@ html.v-mine .compose,html.v-mine .library:not(#library){display:none!important}
 .mprice{font-size:1.8rem;color:var(--gold)}.mprice.free{color:#7fe0a8}.mcard.hl{border-color:var(--gold);box-shadow:0 0 0 3px rgba(244,185,66,.14)}
 .hero1.pro h1{max-width:24ch}footer.foot a{color:var(--gold)}footer.foot a:hover{text-decoration:underline}
 .aiimg{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);display:grid;gap:8px}.aiimg .field{margin:0}
+.hl{background:linear-gradient(100deg,#f4b942,#ff8a5c 60%,#ff5f8a);-webkit-background-clip:text;background-clip:text;color:transparent;font-style:normal}
+.hl2{color:var(--gold);font-weight:700}
+.langs{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 auto 22px;padding:0;max-width:640px}
+.langs li{border:1px solid rgba(244,185,66,.45);background:rgba(244,185,66,.08);color:var(--ink);border-radius:99px;padding:5px 14px;font-size:.95rem}
