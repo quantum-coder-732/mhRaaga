@@ -11,6 +11,7 @@ from .ragas import _CLASS, N_GOPI, get_raga
 from .tala import TALAS
 
 MODELS = ("z-ai/glm-5.3-flash", "deepseek/deepseek-v4-flash")
+PLANNERS = {"glm": MODELS, "deepseek": (MODELS[1], MODELS[0]), "auto": MODELS}   # the one you pick goes first, the other is the back-up
 LANGS = ("hindi", "marathi", "sanskrit", "english", "telugu", "gujarati", "kannada", "tamil")
 LEADS = ("bansuri", "harmonium", "veena")
 KRISHNA = re.compile(r"krish|kanha|govind|madhav|gopi|gopal|radha|bansuri|flute|vrind|murali|ghanshyam|कृष्ण|कान्हा|गोपी|राधा", re.I)
@@ -128,7 +129,7 @@ def make_brief(prompt: str, opts: dict | None = None, api_key: str = "", timeout
     opts = opts or {}
     brief, source, usage = None, "fallback", {}
     if api_key:
-        for model in MODELS:
+        for model in PLANNERS.get(opts.get("planner"), MODELS):
             try:
                 raw = _call(model, prompt + (f"\n(language: {opts['language']})" if opts.get("language") else "") +
                             (f"\n(style tags, follow them: {opts['style']})" if opts.get("style") else "") +

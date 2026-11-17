@@ -261,6 +261,7 @@ def make_song(event):
     opts = {"raga": raga_in, "tala": tala_in if tala_in in TALAS else "", "language": text(b.get("language"), 12).lower(),
             "lead": text(b.get("lead"), 12), "lyrics": text(b.get("lyrics"), 3000), "instrumental": bool(b.get("instrumental")), "poem": bool(b.get("poem")),
             "tempo": int(b["tempo"]) if isinstance(b.get("tempo"), (int, float)) and 40 <= b["tempo"] <= 180 else 0}
+    opts["planner"] = b.get("planner") if b.get("planner") in ("glm", "deepseek") else "auto"
     hint = styles.parse(style)                        # style words -> lead, tala, tempo, extra players (what you choose by hand still wins)
     opts["style"] = style
     for k in ("lead", "tala"):

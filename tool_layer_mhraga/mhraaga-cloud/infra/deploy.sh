@@ -9,6 +9,13 @@ ACCT=$(aws sts get-caller-identity --query Account --output text); echo "account
 
 # 1. secrets live in SSM Parameter Store (SecureString), never in the repo or the template
 [ -n "${OPENROUTER_API_KEY:-}" ] && aws ssm put-parameter --name /mhraaga/openrouter_key --type SecureString --overwrite --value "$OPENROUTER_API_KEY" >/dev/null
+# Never wipe the custom domain by accident: with no CERT_ARN given, keep the one the stack already uses.
+if [ -z "${CERT_ARN:-}" ]; then
+  CERT_ARN=$(aws cloudformation describe-stacks --stack-name mhraaga --query 'Stacks[0].Parameters[?ParameterKey==`CertificateArn`].ParameterValue | [0]' --output text 2>/dev/null || true)
+  [ "$CERT_ARN" = "None" ] && CERT_ARN=""
+  export CERT_ARN
+fi
+if [ -n "${DOMAIN_NAME:-}" ] && [ -z "${CERT_ARN:-}" ]; then echo "DOMAIN_NAME is set but there is no certificate (CERT_ARN). Stopping so the domain is not removed." >&2; exit 1; fi
 aws ssm get-parameter --name /mhraaga/jwt_secret >/dev/null 2>&1 || aws ssm put-parameter --name /mhraaga/jwt_secret --type SecureString --value "$(openssl rand -hex 32)" >/dev/null
 aws ssm get-parameter --name /mhraaga/origin_secret >/dev/null 2>&1 || aws ssm put-parameter --name /mhraaga/origin_secret --type SecureString --value "$(openssl rand -hex 24)" >/dev/null
 ORIGIN=$(aws ssm get-parameter --name /mhraaga/origin_secret --with-decryption --query Parameter.Value --output text)

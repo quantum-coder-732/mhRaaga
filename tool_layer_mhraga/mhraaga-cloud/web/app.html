@@ -25,6 +25,7 @@
       </div>
     </label>
     <label class="field adv"><span>Styles <em>(words that shape the music, like Suno: genre, mood, instruments)</em></span><input id="styletext" maxlength="200" placeholder="sufi qawwali, harmonium, dholak, handclaps, building crescendo" autocomplete="off"></label>
+    <label class="field adv"><span>Lyrics &amp; plan written by <em>(cheap text models; they write the words and the raga plan, the engine plays it)</em></span><select id="planner"><option value="auto">Automatic (GLM, then DeepSeek)</option><option value="glm">GLM 5.3 Flash</option><option value="deepseek">DeepSeek V4 Flash</option></select></label>
     <div class="adv"><div class="styles" id="styles" role="group" aria-label="Styles">
       <span class="lab">Styles</span>
       <button type="button" class="tag krishna" data-tag="poem">📜 Spoken poem <i>like a poem video</i></button>
