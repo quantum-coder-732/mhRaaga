@@ -19,12 +19,32 @@
     <ul class="langs" aria-label="Languages"><li>हिन्दी</li><li>मराठी</li><li>संस्कृतम्</li><li>తెలుగు</li><li>ગુજરાતી</li><li>ಕನ್ನಡ</li><li>தமிழ்</li></ul>
     <form class="dprompt" id="dform">
       <textarea id="dtext" rows="2" maxlength="800" placeholder="Describe the song you want to make…" aria-label="Describe the song"></textarea>
+      <div class="mpick" data-auth hidden role="radiogroup" aria-label="How should it be made?">
+        <label class="mp on"><input type="radio" name="hm" value="free" checked><b>Built-in engine</b><small>Free · instant</small></label>
+        <label class="mp"><input type="radio" name="hm" value="clip"><b>AI singer · Clip</b><small>$0.04 · 30 s</small></label>
+        <label class="mp"><input type="radio" name="hm" value="pro"><b>AI singer · Full song</b><small>$0.08 · about 2 min</small></label>
+        <select id="hplanner" aria-label="Who writes the lyrics and plan"><option value="auto">Lyrics by: automatic</option><option value="glm">Lyrics by: GLM 5.3 Flash</option><option value="deepseek">Lyrics by: DeepSeek V4 Flash</option></select>
+      </div>
       <div class="drow"><div class="dchips" id="dchips">
-        <button type="button" class="tag" data-s="devotional">Devotional</button><button type="button" class="tag" data-s="poem">Spoken poem</button><button type="button" class="tag" data-s="dawn">Dawn</button><button type="button" class="tag" data-s="rain">Rain</button><button type="button" class="tag" data-s="night">Night</button></div>
+        <button type="button" class="tag krishna" data-s="krishna" data-auth hidden>🪈 Krishna flute</button><button type="button" class="tag" data-s="devotional">Devotional</button><button type="button" class="tag" data-s="poem">Spoken poem</button><button type="button" class="tag" data-s="dawn">Dawn</button><button type="button" class="tag" data-s="rain">Rain</button><button type="button" class="tag" data-s="night">Night</button></div>
         <button class="primary" type="submit">Create</button></div>
     </form>
     <p class="muted" id="quota"></p>
     <ul class="facts" aria-label="Highlights"><li><b class="hl2">7</b><span>Indian languages</span></li><li><b class="hl2">Ragas</b><span>chosen to fit the mood</span></li><li><b>Free</b><span>or AI singer, your choice</span></li><li><b>Clear</b><span>model and cost on every song</span></li></ul>
+  </section>
+
+  <section class="blk" id="dash" data-sec data-auth hidden><h2 class="sech">Your studio</h2>
+    <div class="tiles">
+      <a class="tile" href="#create" data-v="create"><span class="fic">✦</span><b>Create a song</b><small>Choose the model, style, lyrics and singer</small></a>
+      <a class="tile" href="#film" data-v="film"><span class="fic">▶</span><b>Film &amp; VFX</b><small>Scenes, glow, grain, light leak, petals, colour grade, AI pictures, export</small></a>
+      <a class="tile" href="#stories" data-v="stories"><span class="fic">❝</span><b>Stories &amp; poems</b><small>Narrated over music</small></a>
+      <a class="tile" href="#playlist" data-v="playlist"><span class="fic">♫</span><b>Playlist</b><small>Songs everyone can play</small></a>
+      <a class="tile" href="#mine" data-v="mine"><span class="fic">☰</span><b>My songs</b><small>Everything you made, with model and cost</small></a>
+      <a class="tile" href="#people" data-v="people"><span class="fic">☺</span><b>People</b><small>Voices and speaking styles</small></a>
+      <a class="tile" href="#team" data-v="team"><span class="fic">⚑</span><b>Team</b><small>Up to 150 artists on one piece</small></a>
+      <a class="tile" href="#studio" data-v="studio"><span class="fic">⚙</span><b>Studio rules</b><small>What the AI follows and learns</small></a>
+      <a class="tile" href="#ragas" data-v="ragas"><span class="fic">〰</span><b>Raga explorer</b><small>Hear the scales, pick one</small></a>
+    </div>
   </section>
 
   <section class="gate card" id="gate"><h2>Sign in to create</h2><p class="muted">Songs, poems, stories and films need an account. New accounts are approved by an administrator.</p><a class="btn" href="login.html">Sign in or request access</a></section>

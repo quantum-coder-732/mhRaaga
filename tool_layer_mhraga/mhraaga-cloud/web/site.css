@@ -251,3 +251,12 @@ button.primary,a.primary,.btn{transition:transform .15s,box-shadow .2s}button.pr
 .card.dl{background:linear-gradient(120deg,rgba(139,92,246,.22),rgba(244,185,66,.12));border:1px solid rgba(255,255,255,.12)}
 footer.foot{border-top:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.18)}
 .hl2{white-space:nowrap}
+
+/* signed-in home: model chooser and studio tiles */
+.mpick{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:0 0 10px}
+.mp{position:relative;flex:1 1 150px;display:grid;gap:1px;border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;cursor:pointer;background:rgba(255,255,255,.04);text-align:left}
+.mp input{position:absolute;opacity:0;pointer-events:none}.mp b{font-size:.9rem}.mp small{color:var(--mute);font-size:.76rem}.mp.on{border-color:var(--gold);background:rgba(244,185,66,.12);box-shadow:0 0 0 3px rgba(244,185,66,.12)}
+#hplanner{flex:1 1 190px;background:rgba(255,255,255,.04);color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;font:inherit}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;max-width:1040px;margin:18px auto 0}
+.tile{display:grid;gap:6px;align-content:start;text-decoration:none;color:var(--ink);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));transition:transform .15s,border-color .15s}
+.tile:hover{transform:translateY(-3px);border-color:rgba(244,185,66,.6)}.tile b{font-size:1.02rem}.tile small{color:var(--mute);line-height:1.4}

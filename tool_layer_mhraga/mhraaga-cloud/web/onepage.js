@@ -14,7 +14,7 @@ document.querySelectorAll("[data-auth]").forEach((s) => (s.hidden = !authed));
 
 // Suno-style shell for signed-in people: sidebar on desktop, bottom bar on phones. One view at a time, linkable by #hash.
 const NAV = [["home", "🏠", "Home"], ["create", "✨", "Create"], ["playlist", "🎵", "Playlist"], ["mine", "📚", "My songs"], ["stories", "📖", "Stories"], ["people", "👤", "People"], ["film", "🎬", "Film"], ["team", "👥", "Team"], ["studio", "🧠", "Studio"], ["ragas", "🪈", "Ragas"]];
-const VIEWS = { home: ["home-hero", "features", "models", "app"], create: ["create"], playlist: ["playlist"], mine: ["mine"], stories: ["stories"], people: ["people"], film: ["film"], team: ["team"], studio: ["studio"], ragas: ["ragas"] };
+const VIEWS = { home: ["home-hero", "dash", "features", "models", "app"], create: ["create"], playlist: ["playlist"], mine: ["mine"], stories: ["stories"], people: ["people"], film: ["film"], team: ["team"], studio: ["studio"], ragas: ["ragas"] };
 let view = "home";
 function show(v, push = true) {
   if (!authed) return;
@@ -46,6 +46,9 @@ function load(f) { if (f.dataset.loaded) return; f.dataset.loaded = 1; f.src = f
 const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && (load(e.target), io.unobserve(e.target))), { rootMargin: "600px" });
 if (!authed) document.querySelectorAll("iframe[data-src]").forEach((f) => { if (f.closest("[hidden]")) return; io.observe(f); });
 
+// dashboard tiles and the model chooser on the home prompt
+document.addEventListener("click", (e) => { const t = e.target.closest("a.tile[data-v]"); if (t) { e.preventDefault(); show(t.dataset.v); } });
+document.querySelectorAll('input[name="hm"]').forEach((r) => (r.onchange = () => document.querySelectorAll(".mp").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked))));
 // hero prompt: hand it to the Create frame
 const picked = new Set();
 $("dchips").onclick = (e) => { const b = e.target.closest(".tag"); if (!b) return; const s = b.dataset.s; picked.has(s) ? picked.delete(s) : picked.add(s); b.classList.toggle("on", picked.has(s)); };
@@ -53,6 +56,8 @@ $("dform").onsubmit = (e) => {
   e.preventDefault(); const t = $("dtext").value.trim() || (picked.has("poem") ? "A tender poem about love and patience" : "A gentle raga for the morning");
   if (!authed) { try { sessionStorage.setItem("mh_prompt", JSON.stringify({ t, s: [...picked] })); } catch {} location.href = "login.html"; return; }
   const q = new URLSearchParams({ prompt: t }); if (picked.has("krishna")) q.set("style", "krishna"); else if (picked.has("poem")) q.set("style", "poem");
+  const hm = document.querySelector('input[name="hm"]:checked'); if (hm && hm.value !== "free") q.set("model", hm.value);     // AI singer (Lyria) card on the Create page
+  if ($("hplanner").value !== "auto") q.set("planner", $("hplanner").value);                                                   // GLM or DeepSeek writes the lyrics and plan
   const f = document.querySelector("#create iframe"); f.dataset.loaded = ""; f.dataset.src = "app.html?" + q; show("create"); load(f);
 };
 try { const p = JSON.parse(sessionStorage.getItem("mh_prompt") || "null"); if (p && authed) { sessionStorage.removeItem("mh_prompt"); $("dtext").value = p.t; (p.s || []).forEach((s) => document.querySelector(`#dchips [data-s="${s}"]`)?.click()); $("dform").requestSubmit(); } } catch {}
